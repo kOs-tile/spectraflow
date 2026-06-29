@@ -1,0 +1,191 @@
+version: "3.9"
+
+services:
+  # ── Core App ──────────────────────────────────────────────────────────────
+  spectraflow:
+    build: .
+    container_name: spectraflow-proxy
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - TIMESCALEDB_URL=postgresql://spectraflow:spectraflow@timescaledb:5432/spectraflow
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+    env_file:
+      - .env
+    depends_on:
+      redis:
+        condition: service_healthy
+      timescaledb:
+        condition: service_healthy
+      qdrant:
+        condition: service_started
+    volumes:
+      - ./spectraflow:/app/spectraflow:ro
+    restart: unless-stopped
+    networks:
+      - spectraflow-net
+
+  # ── Celery Worker ─────────────────────────────────────────────────────────
+  celery-worker:
+    build: .
+    container_name: spectraflow-celery-worker
+    command: celery -A spectraflow.detection.drift_monitor worker --loglevel=info --concurrency=4
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - TIMESCALEDB_URL=postgresql://spectraflow:spectraflow@timescaledb:5432/spectraflow
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - timescaledb
+      - qdrant
+    restart: unless-stopped
+    networks:
+      - spectraflow-net
+
+  # ── Celery Beat Scheduler ─────────────────────────────────────────────────
+  celery-beat:
+    build: .
+    container_name: spectraflow-celery-beat
+    command: celery -A spectraflow.detection.drift_monitor beat --loglevel=info --scheduler celery.beat.PersistentScheduler
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - TIMESCALEDB_URL=postgresql://spectraflow:spectraflow@timescaledb:5432/spectraflow
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - timescaledb
+    restart: unless-stopped
+    networks:
+      - spectraflow-net
+
+  # ── Telemetry Consumer ────────────────────────────────────────────────────
+  telemetry-consumer:
+    build: .
+    container_name: spectraflow-telemetry
+    command: python -m spectraflow.telemetry.ingestion
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - TIMESCALEDB_URL=postgresql://spectraflow:spectraflow@timescaledb:5432/spectraflow
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - timescaledb
+      - qdrant
+    restart: unless-stopped
+    networks:
+      - spectraflow-net
+
+  # ── Redis ─────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7.2-alpine
+    container_name: spectraflow-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --maxmemory 512mb --maxmemory-policy allkeys-lru --save 60 1
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - spectraflow-net
+
+  # ── TimescaleDB ───────────────────────────────────────────────────────────
+  timescaledb:
+    image: timescale/timescaledb:latest-pg15
+    container_name: spectraflow-timescaledb
+    environment:
+      POSTGRES_USER: spectraflow
+      POSTGRES_PASSWORD: spectraflow
+      POSTGRES_DB: spectraflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescaledb-data:/var/lib/postgresql/data
+      - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U spectraflow -d spectraflow"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - spectraflow-net
+
+  # ── Qdrant ────────────────────────────────────────────────────────────────
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: spectraflow-qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant-data:/qdrant/storage
+    environment:
+      - QDRANT__SERVICE__GRPC_PORT=6334
+    networks:
+      - spectraflow-net
+
+  # ── Prometheus ────────────────────────────────────────────────────────────
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: spectraflow-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./grafana/provisioning/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-lifecycle'
+    networks:
+      - spectraflow-net
+
+  # ── Grafana ───────────────────────────────────────────────────────────────
+  grafana:
+    image: grafana/grafana:latest
+    container_name: spectraflow-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=spectraflow
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+    networks:
+      - spectraflow-net
+
+volumes:
+  redis-data:
+  timescaledb-data:
+  qdrant-data:
+  prometheus-data:
+  grafana-data:
+
+networks:
+  spectraflow-net:
+    driver: bridge
