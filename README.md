@@ -134,6 +134,16 @@ All API calls are proxied transparently. Zero latency impact on the happy path (
 
 ---
 
+## Telemetry privacy
+
+SPECTRAFLOW now applies a content-retention policy **before telemetry leaves the proxy**:
+
+- `response` (default): stores model output for semantic drift analysis, but does not store raw user prompt messages.
+- `metadata`: stores neither prompt nor response text; hashes, model/usage metadata, and latency remain available. Semantic fingerprinting is skipped because no response text is retained.
+- `full`: explicit opt-in for storing both prompt messages and model output.
+
+Request and response SHA-256 fingerprints are emitted in every mode so repeated payloads can be correlated without keeping raw prompt text. This is still not a complete PII/compliance solution; production deployments should add field-level masking and retention controls appropriate to their data.
+
 ## Features
 
 | Feature | Description |
@@ -301,7 +311,7 @@ spectraflow/
 
 Built by **Onur Kavi** — AI/ML Engineer
 
-[GitHub](https://github.com/onurkavi) · [LinkedIn](https://linkedin.com/in/onurkavi)
+[GitHub](https://github.com/kOs-tile) · [LinkedIn](https://linkedin.com/in/onurkavi)
 
 ---
 
