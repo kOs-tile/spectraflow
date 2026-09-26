@@ -79,6 +79,16 @@ def mock_redis():
     return mock
 
 
+def _mock_upstream_client(*, response=None, side_effect=None):
+    """Patch only the proxy's upstream client, never the ASGI test client."""
+    upstream = AsyncMock()
+    upstream.post = AsyncMock(return_value=response, side_effect=side_effect)
+    context = MagicMock()
+    context.__aenter__ = AsyncMock(return_value=upstream)
+    context.__aexit__ = AsyncMock(return_value=None)
+    return patch("spectraflow.proxy.handler.httpx.AsyncClient", return_value=context)
+
+
 @pytest.fixture
 def mock_upstream_response():
     """Mock successful OpenAI upstream response."""
@@ -263,7 +273,7 @@ class TestProxyChatCompletions:
         from main import app
 
         with patch("spectraflow.proxy.handler._redis_client", mock_redis):
-            with patch("httpx.AsyncClient.post", return_value=mock_upstream_response):
+            with _mock_upstream_client(response=mock_upstream_response):
                 async with AsyncClient(app=app, base_url="http://test") as client:
                     response = await client.post(
                         "/v1/chat/completions",
@@ -303,9 +313,8 @@ class TestProxyChatCompletions:
         import httpx
 
         with patch("spectraflow.proxy.handler._redis_client", mock_redis):
-            with patch(
-                "httpx.AsyncClient.post",
-                side_effect=httpx.TimeoutException("timeout"),
+            with _mock_upstream_client(
+                side_effect=httpx.TimeoutException("timeout")
             ):
                 from main import app
 
@@ -329,9 +338,8 @@ class TestProxyChatCompletions:
         import httpx
 
         with patch("spectraflow.proxy.handler._redis_client", mock_redis):
-            with patch(
-                "httpx.AsyncClient.post",
-                side_effect=httpx.ConnectError("connection refused"),
+            with _mock_upstream_client(
+                side_effect=httpx.ConnectError("connection refused")
             ):
                 from main import app
 
@@ -364,7 +372,7 @@ class TestProxyChatCompletions:
         error_response.headers = {"content-type": "application/json"}
 
         with patch("spectraflow.proxy.handler._redis_client", mock_redis):
-            with patch("httpx.AsyncClient.post", return_value=error_response):
+            with _mock_upstream_client(response=error_response):
                 from main import app
 
                 async with AsyncClient(app=app, base_url="http://test") as client:
@@ -390,7 +398,7 @@ class TestProxyEmbeddings:
         """Embeddings should be passed through and returned correctly."""
         from main import app
 
-        with patch("httpx.AsyncClient.post", return_value=mock_embeddings_response):
+        with _mock_upstream_client(response=mock_embeddings_response):
             async with AsyncClient(app=app, base_url="http://test") as client:
                 response = await client.post(
                     "/v1/embeddings",
@@ -425,7 +433,7 @@ class TestProxyTelemetryContent:
         mock_redis.xadd = capture_xadd
 
         with patch("spectraflow.proxy.handler._redis_client", mock_redis):
-            with patch("httpx.AsyncClient.post", return_value=mock_upstream_response):
+            with _mock_upstream_client(response=mock_upstream_response):
                 from main import app
 
                 async with AsyncClient(app=app, base_url="http://test") as client:
