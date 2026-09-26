@@ -130,9 +130,21 @@ client = openai.OpenAI(api_key="sk-...")
 client = openai.OpenAI(api_key="sk-...", base_url="http://localhost:8000/v1")
 ```
 
-All API calls are proxied transparently. Zero latency impact on the happy path (telemetry is async fire-and-forget).
+All API calls are proxied transparently. Telemetry dispatch is asynchronous so Redis emission does not block the completed upstream response path, but the proxy still adds normal network/parsing overhead.
 
 ---
+
+## KCC authority correlation
+
+When a caller is executing under a KAVI Capability Compiler capsule, it can attach internal correlation headers:
+
+```text
+X-KCC-Capsule-Id: <capsule id>
+X-KCC-Capability-Id: <canonical capability id>
+X-KCC-Operation: <bounded operation>
+```
+
+SPECTRAFLOW records these values with telemetry so drift/incidents can be traced back to the authority context that was active. These headers are stripped before forwarding the request upstream. SPECTRAFLOW does not validate or grant the authority; KCC remains the enforcement plane.
 
 ## Telemetry privacy
 
