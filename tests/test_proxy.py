@@ -164,6 +164,22 @@ class TestProviderRouting:
         base_url, _ = _resolve_upstream("deepseek-chat")
         assert base_url == settings.deepseek_base_url
 
+    def test_claude_without_compatible_gateway_fails_closed(self, monkeypatch) -> None:
+        from spectraflow.proxy.handler import _resolve_upstream, settings
+
+        monkeypatch.setattr(settings, "anthropic_compatible_base_url", "")
+        with pytest.raises(ValueError, match="ANTHROPIC_COMPATIBLE_BASE_URL"):
+            _resolve_upstream("claude-sonnet")
+
+    def test_claude_routes_only_to_explicit_compatible_gateway(self, monkeypatch) -> None:
+        from spectraflow.proxy.handler import _resolve_upstream, settings
+
+        monkeypatch.setattr(settings, "anthropic_compatible_base_url", "https://gateway.example/v1")
+        monkeypatch.setattr(settings, "anthropic_api_key", "test-anthropic-key")
+        base_url, api_key = _resolve_upstream("claude-sonnet")
+        assert base_url == "https://gateway.example/v1"
+        assert api_key == "test-anthropic-key"
+
     def test_none_model_defaults_to_openai(self) -> None:
         from spectraflow.proxy.handler import _resolve_upstream
         from spectraflow.config import get_settings
