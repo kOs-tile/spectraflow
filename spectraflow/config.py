@@ -42,6 +42,13 @@ class Settings(BaseSettings):
     upstream_timeout: float = 120.0
     upstream_max_retries: int = 2
     proxy_passthrough_unknown: bool = True
+    telemetry_content_mode: Literal["metadata", "response", "full"] = Field(
+        default="response",
+        description=(
+            "Telemetry content capture policy. 'metadata' stores no prompt/response text; "
+            "'response' stores only model output; 'full' stores prompt and output."
+        ),
+    )
 
     # ── Redis / Streams ───────────────────────────────────────────────────────
     redis_url: str = "redis://localhost:6379/0"
