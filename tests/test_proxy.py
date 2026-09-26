@@ -422,22 +422,16 @@ class TestProxyTelemetryContent:
         self,
         mock_upstream_response: MagicMock,
     ) -> None:
-        """Emitted telemetry events must contain all required fields."""
-        emitted_events: list[dict] = []
-        mock_redis = AsyncMock()
+        """Telemetry scheduling should carry the required structured fields."""
+        from main import app
 
-        async def capture_xadd(stream_key: str, event: dict, **kwargs: Any) -> str:
-            emitted_events.append(event)
-            return "1-0"
-
-        mock_redis.xadd = capture_xadd
-
-        with patch("spectraflow.proxy.handler._redis_client", mock_redis):
+        with patch(
+            "spectraflow.proxy.handler._emit_telemetry",
+            new_callable=AsyncMock,
+        ) as mock_emit:
             with _mock_upstream_client(response=mock_upstream_response):
-                from main import app
-
                 async with AsyncClient(app=app, base_url="http://test") as client:
-                    await client.post(
+                    response = await client.post(
                         "/v1/chat/completions",
                         json={
                             "model": "gpt-4o-mini",
@@ -450,12 +444,14 @@ class TestProxyTelemetryContent:
                         },
                     )
 
-        # Wait for async tasks
-        import asyncio
-        await asyncio.sleep(0.1)
+                # Let the create_task() callback get one event-loop turn while
+                # the telemetry coroutine is still patched.
+                import asyncio
+                await asyncio.sleep(0)
 
-        assert len(emitted_events) > 0, "No telemetry events were emitted"
-        event = emitted_events[0]
+        assert response.status_code == 200
+        assert mock_emit.await_count == 1
+        event = mock_emit.await_args.args[0]
 
         required_fields = [
             "event_id", "event_type", "pipeline_name",
