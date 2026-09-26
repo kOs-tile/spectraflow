@@ -1,5 +1,8 @@
 # SPECTRAFLOW
 
+> **Status — Research-active.** Core proxy, telemetry, and CUSUM components are being revalidated with regression tests and CI. This is an engineering/research system, not a production observability product claim.
+
+
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com)
 [![OpenAI Compatible](https://img.shields.io/badge/OpenAI-compatible-412991.svg?logo=openai)](https://platform.openai.com/docs/api-reference)
@@ -213,7 +216,7 @@ All API calls are proxied transparently. Zero latency impact on the happy path (
 ### Run
 
 ```bash
-git clone https://github.com/onurkavi/spectraflow
+git clone https://github.com/kOs-tile/spectraflow
 cd spectraflow
 cp .env.example .env
 # Edit .env with your API keys
