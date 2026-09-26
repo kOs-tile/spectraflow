@@ -49,6 +49,7 @@ class AuthorityDriftResult(BaseModel):
     capability_id: str
     operation: str | None = None
     observation_fingerprint: str
+    evaluation_fingerprint: str = ""
     violations: list[AuthorityDriftViolation] = Field(default_factory=list)
 
 
@@ -277,7 +278,7 @@ def evaluate_authority_drift(request: AuthorityDriftRequest) -> AuthorityDriftRe
         "observed_at": observed_at,
     }
 
-    return AuthorityDriftResult(
+    result = AuthorityDriftResult(
         drift_detected=bool(violations),
         within_claimed_authority=not violations,
         capsule_integrity_valid=integrity_valid,
@@ -287,3 +288,7 @@ def evaluate_authority_drift(request: AuthorityDriftRequest) -> AuthorityDriftRe
         observation_fingerprint=_digest(observation),
         violations=violations,
     )
+    result.evaluation_fingerprint = _digest(
+        result.model_dump(exclude={"evaluation_fingerprint"})
+    )
+    return result
