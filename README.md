@@ -1,6 +1,6 @@
 # SPECTRAFLOW
 
-> **Status — Research-active.** Core proxy, telemetry, and CUSUM components are being revalidated with regression tests and CI. This is an engineering/research system, not a production observability product claim.
+> **Status — Research-active observability subsystem.** Semantic-drift telemetry remains available, while the active KAVI wedge is observational **authority drift**: correlating runtime behavior with the bounded authority encoded by KCC capsules. SPECTRAFLOW observes and reports; it does not grant or enforce authority.
 
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
@@ -10,7 +10,7 @@
 [![Docker](https://img.shields.io/badge/Docker-ready-2496ED.svg?logo=docker)](https://www.docker.com/)
 [![Celery](https://img.shields.io/badge/Celery-5.x-37814A.svg)](https://docs.celeryq.dev/)
 
-> **LLM production observability and semantic drift detection — because your model didn't change, but your outputs did.**
+> **Behavior and authority-drift observability for agent systems.**
 
 ---
 
@@ -144,7 +144,11 @@ X-KCC-Capability-Id: <canonical capability id>
 X-KCC-Operation: <bounded operation>
 ```
 
-SPECTRAFLOW records these values with telemetry so drift/incidents can be traced back to the authority context that was active. These headers are stripped before forwarding the request upstream. SPECTRAFLOW does not validate or grant the authority; KCC remains the enforcement plane.
+SPECTRAFLOW records these values with telemetry so drift/incidents can be traced back to the authority context that was active. These headers are stripped before forwarding the request upstream.
+
+For explicit verification, `POST /api/v1/authority/evaluate` compares a supplied `kcc.capsule.v0` with an observed capability call. It reports capsule tampering, expiry, ungranted capabilities, operation escape, and supported parameter-boundary violations, then seals the result with an `evaluation_fingerprint`.
+
+This evaluator is **observational only**. It does not grant, expand, or dispatch authority; KCC remains the authority/enforcement plane.
 
 ## Telemetry privacy
 
@@ -165,6 +169,7 @@ Request and response SHA-256 fingerprints are emitted in every mode so repeated 
 | **Semantic Fingerprinting** | Embed every response with `text-embedding-3-small`, store in Qdrant for similarity search |
 | **Behavioral Baselines** | Rolling 7-day per-pipeline centroid, semantic variance, schema compliance rate |
 | **CUSUM Drift Detection** | Tabular CUSUM control charts with configurable h/k thresholds. Detects sustained shifts, not noise spikes |
+| **Authority Drift Observation** | Compares runtime calls with KCC capsule grants, operation bounds, expiry, integrity, and supported parameter constraints |
 | **Root Cause Analysis** | Multi-step LLM agent compares drifted samples, analyzes prompt history, identifies likely cause |
 | **Regression Test Synthesis** | Learns golden test cases from production traffic. Auto-runs on shadow model |
 | **Prompt Registry** | Versioned prompt templates with SHA-256 hashes. Every inference attributed to a prompt version |
@@ -212,20 +217,20 @@ Request and response SHA-256 fingerprints are emitted in every mode so repeated 
 
 ---
 
-## Comparison
+## Product boundary
 
-| Capability | SPECTRAFLOW | Langfuse | Arize Phoenix |
-|---|:---:|:---:|:---:|
-| OpenAI-compatible proxy | ✅ | ❌ | ❌ |
-| Semantic drift detection | ✅ | ❌ | ✅ |
-| CUSUM control charts | ✅ | ❌ | ❌ |
-| Root cause LLM agent | ✅ | ❌ | ❌ |
-| Auto regression synthesis | ✅ | ❌ | ❌ |
-| Prompt version registry | ✅ | ✅ | ❌ |
-| Self-hosted | ✅ | ✅ | ✅ |
-| No SDK changes required | ✅ | ❌ | ❌ |
-| Multi-provider routing | ✅ | ✅ | ✅ |
-| Behavioral baselines | ✅ | ❌ | Partial |
+SPECTRAFLOW is not positioned as a replacement for general-purpose tracing,
+prompt analytics, or OpenTelemetry-compatible observability stacks. Those are
+useful adjacent systems.
+
+The active differentiator is narrower: **bind observed agent behavior to the
+authority context that was supposed to govern it**. Semantic drift answers
+"did behavior change?"; authority drift asks "did execution move outside the
+capability, operation, expiry, or parameter bounds represented by the KCC
+capsule?"
+
+Validation details and the adversarial contract benchmark are in
+[`docs/AUTHORITY_DRIFT_VALIDATION.md`](docs/AUTHORITY_DRIFT_VALIDATION.md).
 
 ---
 
@@ -289,6 +294,8 @@ spectraflow/
 │   ├── telemetry/
 │   │   ├── ingestion.py       # Redis Stream consumer, event tagging
 │   │   └── fingerprinting.py  # Embedding + Qdrant + TimescaleDB
+│   ├── authority/
+│   │   └── drift.py           # Observational KCC authority-drift evaluator
 │   ├── detection/
 │   │   ├── baseline.py        # Rolling centroid, variance, schema compliance
 │   │   ├── cusum.py           # CUSUM control chart algorithm
@@ -299,6 +306,7 @@ spectraflow/
 │   ├── registry/
 │   │   └── prompt_store.py    # Versioned prompt registry
 │   ├── api/
+│   │   ├── authority.py       # /api/v1/authority/evaluate
 │   │   ├── incidents.py       # Incident management routes
 │   │   └── tests.py           # Regression test routes
 │   └── monitoring/
@@ -306,6 +314,7 @@ spectraflow/
 ├── scripts/
 │   └── demo_pipeline.py       # End-to-end demo with injected drift
 ├── tests/
+│   ├── test_authority_drift.py
 │   ├── test_cusum.py
 │   ├── test_proxy.py
 │   └── test_fingerprinting.py
