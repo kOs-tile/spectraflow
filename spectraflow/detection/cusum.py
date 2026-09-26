@@ -102,32 +102,58 @@ def run_cusum(
         )
 
     x = np.array(observations, dtype=np.float64)
+    finite_mask = np.isfinite(x)
+    finite_count = int(np.sum(finite_mask))
+    if finite_count < 2:
+        return CUSUMResult(
+            drift_detected=False,
+            magnitude=0.0,
+            first_signal_index=-1,
+            n_observations=n,
+            threshold_h=threshold_h,
+            slack_k=slack_k,
+        )
 
     # Estimate in-control parameters
     # Use first quarter as "warm-up" period for parameter estimation
     warmup_end = max(2, n // 4)
 
+    warmup_values = x[:warmup_end][np.isfinite(x[:warmup_end])]
+    if len(warmup_values) < 2:
+        warmup_values = x[finite_mask][: max(2, min(finite_count, warmup_end))]
+
     if target_mean is None:
-        target_mean = float(np.median(x[:warmup_end]))
+        target_mean = float(np.median(warmup_values))
 
     if scale_std is None:
-        # Robust standard deviation via MAD
-        mad = float(np.median(np.abs(x[:warmup_end] - target_mean)))
+        # Robust standard deviation via MAD, ignoring missing/non-finite samples.
+        mad = float(np.median(np.abs(warmup_values - target_mean)))
         scale_std = mad * 1.4826  # MAD → Gaussian σ conversion
-        if scale_std < 1e-10:
-            # Near-zero variance: use range-based estimate
-            scale_std = max(float(np.std(x)), 1e-6)
+        if not np.isfinite(scale_std) or scale_std < 1e-10:
+            # Near-zero warm-up variance: fall back to finite observations only.
+            scale_std = max(float(np.std(x[finite_mask])), 1e-6)
 
-    # Normalize observations
-    x_normalized = (x - target_mean) / scale_std
+    if not np.isfinite(scale_std) or scale_std <= 0:
+        scale_std = 1e-6
+
+    # Normalize finite observations while preserving original sample indices.
+    x_normalized = np.full(n, np.nan, dtype=np.float64)
+    x_normalized[finite_mask] = (x[finite_mask] - target_mean) / scale_std
 
     # Tabular CUSUM
     cusum_upper = np.zeros(n, dtype=np.float64)
     cusum_lower = np.zeros(n, dtype=np.float64)
 
     for i in range(n):
-        cusum_upper[i] = max(0.0, (cusum_upper[i - 1] if i > 0 else 0.0) + x_normalized[i] - slack_k)
-        cusum_lower[i] = max(0.0, (cusum_lower[i - 1] if i > 0 else 0.0) - x_normalized[i] - slack_k)
+        prev_upper = cusum_upper[i - 1] if i > 0 else 0.0
+        prev_lower = cusum_lower[i - 1] if i > 0 else 0.0
+        if not np.isfinite(x_normalized[i]):
+            # Missing telemetry must not poison all subsequent statistics.
+            cusum_upper[i] = prev_upper
+            cusum_lower[i] = prev_lower
+            continue
+        cusum_upper[i] = max(0.0, prev_upper + x_normalized[i] - slack_k)
+        cusum_lower[i] = max(0.0, prev_lower - x_normalized[i] - slack_k)
 
     # Detect first alarm
     upper_alarms = np.where(cusum_upper > threshold_h)[0]
