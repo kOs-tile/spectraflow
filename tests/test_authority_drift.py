@@ -133,3 +133,21 @@ def test_boolean_does_not_satisfy_integer_constraint():
     result = evaluate(make_capsule(), parameters={"tab_index": True})
 
     assert any(v.code == "AUTH-PARAM-TYPE" for v in result.violations)
+
+
+
+def test_evaluation_fingerprint_is_deterministic():
+    cap = make_capsule()
+    first = evaluate(cap)
+    second = evaluate(cap)
+
+    assert len(first.evaluation_fingerprint) == 64
+    assert first.evaluation_fingerprint == second.evaluation_fingerprint
+
+
+def test_evaluation_fingerprint_binds_decision():
+    cap = make_capsule()
+    clean = evaluate(cap)
+    violating = evaluate(cap, operation="close")
+
+    assert clean.evaluation_fingerprint != violating.evaluation_fingerprint
