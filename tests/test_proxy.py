@@ -199,6 +199,44 @@ class TestProviderRouting:
         assert base_url == settings.upstream_base_url
 
 
+class TestTelemetryContentPolicy:
+
+    def test_response_mode_omits_prompt_but_keeps_output(self, monkeypatch) -> None:
+        from spectraflow.proxy.handler import _content_telemetry, settings
+
+        monkeypatch.setattr(settings, "telemetry_content_mode", "response")
+        payload = _content_telemetry(
+            [{"role": "user", "content": "secret prompt"}],
+            "model response",
+        )
+        assert payload["request_messages"] == []
+        assert payload["response_content"] == "model response"
+        assert payload["request_messages_sha256"]
+        assert payload["response_content_sha256"]
+
+    def test_metadata_mode_stores_no_raw_content(self, monkeypatch) -> None:
+        from spectraflow.proxy.handler import _content_telemetry, settings
+
+        monkeypatch.setattr(settings, "telemetry_content_mode", "metadata")
+        payload = _content_telemetry(
+            [{"role": "user", "content": "secret prompt"}],
+            "sensitive response",
+        )
+        assert payload["request_messages"] == []
+        assert payload["response_content"] == ""
+        assert payload["request_messages_sha256"]
+        assert payload["response_content_sha256"]
+
+    def test_full_mode_is_explicit_opt_in(self, monkeypatch) -> None:
+        from spectraflow.proxy.handler import _content_telemetry, settings
+
+        monkeypatch.setattr(settings, "telemetry_content_mode", "full")
+        messages = [{"role": "user", "content": "debug me"}]
+        payload = _content_telemetry(messages, "full response")
+        assert payload["request_messages"] == messages
+        assert payload["response_content"] == "full response"
+
+
 class TestTelemetryEmission:
 
     @pytest.mark.asyncio
