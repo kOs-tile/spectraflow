@@ -187,15 +187,19 @@ class TestCUSUMEdgeCases:
         # Both should detect drift; explicit might be more sensitive
         assert result_explicit.drift_detected is True
 
-    def test_nan_handling(self) -> None:
-        """NaN values should not crash the algorithm."""
+    def test_nan_handling_preserves_detection(self) -> None:
+        """A missing sample must not poison later CUSUM statistics."""
         series = [0.1] * 20 + [float("nan")] + [0.5] * 20
-        try:
-            result = run_cusum(series)
-            # May or may not detect drift — just shouldn't crash
-            assert isinstance(result.drift_detected, bool)
-        except Exception as exc:
-            pytest.fail(f"run_cusum crashed on NaN input: {exc}")
+        result = run_cusum(series)
+        assert result.drift_detected is True
+        assert result.direction == "increase"
+        assert result.first_signal_index > 20
+        assert math.isfinite(result.magnitude)
+
+    def test_all_non_finite_returns_no_drift(self) -> None:
+        result = run_cusum([float("nan"), float("inf"), float("-inf")])
+        assert result.drift_detected is False
+        assert result.first_signal_index == -1
 
 
 # ── Parameter sensitivity ─────────────────────────────────────────────────────
