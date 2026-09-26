@@ -30,6 +30,13 @@ class Settings(BaseSettings):
     openai_api_key: str = Field(default="", description="OpenAI API key")
     upstream_base_url: str = "https://api.openai.com/v1"
     anthropic_api_key: str = ""
+    anthropic_compatible_base_url: str = Field(
+        default="",
+        description=(
+            "Optional OpenAI-compatible gateway/base URL for Claude models. "
+            "SPECTRAFLOW does not translate OpenAI chat-completions payloads to Anthropic native /messages."
+        ),
+    )
     deepseek_api_key: str = ""
     deepseek_base_url: str = "https://api.deepseek.com/v1"
     upstream_timeout: float = 120.0
