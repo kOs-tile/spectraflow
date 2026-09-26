@@ -9,6 +9,7 @@ The telemetry emission is fire-and-forget — it never blocks the response.
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import json
 import time
 import uuid
@@ -27,6 +28,27 @@ from spectraflow.monitoring.metrics import (
 )
 
 settings = get_settings()
+
+
+def _content_telemetry(
+    request_messages: list[dict[str, Any]],
+    response_content: str,
+) -> dict[str, Any]:
+    """Apply the configured content-retention policy before telemetry leaves the proxy."""
+    request_json = json.dumps(request_messages, sort_keys=True, separators=(",", ":"))
+    payload: dict[str, Any] = {
+        "telemetry_content_mode": settings.telemetry_content_mode,
+        "request_messages_sha256": hashlib.sha256(request_json.encode()).hexdigest(),
+        "response_content_sha256": hashlib.sha256(response_content.encode()).hexdigest(),
+        "request_messages": [],
+        "response_content": "",
+    }
+    if settings.telemetry_content_mode == "response":
+        payload["response_content"] = response_content
+    elif settings.telemetry_content_mode == "full":
+        payload["request_messages"] = request_messages
+        payload["response_content"] = response_content
+    return payload
 
 
 # ── Redis client (lazy-initialized) ──────────────────────────────────────────
@@ -204,8 +226,7 @@ async def _stream_upstream(
                 "prompt_version": metadata["prompt_version"],
                 "user_segment": metadata["user_segment"],
                 "model_id": metadata["model_id"],
-                "request_messages": body.get("messages", []),
-                "response_content": full_content,
+                **_content_telemetry(body.get("messages", []), full_content),
                 "finish_reason": finish_reason,
                 "total_tokens": total_tokens,
                 "latency_seconds": total_latency,
@@ -394,8 +415,7 @@ async def proxy_chat_completions(request: Request) -> Response:
                         "prompt_version": metadata["prompt_version"],
                         "user_segment": metadata["user_segment"],
                         "model_id": metadata["model_id"],
-                        "request_messages": body.get("messages", []),
-                        "response_content": content,
+                        **_content_telemetry(body.get("messages", []), content),
                         "finish_reason": finish_reason,
                         "total_tokens": usage.get("total_tokens", 0),
                         "prompt_tokens": usage.get("prompt_tokens", 0),
