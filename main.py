@@ -43,7 +43,7 @@ else:
 # ── FastAPI app ───────────────────────────────────────────────────────────────
 app = FastAPI(
     title="SPECTRAFLOW",
-    description="LLM observability and semantic-drift research platform",
+    description="Agent behavior, semantic-drift, and KCC-correlated authority-drift observability",
     version=settings.app_version,
     docs_url="/docs",
     redoc_url="/redoc",
