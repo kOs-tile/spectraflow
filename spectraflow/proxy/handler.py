@@ -145,6 +145,9 @@ def _extract_metadata(
         "prompt_version": request.headers.get("x-prompt-version", "unknown"),
         "user_segment": request.headers.get("x-user-segment", "unknown"),
         "model_id": body.get("model", "unknown"),
+        "kcc_capsule_id": request.headers.get("x-kcc-capsule-id", ""),
+        "kcc_capability_id": request.headers.get("x-kcc-capability-id", ""),
+        "kcc_operation": request.headers.get("x-kcc-operation", ""),
     }
 
 
@@ -226,6 +229,9 @@ async def _stream_upstream(
                 "prompt_version": metadata["prompt_version"],
                 "user_segment": metadata["user_segment"],
                 "model_id": metadata["model_id"],
+                "kcc_capsule_id": metadata["kcc_capsule_id"],
+                "kcc_capability_id": metadata["kcc_capability_id"],
+                "kcc_operation": metadata["kcc_operation"],
                 **_content_telemetry(body.get("messages", []), full_content),
                 "finish_reason": finish_reason,
                 "total_tokens": total_tokens,
@@ -309,6 +315,7 @@ async def proxy_chat_completions(request: Request) -> Response:
             "authorization", "content-length", "host",
             "x-pipeline-name", "x-prompt-version", "x-user-segment",
             "x-spectraflow-pipeline",
+            "x-kcc-capsule-id", "x-kcc-capability-id", "x-kcc-operation",
         }:
             upstream_headers[key] = value
 
@@ -415,6 +422,9 @@ async def proxy_chat_completions(request: Request) -> Response:
                         "prompt_version": metadata["prompt_version"],
                         "user_segment": metadata["user_segment"],
                         "model_id": metadata["model_id"],
+                        "kcc_capsule_id": metadata["kcc_capsule_id"],
+                        "kcc_capability_id": metadata["kcc_capability_id"],
+                        "kcc_operation": metadata["kcc_operation"],
                         **_content_telemetry(body.get("messages", []), content),
                         "finish_reason": finish_reason,
                         "total_tokens": usage.get("total_tokens", 0),
