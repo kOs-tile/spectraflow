@@ -24,9 +24,10 @@ settings = get_settings()
 # ── Logging setup ─────────────────────────────────────────────────────────────
 logger.remove()
 if settings.log_format == "json":
+    # Let Loguru own JSON serialization. Hand-rolled JSON in `format=`
+    # is parsed as a Loguru format string and literal braces become fields.
     logger.add(
         sys.stdout,
-        format='{"time":"{time:YYYY-MM-DDTHH:mm:ss.SSSZZ}","level":"{level}","message":"{message}",{extra}}',
         level=settings.log_level,
         serialize=True,
     )
@@ -41,7 +42,7 @@ else:
 # ── FastAPI app ───────────────────────────────────────────────────────────────
 app = FastAPI(
     title="SPECTRAFLOW",
-    description="LLM Production Observability & Semantic Drift Detection Platform",
+    description="LLM observability and semantic-drift research platform",
     version=settings.app_version,
     docs_url="/docs",
     redoc_url="/redoc",
