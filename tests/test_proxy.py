@@ -145,6 +145,22 @@ class TestProxyMetadataExtraction:
         assert meta["user_segment"] == "enterprise"
         assert meta["model_id"] == "gpt-4o-mini"
 
+    def test_kcc_authority_headers_are_captured_as_internal_metadata(self) -> None:
+        request = MagicMock()
+        request.headers = {
+            "x-kcc-capsule-id": "capsule-123",
+            "x-kcc-capability-id": "mcp:github:create_issue",
+            "x-kcc-operation": "create",
+        }
+
+        from spectraflow.proxy.handler import _extract_metadata
+
+        metadata = _extract_metadata(request, {"model": "gpt-4o-mini"})
+
+        assert metadata["kcc_capsule_id"] == "capsule-123"
+        assert metadata["kcc_capability_id"] == "mcp:github:create_issue"
+        assert metadata["kcc_operation"] == "create"
+
     def test_spectraflow_pipeline_header_alias(self) -> None:
         from spectraflow.proxy.handler import _extract_metadata
 
@@ -499,3 +515,6 @@ class TestProxyTelemetryContent:
             assert field in event, f"Missing required telemetry field: {field}"
 
         assert event["pipeline_name"] == "test-pipeline"
+        assert "kcc_capsule_id" in event
+        assert "kcc_capability_id" in event
+        assert "kcc_operation" in event
