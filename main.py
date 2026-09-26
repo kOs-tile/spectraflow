@@ -16,6 +16,7 @@ from loguru import logger
 from spectraflow.config import get_settings
 from spectraflow.proxy.router import router as proxy_router
 from spectraflow.api.incidents import router as incidents_router
+from spectraflow.api.authority import router as authority_router
 from spectraflow.api.tests import router as tests_router
 from spectraflow.monitoring.metrics import metrics_router
 
@@ -61,6 +62,7 @@ app.add_middleware(
 # ── Routers ───────────────────────────────────────────────────────────────────
 app.include_router(proxy_router, tags=["Proxy"])
 app.include_router(incidents_router, prefix="/api/v1", tags=["Incidents"])
+app.include_router(authority_router, prefix="/api/v1", tags=["Authority Drift"])
 app.include_router(tests_router, prefix="/api/v1", tags=["Regression Tests"])
 app.include_router(metrics_router, tags=["Monitoring"])
 
