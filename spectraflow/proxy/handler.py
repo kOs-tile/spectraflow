@@ -88,8 +88,13 @@ def _resolve_upstream(request_model: str | None) -> tuple[str, str]:
     """
     if request_model:
         if request_model.startswith("claude-"):
-            # Anthropic compatibility layer (via OpenAI-compatible wrapper)
-            return settings.deepseek_base_url, settings.anthropic_api_key
+            # Claude requires an explicitly configured OpenAI-compatible gateway.
+            # Do not silently send an Anthropic credential to an unrelated provider.
+            if not settings.anthropic_compatible_base_url:
+                raise ValueError(
+                    "Claude routing is disabled until ANTHROPIC_COMPATIBLE_BASE_URL is configured"
+                )
+            return settings.anthropic_compatible_base_url, settings.anthropic_api_key
         if request_model.startswith("deepseek"):
             return settings.deepseek_base_url, settings.deepseek_api_key
 
@@ -240,8 +245,20 @@ async def proxy_chat_completions(request: Request) -> Response:
             media_type="application/json",
         )
 
-    # 2. Resolve upstream
-    upstream_base_url, api_key = _resolve_upstream(body.get("model"))
+    # 2. Resolve upstream. Unsupported/unconfigured provider routes fail closed.
+    try:
+        upstream_base_url, api_key = _resolve_upstream(body.get("model"))
+    except ValueError as exc:
+        return Response(
+            content=json.dumps({
+                "error": {
+                    "message": str(exc),
+                    "type": "provider_configuration_error",
+                }
+            }),
+            status_code=400,
+            media_type="application/json",
+        )
     metadata = _extract_metadata(request, body)
 
     # Prometheus counter
