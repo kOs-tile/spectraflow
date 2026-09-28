@@ -7,7 +7,9 @@ wedge asks a narrower production question:
 > that the caller claimed was active?
 
 This layer is observational. It does not replace KCC enforcement and it never
-grants authority.
+grants authority. Current observations are evaluated through KCC's public
+`authorize_call()` primitive from the immutable v0.1.1 release; SPECTRAFLOW does
+not reimplement the KCC authorization rules and never supplies a dispatcher.
 
 ## Failure taxonomy
 
@@ -19,7 +21,7 @@ grants authority.
 | `AUTH-CAPABILITY-NOT-GRANTED` | Observed capability is absent from grants | critical |
 | `AUTH-OPERATION-NOT-GRANTED` | Observed operation exceeds the grant | critical |
 | `AUTH-PARAM-*` | Observed parameter violates a bound encoded in the capsule | high |
-| `AUTH-CAPSULE-VERSION` | Capsule contract is not the supported v0 schema | high |
+| `AUTH-CAPSULE-VERSION` | Capsule contract is not the supported `kcc.capsule.v1` schema | high |
 
 ## Primary metrics
 
@@ -38,8 +40,9 @@ agent systems.
 
 The authority-drift slice is ready for KAVI integration when:
 
-1. every KCC v0 violation class represented in the benchmark is detected;
+1. every current KCC v1 violation class represented in the benchmark is detected;
 2. within-authority calls remain clean;
 3. tampered capsules fail closed;
 4. the evaluator remains observational and cannot grant or dispatch authority;
-5. integration tests bind real KCC-produced capsules to SPECTRAFLOW observations.
+5. integration tests bind real KCC-produced `kcc.capsule.v1` artifacts to SPECTRAFLOW observations;
+6. SPECTRAFLOW delegates authority decisions to KCC's public primitive and performs zero host dispatches.

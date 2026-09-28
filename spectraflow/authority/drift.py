@@ -1,19 +1,18 @@
 """Observe runtime calls against a claimed KCC capsule.
 
 This module is deliberately observational. It does not grant authority and is not
-an enforcement replacement for KCC's authorize_call(). Its purpose is to make
-runtime authority drift visible even when another enforcement layer is bypassed,
-misconfigured, or absent.
+an enforcement replacement for KCC's Guard. KCC remains the authority engine;
+SPECTRAFLOW translates KCC decisions into drift telemetry without dispatching.
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
-import re
 import time
 from typing import Any, Literal
 
+from kavi_capability_compiler import CAPSULE_VERSION, authorize_call
 from pydantic import BaseModel, Field
 
 
@@ -53,167 +52,186 @@ class AuthorityDriftResult(BaseModel):
     violations: list[AuthorityDriftViolation] = Field(default_factory=list)
 
 
-def _parameter_violations(
-    constraints: dict[str, Any],
-    parameters: dict[str, Any],
-) -> list[AuthorityDriftViolation]:
-    violations: list[AuthorityDriftViolation] = []
+def _field_from_reason(reason: str) -> str | None:
+    if ":" not in reason:
+        return None
+    return reason.split(":", 1)[1] or None
 
-    for key, rule in (constraints.get("parameters") or {}).items():
-        if isinstance(rule, dict) and rule.get("required") is True and key not in parameters:
-            violations.append(
-                AuthorityDriftViolation(
-                    code="AUTH-PARAM-REQUIRED",
-                    severity="high",
-                    field=key,
-                    message=f"Required parameter {key!r} was absent from the observed call.",
-                )
-            )
-            continue
 
-        if key not in parameters:
-            continue
-        value = parameters[key]
+def _violation_from_kcc_reason(reason: str) -> AuthorityDriftViolation:
+    field = _field_from_reason(reason)
 
-        if not isinstance(rule, dict):
-            if value != rule:
-                violations.append(
-                    AuthorityDriftViolation(
-                        code="AUTH-PARAM-MISMATCH",
-                        severity="high",
-                        field=key,
-                        message=f"Observed value for {key!r} differs from the capsule constraint.",
-                    )
-                )
-            continue
+    fixed = {
+        "invalid_capsule_integrity": (
+            "AUTH-CAPSULE-INTEGRITY",
+            "critical",
+            "Claimed KCC capsule failed KCC integrity verification.",
+            None,
+        ),
+        "unsupported_capsule_version": (
+            "AUTH-CAPSULE-VERSION",
+            "high",
+            f"Observed authority artifact is not the supported {CAPSULE_VERSION} capsule.",
+            None,
+        ),
+        "fail_closed_required": (
+            "AUTH-CAPSULE-FAIL-CLOSED",
+            "critical",
+            "Observed capsule does not require fail-closed authorization.",
+            None,
+        ),
+        "expired": (
+            "AUTH-CAPSULE-EXPIRED",
+            "critical",
+            "Runtime call was observed after the capsule expiry boundary.",
+            None,
+        ),
+        "approval_required": (
+            "AUTH-APPROVAL-REQUIRED",
+            "high",
+            "Observed call requires external approval and is not an automatic grant.",
+            None,
+        ),
+        "capability_denied": (
+            "AUTH-CAPABILITY-DENIED",
+            "critical",
+            "Observed capability is explicitly denied by the capsule.",
+            "capability_id",
+        ),
+        "capability_not_granted": (
+            "AUTH-CAPABILITY-NOT-GRANTED",
+            "critical",
+            "Observed capability is absent from the capsule grants.",
+            "capability_id",
+        ),
+        "operation_not_granted": (
+            "AUTH-OPERATION-NOT-GRANTED",
+            "critical",
+            "Observed operation is outside the capsule operation constraint.",
+            "operation",
+        ),
+    }
+    if reason in fixed:
+        code, severity, message, fixed_field = fixed[reason]
+        return AuthorityDriftViolation(
+            code=code,
+            severity=severity,
+            message=message,
+            field=fixed_field,
+        )
 
-        if "type" in rule:
-            kinds: dict[str, Any] = {
-                "string": str,
-                "integer": int,
-                "number": (int, float),
-                "boolean": bool,
-                "array": list,
-                "object": dict,
-            }
-            expected = kinds.get(rule["type"])
-            if expected is None:
-                violations.append(
-                    AuthorityDriftViolation(
-                        code="AUTH-CONSTRAINT-UNSUPPORTED",
-                        severity="medium",
-                        field=key,
-                        message=f"Unsupported parameter type constraint for {key!r}.",
-                    )
-                )
-                continue
-            type_matches = isinstance(value, expected)
-            if rule["type"] in {"integer", "number"} and isinstance(value, bool):
-                type_matches = False
-            if not type_matches:
-                violations.append(
-                    AuthorityDriftViolation(
-                        code="AUTH-PARAM-TYPE",
-                        severity="high",
-                        field=key,
-                        message=f"Observed parameter {key!r} violates its type constraint.",
-                    )
-                )
-                continue
+    parameter_prefixes = {
+        "required_parameter_missing": (
+            "AUTH-PARAM-REQUIRED",
+            "Observed call omitted a required parameter.",
+        ),
+        "parameter_not_granted": (
+            "AUTH-PARAM-NOT-GRANTED",
+            "Observed call supplied a parameter outside the capsule constraint.",
+        ),
+        "parameter_type_mismatch": (
+            "AUTH-PARAM-TYPE",
+            "Observed parameter violates its KCC type constraint.",
+        ),
+        "parameter_above_max": (
+            "AUTH-PARAM-ABOVE-MAX",
+            "Observed parameter exceeds the capsule maximum.",
+        ),
+        "parameter_below_min": (
+            "AUTH-PARAM-BELOW-MIN",
+            "Observed parameter is below the capsule minimum.",
+        ),
+        "parameter_not_allowed": (
+            "AUTH-PARAM-ENUM",
+            "Observed parameter is outside the allowed values.",
+        ),
+        "parameter_too_long": (
+            "AUTH-PARAM-TOO-LONG",
+            "Observed parameter exceeds the allowed length.",
+        ),
+        "parameter_pattern_mismatch": (
+            "AUTH-PARAM-PATTERN",
+            "Observed parameter violates the allowed pattern.",
+        ),
+        "parameter_mismatch": (
+            "AUTH-PARAM-MISMATCH",
+            "Observed parameter differs from the exact capsule constraint.",
+        ),
+        "unsupported_parameter_type_rule": (
+            "AUTH-CONSTRAINT-UNSUPPORTED",
+            "KCC rejected an unsupported parameter type rule.",
+        ),
+    }
+    prefix = reason.split(":", 1)[0]
+    if prefix in parameter_prefixes:
+        code, message = parameter_prefixes[prefix]
+        return AuthorityDriftViolation(
+            code=code,
+            severity="high",
+            message=message,
+            field=field,
+        )
 
-        try:
-            if "max" in rule and value > rule["max"]:
-                violations.append(
-                    AuthorityDriftViolation(
-                        code="AUTH-PARAM-ABOVE-MAX",
-                        severity="high",
-                        field=key,
-                        message=f"Observed parameter {key!r} exceeds the capsule maximum.",
-                    )
-                )
-            if "min" in rule and value < rule["min"]:
-                violations.append(
-                    AuthorityDriftViolation(
-                        code="AUTH-PARAM-BELOW-MIN",
-                        severity="high",
-                        field=key,
-                        message=f"Observed parameter {key!r} is below the capsule minimum.",
-                    )
-                )
-        except TypeError:
-            violations.append(
-                AuthorityDriftViolation(
-                    code="AUTH-PARAM-COMPARISON",
-                    severity="high",
-                    field=key,
-                    message=f"Observed parameter {key!r} cannot satisfy the numeric constraint.",
-                )
-            )
+    if reason in {
+        "invalid_parameters",
+        "invalid_parameter_constraints",
+        "invalid_capsule_shape",
+        "invalid_capsule",
+        "invalid_inventory_binding",
+        "unsupported_inventory_version",
+        "invalid_inventory_integrity",
+        "inventory_drift",
+    }:
+        return AuthorityDriftViolation(
+            code="AUTH-KCC-INVALID",
+            severity="critical",
+            message=f"KCC rejected the observed authority artifact or call: {reason}.",
+            field=field,
+        )
 
-        if "enum" in rule and value not in rule["enum"]:
-            violations.append(
-                AuthorityDriftViolation(
-                    code="AUTH-PARAM-ENUM",
-                    severity="high",
-                    field=key,
-                    message=f"Observed parameter {key!r} is outside the allowed values.",
-                )
-            )
+    return AuthorityDriftViolation(
+        code="AUTH-KCC-DENIED",
+        severity="high",
+        message=f"KCC denied the observed call: {reason}.",
+        field=field,
+    )
 
-        if "max_length" in rule:
-            try:
-                too_long = len(value) > rule["max_length"]
-            except TypeError:
-                too_long = True
-            if too_long:
-                violations.append(
-                    AuthorityDriftViolation(
-                        code="AUTH-PARAM-TOO-LONG",
-                        severity="high",
-                        field=key,
-                        message=f"Observed parameter {key!r} exceeds the allowed length.",
-                    )
-                )
 
-        if "pattern" in rule and not re.fullmatch(rule["pattern"], str(value)):
-            violations.append(
-                AuthorityDriftViolation(
-                    code="AUTH-PARAM-PATTERN",
-                    severity="high",
-                    field=key,
-                    message=f"Observed parameter {key!r} violates the allowed pattern.",
-                )
-            )
-
-    return violations
+def _integrity_valid(decision: dict[str, Any]) -> bool:
+    verification = decision.get("verification")
+    if isinstance(verification, dict):
+        for check in verification.get("checks", []):
+            if isinstance(check, dict) and check.get("name") == "integrity":
+                return check.get("ok") is True
+    return decision.get("reason") not in {
+        "invalid_capsule_integrity",
+        "invalid_capsule_shape",
+        "invalid_capsule",
+    }
 
 
 def evaluate_authority_drift(request: AuthorityDriftRequest) -> AuthorityDriftResult:
-    """Compare one observed runtime call with the authority claimed by a KCC capsule."""
+    """Observe one call against KCC authority without dispatching anything."""
     capsule = request.capsule
+    observed_at = int(request.observed_at or time.time())
+
+    decision = authorize_call(
+        capsule,
+        request.capability_id,
+        operation=request.operation,
+        parameters=request.parameters,
+        now=observed_at,
+    )
+
     violations: list[AuthorityDriftViolation] = []
-
-    body = dict(capsule)
-    claimed_capsule_id = body.pop("capsule_id", None)
-    integrity_valid = bool(claimed_capsule_id) and claimed_capsule_id == _digest(body)
-
-    if not integrity_valid:
+    if not decision.get("allowed", False):
         violations.append(
-            AuthorityDriftViolation(
-                code="AUTH-CAPSULE-INTEGRITY",
-                severity="critical",
-                message="Claimed KCC capsule failed canonical integrity verification.",
-            )
+            _violation_from_kcc_reason(str(decision.get("reason", "kcc_denied")))
         )
 
-    if capsule.get("version") != "kcc.capsule.v0":
-        violations.append(
-            AuthorityDriftViolation(
-                code="AUTH-CAPSULE-VERSION",
-                severity="high",
-                message="Observed authority artifact is not a supported kcc.capsule.v0 capsule.",
-            )
-        )
+    claimed_capsule_id = capsule.get("capsule_id")
+    if not isinstance(claimed_capsule_id, str):
+        claimed_capsule_id = None
 
     if (
         request.observed_capsule_id
@@ -228,47 +246,6 @@ def evaluate_authority_drift(request: AuthorityDriftRequest) -> AuthorityDriftRe
             )
         )
 
-    observed_at = int(request.observed_at or time.time())
-    expires_at = int(capsule.get("expires_at", 0) or 0)
-    if observed_at >= expires_at:
-        violations.append(
-            AuthorityDriftViolation(
-                code="AUTH-CAPSULE-EXPIRED",
-                severity="critical",
-                message="Runtime call was observed after the capsule expiry boundary.",
-            )
-        )
-
-    grants = {
-        entry.get("id"): entry
-        for entry in capsule.get("grants", [])
-        if isinstance(entry, dict) and entry.get("id")
-    }
-    entry = grants.get(request.capability_id)
-
-    if entry is None:
-        violations.append(
-            AuthorityDriftViolation(
-                code="AUTH-CAPABILITY-NOT-GRANTED",
-                severity="critical",
-                field="capability_id",
-                message="Observed capability is absent from the capsule grants.",
-            )
-        )
-    else:
-        constraints = entry.get("constraints") or {}
-        operations = constraints.get("operations")
-        if operations and request.operation not in operations:
-            violations.append(
-                AuthorityDriftViolation(
-                    code="AUTH-OPERATION-NOT-GRANTED",
-                    severity="critical",
-                    field="operation",
-                    message="Observed operation is outside the capsule operation constraint.",
-                )
-            )
-        violations.extend(_parameter_violations(constraints, request.parameters))
-
     observation = {
         "capsule_id": claimed_capsule_id,
         "observed_capsule_id": request.observed_capsule_id,
@@ -281,7 +258,7 @@ def evaluate_authority_drift(request: AuthorityDriftRequest) -> AuthorityDriftRe
     result = AuthorityDriftResult(
         drift_detected=bool(violations),
         within_claimed_authority=not violations,
-        capsule_integrity_valid=integrity_valid,
+        capsule_integrity_valid=_integrity_valid(decision),
         capsule_id=claimed_capsule_id,
         capability_id=request.capability_id,
         operation=request.operation,
