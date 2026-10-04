@@ -165,9 +165,10 @@ def _top_level_map(source: str) -> tuple[ast.Module, dict[str, ast.FunctionDef]]
 
 
 def _node_key(node: ast.AST) -> str:
-    if isinstance(node, ast.FunctionDef):
-        return f"function:{node.name}"
-    return f"node:{type(node).__name__}:{ast.dump(node, include_attributes=False)}"
+    return (
+        f"node:{type(node).__name__}:"
+        f"{ast.dump(node, include_attributes=False)}"
+    )
 
 
 def validate_candidate_integrity(
