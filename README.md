@@ -171,6 +171,7 @@ Request and response SHA-256 fingerprints are emitted in every mode so repeated 
 | **CUSUM Drift Detection** | Tabular CUSUM control charts with configurable h/k thresholds. Detects sustained shifts, not noise spikes |
 | **Authority Drift Observation** | Compares runtime calls with KCC capsule grants, operation bounds, expiry, integrity, and supported parameter constraints |
 | **Bounded Recovery Evaluation** | Deterministic synthetic timeout, provider-failure, malformed-result, retry-exhaustion, and non-retryable-failure scenarios with per-attempt traces |
+| **Execution-Trace Assessment** | Measures dispatcher calls, committed side effects, verification, duplicate execution, safe completion, and intervention requirement |
 | **Root Cause Analysis** | Multi-step LLM agent compares drifted samples, analyzes prompt history, identifies likely cause |
 | **Regression Test Synthesis** | Learns golden test cases from production traffic. Auto-runs on shadow model |
 | **Prompt Registry** | Versioned prompt templates with SHA-256 hashes. Every inference attributed to a prompt version |
@@ -233,8 +234,7 @@ capsule?"
 Authority validation details are in
 [`docs/AUTHORITY_DRIFT_VALIDATION.md`](docs/AUTHORITY_DRIFT_VALIDATION.md).
 
-The separate bounded-recovery harness and synthetic fault benchmark are documented in
-[`docs/RELIABILITY_VALIDATION.md`](docs/RELIABILITY_VALIDATION.md). This benchmark is a deterministic regression layer, not evidence of production-world recovery rates.
+The reliability evidence in [`docs/RELIABILITY_VALIDATION.md`](docs/RELIABILITY_VALIDATION.md) now includes both deterministic fault injection and an executable six-case side-effect trace corpus. The trace corpus demonstrates that a blind retry after a post-commit timeout can report recovery while duplicating the side effect, while a stable idempotency key prevents the duplicate in the same scenario. These remain reproducible local traces, not production-world reliability rates.
 
 ---
 
