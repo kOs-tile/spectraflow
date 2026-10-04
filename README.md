@@ -146,7 +146,7 @@ X-KCC-Operation: <bounded operation>
 
 SPECTRAFLOW records these values with telemetry so drift/incidents can be traced back to the authority context that was active. These headers are stripped before forwarding the request upstream.
 
-For explicit verification, `POST /api/v1/authority/evaluate` compares a supplied `kcc.capsule.v0` with an observed capability call. It reports capsule tampering, expiry, ungranted capabilities, operation escape, and supported parameter-boundary violations, then seals the result with an `evaluation_fingerprint`.
+For explicit verification, `POST /api/v1/authority/evaluate` compares a supplied `kcc.capsule.v1` with an observed capability call. It reports capsule tampering, expiry, ungranted capabilities, operation escape, and supported parameter-boundary violations, then seals the result with an `evaluation_fingerprint`.
 
 This evaluator is **observational only**. It does not grant, expand, or dispatch authority; KCC remains the authority/enforcement plane.
 
@@ -170,6 +170,7 @@ Request and response SHA-256 fingerprints are emitted in every mode so repeated 
 | **Behavioral Baselines** | Rolling 7-day per-pipeline centroid, semantic variance, schema compliance rate |
 | **CUSUM Drift Detection** | Tabular CUSUM control charts with configurable h/k thresholds. Detects sustained shifts, not noise spikes |
 | **Authority Drift Observation** | Compares runtime calls with KCC capsule grants, operation bounds, expiry, integrity, and supported parameter constraints |
+| **Bounded Recovery Evaluation** | Deterministic synthetic timeout, provider-failure, malformed-result, retry-exhaustion, and non-retryable-failure scenarios with per-attempt traces |
 | **Root Cause Analysis** | Multi-step LLM agent compares drifted samples, analyzes prompt history, identifies likely cause |
 | **Regression Test Synthesis** | Learns golden test cases from production traffic. Auto-runs on shadow model |
 | **Prompt Registry** | Versioned prompt templates with SHA-256 hashes. Every inference attributed to a prompt version |
@@ -229,8 +230,11 @@ authority context that was supposed to govern it**. Semantic drift answers
 capability, operation, expiry, or parameter bounds represented by the KCC
 capsule?"
 
-Validation details and the adversarial contract benchmark are in
+Authority validation details are in
 [`docs/AUTHORITY_DRIFT_VALIDATION.md`](docs/AUTHORITY_DRIFT_VALIDATION.md).
+
+The separate bounded-recovery harness and synthetic fault benchmark are documented in
+[`docs/RELIABILITY_VALIDATION.md`](docs/RELIABILITY_VALIDATION.md). This benchmark is a deterministic regression layer, not evidence of production-world recovery rates.
 
 ---
 
@@ -296,6 +300,8 @@ spectraflow/
 │   │   └── fingerprinting.py  # Embedding + Qdrant + TimescaleDB
 │   ├── authority/
 │   │   └── drift.py           # Observational KCC authority-drift evaluator
+│   ├── reliability/
+│   │   └── recovery.py        # Framework-neutral bounded recovery evaluation harness
 │   ├── detection/
 │   │   ├── baseline.py        # Rolling centroid, variance, schema compliance
 │   │   ├── cusum.py           # CUSUM control chart algorithm
@@ -311,10 +317,15 @@ spectraflow/
 │   │   └── tests.py           # Regression test routes
 │   └── monitoring/
 │       └── metrics.py         # Prometheus metrics
+├── benchmark/
+│   ├── authority_drift.py     # KCC authority-drift adversarial benchmark
+│   └── recovery_faults.py     # Deterministic bounded-recovery fault benchmark
 ├── scripts/
 │   └── demo_pipeline.py       # End-to-end demo with injected drift
 ├── tests/
 │   ├── test_authority_drift.py
+│   ├── test_recovery.py
+│   ├── test_recovery_benchmark.py
 │   ├── test_cusum.py
 │   ├── test_proxy.py
 │   └── test_fingerprinting.py
@@ -330,9 +341,9 @@ spectraflow/
 
 ## Author
 
-Built by **Onur Kavi** — AI/ML Engineer
+Built by **Onur Kavi** — AI Systems Engineer
 
-[GitHub](https://github.com/kOs-tile) · [LinkedIn](https://linkedin.com/in/onurkavi)
+[GitHub](https://github.com/kOs-tile) · [LinkedIn](https://linkedin.com/in/onurcankavi)
 
 ---
 
