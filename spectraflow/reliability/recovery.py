@@ -46,7 +46,7 @@ def run_recovery_trial(
     *,
     max_attempts: int = 3,
     validator: Callable[[Any], bool] | None = None,
-    retryable_exceptions: tuple[type[BaseException], ...] = (
+    retryable_exceptions: tuple[type[Exception], ...] = (
         TimeoutError,
         ConnectionError,
         ResultValidationError,
@@ -92,7 +92,7 @@ def run_recovery_trial(
                 result=value,
                 records=tuple(records),
             )
-        except BaseException as exc:
+        except Exception as exc:
             duration_ms = (time.perf_counter() - started) * 1000
             records.append(
                 AttemptRecord(
