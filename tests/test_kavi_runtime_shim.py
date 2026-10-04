@@ -190,6 +190,8 @@ def test_finalize_verified_idempotent_run_produces_bridge_ready_evidence(tmp_pat
     assert patch["receipt_fingerprint"]
     assert patch["benchmark_result_status"] == "recovered"
     assert patch["benchmark_failure_class"] is None
+    assert patch["benchmark_recovered"] is True
+    assert patch["benchmark_authority_escape"] is False
     assert patch["input_tokens"] == 120
     assert patch["cost_usd"] == 0.002
     assert str(tmp_path) not in json.dumps(patch)
@@ -217,6 +219,8 @@ def test_finalize_authority_aware_revocation_denies_before_dispatch(tmp_path):
     assert patch["dispatch_authority_decision"] == "deny_revoked"
     assert patch["benchmark_result_status"] == "denied"
     assert patch["benchmark_failure_class"] == "current_authority_revoked"
+    assert patch["benchmark_recovered"] is False
+    assert patch["benchmark_authority_escape"] is False
 
 
 def test_finalize_missing_authority_fixture_fails_closed(tmp_path):

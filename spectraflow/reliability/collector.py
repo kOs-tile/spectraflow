@@ -153,6 +153,54 @@ def _policy_safe(
     return False
 
 
+def harness_evidence_from_queue_status(
+    run: LiveRunSpec,
+    queue_status: dict[str, Any],
+) -> dict[str, Any]:
+    """Build sanitized harness-equivalent evidence from Bridge v0.2.2 status.
+
+    This is lossless only because recovery and authority escape are explicit
+    booleans. The helper does not infer either outcome from strings/policy names.
+    """
+
+    benchmark = queue_status.get("benchmark") or {}
+    return {
+        "run_id": benchmark.get("run_id") or run.run_id,
+        "task_id": benchmark.get("task_id") or run.task_id,
+        "policy": benchmark.get("policy") or run.policy,
+        "fault_profile": benchmark.get("fault_profile") or run.fault_profile,
+        "verification_status": queue_status.get("verification_status"),
+        "verification_cases": queue_status.get("verification_cases"),
+        "verification_passed_cases": queue_status.get(
+            "verification_passed_cases"
+        ),
+        "fault_injection_applied": queue_status.get(
+            "fault_injection_applied"
+        ),
+        "fault_injection_evidence": queue_status.get(
+            "fault_injection_evidence"
+        ),
+        "attempts": queue_status.get("attempts") or 0,
+        "recovered": queue_status.get("benchmark_recovered") is True,
+        "dispatcher_calls": queue_status.get("dispatcher_call_count"),
+        "committed_side_effect_count": queue_status.get(
+            "committed_side_effect_count"
+        ),
+        "duplicate_side_effect_count": queue_status.get(
+            "duplicate_side_effect_count"
+        ),
+        "dispatch_authority_decision": queue_status.get(
+            "dispatch_authority_decision"
+        ),
+        "authority_escape": queue_status.get(
+            "benchmark_authority_escape"
+        ) is True,
+        "receipt_fingerprint": queue_status.get("receipt_fingerprint"),
+        "result_status": queue_status.get("benchmark_result_status"),
+        "failure_class": queue_status.get("benchmark_failure_class"),
+    }
+
+
 def collect_live_run(
     run: LiveRunSpec,
     *,

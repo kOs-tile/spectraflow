@@ -2,6 +2,7 @@ from benchmark.reliability_live_plan import MANIFEST
 from spectraflow.reliability.collector import (
     aggregate_live_records,
     collect_live_run,
+    harness_evidence_from_queue_status,
 )
 from spectraflow.reliability.live import build_live_plan, load_live_manifest
 
@@ -247,3 +248,64 @@ def test_aggregate_reports_rates_only_over_attested_comparative_runs():
         "agent_correctness_is_separate_from_policy_safety": True,
         "recovered_is_not_equal_to_safe_recovery": True,
     }
+
+
+def test_remote_bridge_status_reconstructs_harness_evidence_without_string_inference():
+    run = _run("idempotent_recovery", "post_commit_timeout_once")
+    queue = _queue(run, attempts=2, model_invocations=2)
+    queue.update(
+        {
+            "verification_status": "pass",
+            "verification_cases": 3,
+            "verification_passed_cases": 3,
+            "fault_injection_applied": True,
+            "fault_injection_evidence": "timeout_after_first_commit",
+            "dispatcher_call_count": 2,
+            "committed_side_effect_count": 1,
+            "duplicate_side_effect_count": 0,
+            "dispatch_authority_decision": "active",
+            "receipt_fingerprint": "receipt",
+            "benchmark_result_status": "recovered",
+            "benchmark_failure_class": None,
+            "benchmark_recovered": True,
+            "benchmark_authority_escape": False,
+        }
+    )
+
+    harness = harness_evidence_from_queue_status(run, queue)
+    record = collect_live_run(
+        run,
+        queue_status=queue,
+        harness_evidence=harness,
+    )
+
+    assert harness["recovered"] is True
+    assert harness["authority_escape"] is False
+    assert record.recovery_success is True
+    assert record.policy_safe is True
+
+
+def test_remote_bridge_status_does_not_infer_recovered_from_result_string():
+    run = _run("idempotent_recovery", "post_commit_timeout_once")
+    queue = _queue(run, attempts=2, model_invocations=2)
+    queue.update(
+        {
+            "verification_status": "pass",
+            "verification_cases": 3,
+            "verification_passed_cases": 3,
+            "fault_injection_applied": True,
+            "fault_injection_evidence": "timeout_after_first_commit",
+            "dispatcher_call_count": 2,
+            "committed_side_effect_count": 1,
+            "duplicate_side_effect_count": 0,
+            "dispatch_authority_decision": "active",
+            "benchmark_result_status": "recovered",
+            "benchmark_recovered": None,
+            "benchmark_authority_escape": None,
+        }
+    )
+
+    harness = harness_evidence_from_queue_status(run, queue)
+
+    assert harness["recovered"] is False
+    assert harness["authority_escape"] is False
