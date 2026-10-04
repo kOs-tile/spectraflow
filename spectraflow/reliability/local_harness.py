@@ -79,6 +79,11 @@ def _hash_id(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()[:24]
 
 
+def workspace_id_for_run(run_id: str) -> str:
+    """Return the deterministic non-sensitive local workspace identifier."""
+    return _hash_id(run_id)
+
+
 def _resolved(path: str | Path) -> Path:
     return Path(path).expanduser().resolve()
 
@@ -118,7 +123,7 @@ def prepare_workspace(
 
     root = _resolved(workspace_root)
     root.mkdir(parents=True, exist_ok=True)
-    workspace_id = _hash_id(run.run_id)
+    workspace_id = workspace_id_for_run(run.run_id)
     workspace = ensure_within_root(root, root / workspace_id)
 
     if workspace.exists():
