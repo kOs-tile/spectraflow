@@ -160,6 +160,7 @@ def dispatch_command(
     *,
     evidence_root: str | Path,
     runtime_status_path: str | Path | None = None,
+    runtime_status: dict[str, Any] | None = None,
     authority_fixture_available: bool = True,
 ) -> dict[str, Any]:
     run = _find_run(run_id)
@@ -179,9 +180,12 @@ def dispatch_command(
         authority_fixture_available=authority_fixture_available,
     )
 
-    runtime_status = None
+    if runtime_status_path is not None and runtime_status is not None:
+        raise ValueError("provide_runtime_status_or_path_not_both")
+
+    observed_runtime_status = runtime_status
     if runtime_status_path is not None:
-        runtime_status = json.loads(
+        observed_runtime_status = json.loads(
             Path(runtime_status_path).read_text(encoding="utf-8")
         )
 
@@ -189,7 +193,7 @@ def dispatch_command(
     payload = export_evidence(
         dispatch,
         output_path=output,
-        runtime_telemetry=runtime_status,
+        runtime_telemetry=observed_runtime_status,
     )
 
     return {

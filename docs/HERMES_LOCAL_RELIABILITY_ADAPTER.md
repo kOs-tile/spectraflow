@@ -353,3 +353,66 @@ that takes the `prepare` JSON, launches the existing agent executable in the
 returned cwd, and calls `verify` + `dispatch` after exit. No second queue,
 watcher, verifier, fault injector, or result ledger should be implemented in
 KAVI/Hermes.
+
+
+## 12. Two-hook runtime shim
+
+For an existing KAVI watcher/runner, Reliability Lab integration is reduced to
+two source-agnostic hooks:
+
+```python
+from spectraflow.reliability.kavi_runtime_shim import (
+    prepare_before_agent,
+    finalize_after_agent,
+)
+
+prepared = prepare_before_agent(
+    task,
+    workspace_root=LOCAL_RELIABILITY_WORKSPACE_ROOT,
+)
+
+if prepared["handled"]:
+    # Keep these values local; do not mirror absolute paths into shared state.
+    process = launch_existing_agent(
+        cwd=prepared["cwd"],
+        instruction=prepared["agent_instruction"],
+    )
+
+    observed = {
+        "provider_model": process.provider_model,
+        "input_tokens": process.input_tokens,
+        "output_tokens": process.output_tokens,
+        "cost_usd": process.cost_usd,
+        "human_intervention_count": process.human_intervention_count,
+    }
+
+    result = finalize_after_agent(
+        task,
+        workspace_root=LOCAL_RELIABILITY_WORKSPACE_ROOT,
+        evidence_root=LOCAL_RELIABILITY_EVIDENCE_ROOT,
+        runtime_telemetry=observed,
+    )
+
+    # Persist only this bounded shared-state patch.
+    task.update(result["queue_patch"])
+else:
+    # Existing non-benchmark task behavior remains unchanged.
+    run_normal_kavi_execution(task)
+```
+
+The exact local process-launch API is intentionally not invented here. The
+existing runner keeps ownership of process creation, model/provider invocation,
+timeouts, usage accounting, and authoritative queue write-back.
+
+The shim owns only benchmark-specific behavior:
+
+- exact benchmark identity validation;
+- isolated local workspace preparation;
+- canonical verification;
+- benchmark-local result dispatch;
+- deterministic fault injection;
+- sanitized evidence export;
+- bounded queue telemetry patch generation.
+
+Unknown task/fault/policy identity, retry drift, idempotency drift, wrong actor,
+wrong risk class, or unavailable authority state fail closed.
