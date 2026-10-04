@@ -133,6 +133,8 @@ def _queue_patch_from_evidence(
         "receipt_fingerprint": dispatch["receipt_fingerprint"],
         "benchmark_result_status": dispatch["result_status"],
         "benchmark_failure_class": dispatch["failure_class"],
+        "benchmark_recovered": dispatch["recovered"],
+        "benchmark_authority_escape": dispatch["authority_escape"],
     }
 
     for field in (
