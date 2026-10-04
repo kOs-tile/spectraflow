@@ -172,6 +172,7 @@ Request and response SHA-256 fingerprints are emitted in every mode so repeated 
 | **Authority Drift Observation** | Compares runtime calls with KCC capsule grants, operation bounds, expiry, integrity, and supported parameter constraints |
 | **Bounded Recovery Evaluation** | Deterministic synthetic timeout, provider-failure, malformed-result, retry-exhaustion, and non-retryable-failure scenarios with per-attempt traces |
 | **Execution-Trace Assessment** | Measures dispatcher calls, committed side effects, verification, duplicate execution, safe completion, and intervention requirement |
+| **Runtime-Derived Trace Evidence** | Classifies sanitized real KAVI task metadata without upgrading `completed` to verified PASS unless explicit acceptance/final-status evidence exists |
 | **Root Cause Analysis** | Multi-step LLM agent compares drifted samples, analyzes prompt history, identifies likely cause |
 | **Regression Test Synthesis** | Learns golden test cases from production traffic. Auto-runs on shadow model |
 | **Prompt Registry** | Versioned prompt templates with SHA-256 hashes. Every inference attributed to a prompt version |
@@ -234,7 +235,7 @@ capsule?"
 Authority validation details are in
 [`docs/AUTHORITY_DRIFT_VALIDATION.md`](docs/AUTHORITY_DRIFT_VALIDATION.md).
 
-The reliability evidence in [`docs/RELIABILITY_VALIDATION.md`](docs/RELIABILITY_VALIDATION.md) now includes both deterministic fault injection and an executable six-case side-effect trace corpus. The trace corpus demonstrates that a blind retry after a post-commit timeout can report recovery while duplicating the side effect, while a stable idempotency key prevents the duplicate in the same scenario. These remain reproducible local traces, not production-world reliability rates.
+The reliability evidence in [`docs/RELIABILITY_VALIDATION.md`](docs/RELIABILITY_VALIDATION.md) now has three layers: deterministic fault injection, an executable six-case side-effect trace corpus, and an **8-case sanitized runtime-derived KAVI corpus**. The side-effect corpus demonstrates that a blind retry after a post-commit timeout can report recovery while duplicating the effect, while the runtime-derived corpus distinguishes pre-model failures, post-model failures, timeouts, explicit acceptance, and completed tasks that lack acceptance evidence. The runtime-derived fixture is bound to a source revision and omits payload instructions, result bodies, credentials, paths, and raw transcripts. None of these local/runtime-derived checkpoints are presented as production-world reliability rates.
 
 ---
 
@@ -301,7 +302,9 @@ spectraflow/
 │   ├── authority/
 │   │   └── drift.py           # Observational KCC authority-drift evaluator
 │   ├── reliability/
-│   │   └── recovery.py        # Framework-neutral bounded recovery evaluation harness
+│   │   ├── recovery.py        # Framework-neutral bounded recovery evaluation harness
+│   │   ├── execution.py       # Side-effect execution-trace assessment
+│   │   └── runtime.py         # Sanitized runtime-task evidence classification
 │   ├── detection/
 │   │   ├── baseline.py        # Rolling centroid, variance, schema compliance
 │   │   ├── cusum.py           # CUSUM control chart algorithm
@@ -319,13 +322,19 @@ spectraflow/
 │       └── metrics.py         # Prometheus metrics
 ├── benchmark/
 │   ├── authority_drift.py     # KCC authority-drift adversarial benchmark
-│   └── recovery_faults.py     # Deterministic bounded-recovery fault benchmark
+│   ├── recovery_faults.py     # Deterministic bounded-recovery fault benchmark
+│   ├── execution_traces.py    # Side-effect/idempotency execution corpus
+│   ├── kavi_runtime_traces.py # Sanitized runtime-derived task corpus
+│   └── fixtures/
+│       └── kavi_runtime_trace_v0.json
 ├── scripts/
 │   └── demo_pipeline.py       # End-to-end demo with injected drift
 ├── tests/
 │   ├── test_authority_drift.py
 │   ├── test_recovery.py
 │   ├── test_recovery_benchmark.py
+│   ├── test_execution_trace_benchmark.py
+│   ├── test_kavi_runtime_trace_benchmark.py
 │   ├── test_cusum.py
 │   ├── test_proxy.py
 │   └── test_fingerprinting.py
