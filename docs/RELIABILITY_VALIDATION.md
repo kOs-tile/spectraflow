@@ -52,10 +52,37 @@ and run the regression tests with:
 
     pytest -q tests/test_recovery.py
 
+## Execution-trace corpus v0
+
+A second reproducible corpus executes real Python callables against an in-memory
+side-effect ledger and records actual dispatcher calls and committed effects.
+
+Current six-case checkpoint:
+
+- clean side-effecting success -> safe completion
+- pre-dispatch timeout -> bounded recovery with one committed effect
+- post-commit timeout + blind retry -> recovered result but one duplicate side effect
+- post-commit timeout + stable idempotency key -> recovered result with no duplicate
+- completed operation + failed verification -> intervention required
+- terminal provider failure -> zero dispatcher calls and intervention required
+
+This corpus intentionally exposes the blind-retry failure rather than hiding it.
+A retry is not considered safe merely because the final attempt returns success.
+
+The execution-trace evaluator records:
+
+- task success
+- verification outcome
+- dispatcher call count
+- committed side-effect count
+- duplicate side effects
+- safe completion
+- intervention requirement
+
+This is still reproducible local execution evidence, not production-world reliability.
+
 ## Next evidence gate
 
-Do not expand the public reliability claim until this harness is connected to real
-agent execution traces or a reproducible external task corpus. The next useful
-step is to measure task success, recovery, intervention, duplicate execution, and
-cost/latency under real tool/provider failures while keeping the synthetic suite
-as a deterministic regression layer.
+Connect the same trace contract to real agent/runtime executions or an external
+task corpus and add cost/latency plus human-intervention measurements. Keep both
+the deterministic fault suite and execution-trace suite as regression layers.
