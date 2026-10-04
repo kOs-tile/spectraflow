@@ -11,6 +11,7 @@ on:
       - "tests/test_kavi_runtime_trace_benchmark.py"
       - "tests/test_reliability_lab_v1.py"
       - "tests/test_reliability_live_plan.py"
+      - "tests/test_kavi_live_adapter.py"
       - ".github/workflows/reliability-fast.yml"
   pull_request:
     paths:
@@ -41,3 +42,4 @@ jobs:
           tests/test_kavi_runtime_trace_benchmark.py
           tests/test_reliability_lab_v1.py
           tests/test_reliability_live_plan.py
+          tests/test_kavi_live_adapter.py
