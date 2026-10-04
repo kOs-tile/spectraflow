@@ -69,7 +69,7 @@ def build_enqueue_payload(
         "and do not perform external side effects. "
         "Do not simulate or narrate the benchmark fault profile; the harness injects "
         "faults at the control-plane boundary. "
-        "Finish only after the supplied local verifier passes."
+        "The local runner performs canonical verification after the agent exits; do not claim or simulate verifier success."
     )
 
     payload = {
