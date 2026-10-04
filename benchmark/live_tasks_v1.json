@@ -1,0 +1,292 @@
+{
+  "schema_version": 1,
+  "suite": "spectraflow.reliability-live.v1",
+  "workspace_contract": {
+    "external_side_effects": false,
+    "workspace_mode": "isolated_copy",
+    "baseline_file": "benchmark/live_fixture/baseline.py",
+    "reference_file": "benchmark/live_fixture/reference.py",
+    "candidate_file": "candidate.py"
+  },
+  "tasks": [
+    {
+      "task_id": "clamp-int",
+      "function": "clamp_int",
+      "objective": "Repair clamp_int so it converts value to int and clamps it inclusively to [low, high], rejecting an inverted range.",
+      "cases": [
+        {
+          "args": [
+            5,
+            0,
+            10
+          ]
+        },
+        {
+          "args": [
+            -2,
+            0,
+            10
+          ]
+        },
+        {
+          "args": [
+            50,
+            0,
+            10
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "retry-after",
+      "function": "parse_retry_after",
+      "objective": "Repair parse_retry_after so non-negative integer seconds are returned and missing, invalid, blank, or negative values return None.",
+      "cases": [
+        {
+          "args": [
+            "12"
+          ]
+        },
+        {
+          "args": [
+            "-1"
+          ]
+        },
+        {
+          "args": [
+            "bad"
+          ]
+        },
+        {
+          "args": [
+            null
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "stable-unique",
+      "function": "stable_unique",
+      "objective": "Repair stable_unique so duplicates are removed while preserving first-seen order.",
+      "cases": [
+        {
+          "args": [
+            [
+              3,
+              1,
+              3,
+              2,
+              1
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              "a",
+              "b",
+              "a",
+              "c"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "redact-bearer",
+      "function": "redact_bearer",
+      "objective": "Repair redact_bearer so bearer credential values are replaced with the literal [REDACTED] while surrounding text is preserved.",
+      "cases": [
+        {
+          "args": [
+            "Authorization: Bearer secret123"
+          ]
+        },
+        {
+          "args": [
+            "x Bearer abc,y"
+          ]
+        },
+        {
+          "args": [
+            "no token"
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "timeout-classifier",
+      "function": "classify_timeout",
+      "objective": "Repair classify_timeout so a timed_out process status or a failure string containing timeout is classified as a timeout.",
+      "cases": [
+        {
+          "args": [
+            "timed_out",
+            ""
+          ]
+        },
+        {
+          "args": [
+            "exited",
+            "model execution timeout"
+          ]
+        },
+        {
+          "args": [
+            "exited",
+            "connection refused"
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "canonical-digest",
+      "function": "canonical_json_digest",
+      "objective": "Repair canonical_json_digest so semantically identical JSON objects produce the same SHA-256 using sorted compact JSON encoding.",
+      "cases": [
+        {
+          "args": [
+            {
+              "b": 2,
+              "a": 1
+            }
+          ]
+        },
+        {
+          "args": [
+            {
+              "nested": {
+                "z": 1,
+                "a": [
+                  2,
+                  3
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "authority-intersection",
+      "function": "authority_allowed",
+      "objective": "Repair authority_allowed so effective authority is the intersection of compiled authority and current host authority; neither side may widen the other.",
+      "cases": [
+        {
+          "args": [
+            true,
+            true
+          ]
+        },
+        {
+          "args": [
+            true,
+            false
+          ]
+        },
+        {
+          "args": [
+            false,
+            true
+          ]
+        },
+        {
+          "args": [
+            false,
+            false
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "state-transition",
+      "function": "valid_transition",
+      "objective": "Repair valid_transition to enforce the bounded ready/running/blocked/queued transition graph and reject terminal-state reopening.",
+      "cases": [
+        {
+          "args": [
+            "ready",
+            "running"
+          ]
+        },
+        {
+          "args": [
+            "running",
+            "completed"
+          ]
+        },
+        {
+          "args": [
+            "completed",
+            "running"
+          ]
+        },
+        {
+          "args": [
+            "blocked",
+            "ready"
+          ]
+        },
+        {
+          "args": [
+            "failed",
+            "ready"
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "expiry-boundary",
+      "function": "is_expired",
+      "objective": "Repair is_expired so ISO-8601 timestamps are timezone-aware and expiry is true when expires_at is less than or equal to now.",
+      "cases": [
+        {
+          "args": [
+            "2026-10-04T10:00:00Z",
+            "2026-10-04T10:00:00Z"
+          ]
+        },
+        {
+          "args": [
+            "2026-10-04T09:59:59Z",
+            "2026-10-04T10:00:00Z"
+          ]
+        },
+        {
+          "args": [
+            "2026-10-04T10:00:01Z",
+            "2026-10-04T10:00:00Z"
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": "bounded-backoff",
+      "function": "backoff_seconds",
+      "objective": "Repair backoff_seconds so exponential backoff is capped at cap and uses base * 2**attempt.",
+      "cases": [
+        {
+          "args": [
+            0,
+            2,
+            30
+          ]
+        },
+        {
+          "args": [
+            3,
+            2,
+            30
+          ]
+        },
+        {
+          "args": [
+            10,
+            2,
+            30
+          ]
+        }
+      ]
+    }
+  ]
+}
