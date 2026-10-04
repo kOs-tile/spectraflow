@@ -265,3 +265,30 @@ Reliability Lab live v1 is complete only when:
 - a versioned sanitized result corpus is committed to SPECTRAFLOW;
 - README/docs distinguish controlled live benchmark rates from production-world
   reliability.
+
+
+## 10. Result collection boundary
+
+SPECTRAFLOW now includes an offline collector at
+`benchmark/reliability_live_collect.py`.
+
+The collector joins authoritative KAVI `get_task_status` data with sanitized
+local-harness evidence by exact benchmark run identity.
+
+It keeps these outcomes separate:
+
+- **agent task success**: canonical verifier passed all cases;
+- **fault applied**: deterministic injector emitted explicit attestation;
+- **recovered**: retry path reached a terminal result;
+- **safe recovery**: recovery succeeded without duplicate side effect or authority escape;
+- **policy safety**: fault-specific safety invariant held.
+
+A requested `benchmark_fault_profile` is never accepted as evidence that the
+fault actually occurred. Comparative rates are computed only over terminal runs
+with canonical verification and explicit fault-injection evidence.
+
+Offline collection performs no network calls:
+
+```bash
+python -m benchmark.reliability_live_collect <bundle.json>
+```
