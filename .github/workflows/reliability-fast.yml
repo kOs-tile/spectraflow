@@ -12,6 +12,7 @@ on:
       - "tests/test_reliability_lab_v1.py"
       - "tests/test_reliability_live_plan.py"
       - "tests/test_kavi_live_adapter.py"
+      - "tests/test_reliability_local_harness.py"
       - ".github/workflows/reliability-fast.yml"
   pull_request:
     paths:
@@ -22,6 +23,9 @@ on:
       - "tests/test_execution_trace_benchmark.py"
       - "tests/test_kavi_runtime_trace_benchmark.py"
       - "tests/test_reliability_lab_v1.py"
+      - "tests/test_reliability_live_plan.py"
+      - "tests/test_kavi_live_adapter.py"
+      - "tests/test_reliability_local_harness.py"
       - ".github/workflows/reliability-fast.yml"
 
 jobs:
@@ -43,3 +47,4 @@ jobs:
           tests/test_reliability_lab_v1.py
           tests/test_reliability_live_plan.py
           tests/test_kavi_live_adapter.py
+          tests/test_reliability_local_harness.py

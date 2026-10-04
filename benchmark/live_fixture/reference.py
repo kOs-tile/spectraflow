@@ -78,7 +78,9 @@ def _dt(value):
 
 
 def is_expired(expires_at, now):
-    return _dt(expires_at) <= _dt(now)
+    expires = datetime.fromisoformat(str(expires_at).replace("Z", "+00:00"))
+    current = datetime.fromisoformat(str(now).replace("Z", "+00:00"))
+    return expires <= current
 
 
 def backoff_seconds(attempt, base, cap):
