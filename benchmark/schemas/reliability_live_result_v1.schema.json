@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kOs-tile/spectraflow/benchmark/schemas/reliability_live_result_v1.schema.json",
+  "title": "SPECTRAFLOW Reliability Lab Live Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "benchmark_run_id",
+    "benchmark_task_id",
+    "benchmark_fault_profile",
+    "benchmark_policy",
+    "status",
+    "verification_status",
+    "attempts",
+    "model_invocations"
+  ],
+  "properties": {
+    "benchmark_run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "benchmark_task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "benchmark_fault_profile": {
+      "enum": [
+        "post_commit_timeout_once",
+        "authority_revoked_before_dispatch"
+      ]
+    },
+    "benchmark_policy": {
+      "enum": [
+        "baseline",
+        "bounded_recovery",
+        "idempotent_recovery",
+        "authority_aware"
+      ]
+    },
+    "status": {
+      "enum": [
+        "completed",
+        "failed",
+        "blocked",
+        "cancelled"
+      ]
+    },
+    "verification_status": {
+      "enum": [
+        "pass",
+        "fail",
+        "error"
+      ]
+    },
+    "attempts": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "model_invocations": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "provider_model": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "input_tokens": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "output_tokens": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "cost_usd": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "human_intervention_count": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "duration_ms": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "dispatcher_calls": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "committed_side_effect_count": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "duplicate_side_effect_count": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "dispatch_authority_decision": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "receipt_fingerprint": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "failure_class": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}
