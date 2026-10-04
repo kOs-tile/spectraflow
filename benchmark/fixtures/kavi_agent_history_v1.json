@@ -1,0 +1,864 @@
+{
+  "schema_version": 1,
+  "corpus_kind": "kavi_agent_history",
+  "provenance": {
+    "source_repo": "kOs-tile/kavi-codex-state",
+    "source_path": "history/shard-0001.json",
+    "source_blob_sha": "01269b622da53cdda4176fd4552ca6503b3b8a34",
+    "generated_at": "2026-09-22T01:58:30Z",
+    "source_record_count": 85,
+    "sanitization": "Session IDs, project/workspace names, titles, task excerpts, latest-result text, prompts, credentials, paths, and transcripts omitted. Stable source-session hashes and count/status metadata retained."
+  },
+  "sessions": [
+    {
+      "source_session_hash": "29f64d638c4d5dc4a827b156eb2bb41caa07093a7eb49eebef9872f6a64858c7",
+      "status": "active_or_unknown",
+      "timestamp": "2026-08-30T06:55:14.679Z",
+      "message_count": 8,
+      "tool_count": 2,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "05e8601ab9ccba5477a761155bfbf5d1fb57196ef8132949bd4605c78f360c58",
+      "status": "active_or_unknown",
+      "timestamp": "2026-08-30T06:57:16.703Z",
+      "message_count": 7,
+      "tool_count": 3,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "404f2fbe6ad1cd872f710abb99b954c2df468f39e93540fc504fad046f4aeca0",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-09T07:38:11.143Z",
+      "message_count": 7,
+      "tool_count": 3,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "6d3b4d435bf74545118f73518e095bb9998e7cc4500f3983a34d3a098e1cb55b",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-09T22:52:12.873Z",
+      "message_count": 7,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "e9ac494f09af6074fb2c58bd11ab3cc6b7007515942647b3e45b9292e5b4a2ed",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-10T03:42:46.261Z",
+      "message_count": 9,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "e8e18be27d9c159182c42315a6a63b58091d264770cc6c3fc7a195bc72cb723d",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-11T03:05:14.699Z",
+      "message_count": 7,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "8519a39a543255fda5a367b3107080c18ec76eb3e73f0ae2880f9c8b63bebc99",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-11T06:16:00.196Z",
+      "message_count": 9,
+      "tool_count": 5,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "c385612ad5e6642f5107893bb62baffc31b3ebfc5c282e80d5e8a8e779092535",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-12T02:03:23.903Z",
+      "message_count": 7,
+      "tool_count": 3,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "269bddea4015691121429e5383ff6b53ac672d7af2e54436b8c46cccea3eec12",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-12T03:01:28.454Z",
+      "message_count": 42,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "428c084e46f08d6d7d67dc470fbdd95b0057039933e293641cca358915e10d9c",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-12T03:26:54.565Z",
+      "message_count": 4,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "206fbb5efb254d6929bc0415c3448523282be028c46369b2736d91cc04e56d28",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-12T04:31:35.948Z",
+      "message_count": 4,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "8c9a914c29e71ab85b9c4b5e5a1364a2a5ae4e1a219d9f3463e2f37ae0ac9f1c",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-13T06:18:52.683Z",
+      "message_count": 7,
+      "tool_count": 5,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "fee904f8bb14249fa2dde44f7af0d38f43f3b4626a696b2a948379a47824ef2b",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-13T06:29:17.269Z",
+      "message_count": 4,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "04d0093a43685a5db456a4c22eee1c600a1fda7829cd5c6351834e9004e1fda1",
+      "status": "blocked",
+      "timestamp": "2026-09-13T06:55:02.998Z",
+      "message_count": 12,
+      "tool_count": 25,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "5aa02b7c1eb4613be477c142068a5ff3172db27a92952a8c7f055c5f25989128",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-13T07:00:55.706Z",
+      "message_count": 4,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "582b7a94679db525dbc18d042db29725dd625b77a67a76293b3e1440cd7d2990",
+      "status": "completed",
+      "timestamp": "2026-09-13T07:40:33.772Z",
+      "message_count": 14,
+      "tool_count": 67,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "820823888b2a24090254a83d68ef4fa6c2f9765e346e266c7e48bcd77d3a5f69",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-13T07:31:30.032Z",
+      "message_count": 15,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "5e2a3b535c852831a7e86e910b8f264c923c93d6f7e8f3691d36cfbbca9a20fa",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-13T07:48:14.342Z",
+      "message_count": 73,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "65517e514a821c912ec9cac9311cda5af13ab261b048772a22a9f146941f0585",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-13T07:53:41.417Z",
+      "message_count": 7,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "42ec648275b8d6fd71e02026e5f764915b7630ae1215fa43a5fd8765829a2b82",
+      "status": "blocked",
+      "timestamp": "2026-09-13T20:10:38.917Z",
+      "message_count": 8,
+      "tool_count": 21,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "a135c71e1f79a84aa885ef71c20e80f54d44533c6d6d057ffb8ed559d8e33caf",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-13T20:10:51.593Z",
+      "message_count": 8,
+      "tool_count": 9,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "be7856f51d4b952fd1add43349c14dcffe15357480fbec21b8e24cfca9e21208",
+      "status": "completed",
+      "timestamp": "2026-09-13T23:16:39.734Z",
+      "message_count": 21,
+      "tool_count": 62,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "539da0b4f7c079de834f2ee4c2d7b1b54947dec6b743b5287eb1ef627eebbb5d",
+      "status": "completed",
+      "timestamp": "2026-09-14T02:34:41.078Z",
+      "message_count": 16,
+      "tool_count": 65,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "ef406b0479fdf5127d6fb828e8dd3b346a4b23d8305c6a25219ec6b9bde83026",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-14T02:57:17.663Z",
+      "message_count": 4,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "4afec8a386fa216e9bcc90134df5b56863d7242e9499317032e4ceaa96389b2b",
+      "status": "completed",
+      "timestamp": "2026-09-16T23:36:36.622Z",
+      "message_count": 249,
+      "tool_count": 1034,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "8d4c5aaa1b4b01534109cf691d899043019b6734a916025748fd7ebeefd88ac6",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-14T16:48:31.693Z",
+      "message_count": 7,
+      "tool_count": 7,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "3c5a3c874d17e390ea5c37bac04f63f94b42209b52f2a48bc793e84c636425e0",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-14T21:52:04.397Z",
+      "message_count": 9,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "59bc99f18c15c989dd24652522b2b970067860b557420f611e5040a40bc1af7d",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-14T23:21:14.082Z",
+      "message_count": 7,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "e094f1d4b174ea4ecb51b13ba8aa47e6b41bd9c45454626b476c5c66c3be637f",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-14T23:24:43.445Z",
+      "message_count": 9,
+      "tool_count": 7,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "4a830b1f8bfeaaf170eacda3d0cb420fafc49632f5f1f32bc8460d6c5ed6523a",
+      "status": "completed",
+      "timestamp": "2026-09-14T23:48:34.782Z",
+      "message_count": 22,
+      "tool_count": 63,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "4d9cd9e4a76f20f0b67c412f3108f8b7a1fe0bc0e06ebbe11f7624620aca8226",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-14T23:39:50.758Z",
+      "message_count": 11,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "0d00369e76badce9d1b40a1b570be32c7672daef846e288e5b224f2c2071b602",
+      "status": "completed",
+      "timestamp": "2026-09-15T03:47:50.334Z",
+      "message_count": 19,
+      "tool_count": 60,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "8245b1c023f9bfae8ab2922f22a3dea6af9fe57b4f0dca4461ae8b10f4248294",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-15T04:50:56.612Z",
+      "message_count": 7,
+      "tool_count": 10,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "fee8de1d4b78638bd319cf176396e6e12f4e7808739409ab73c0538c56f86e5e",
+      "status": "completed",
+      "timestamp": "2026-09-15T04:52:57.855Z",
+      "message_count": 10,
+      "tool_count": 14,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "e59853b788e792163148dda9ad8920fed99250b59ea61fc525c398d561c999c2",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-15T05:13:58.409Z",
+      "message_count": 4,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "37c4b9a1de11218d118f4c3ef20418723a656230f502190a917ab3a1fa2e44fb",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-15T05:46:57.701Z",
+      "message_count": 49,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "74996d9c424426204ee509306bd85f76bbec2d995ee3eb43c60e01d6fc04c22b",
+      "status": "unknown",
+      "timestamp": "2026-09-15T17:55:04.835Z",
+      "message_count": 0,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": false,
+      "has_task_excerpt": false
+    },
+    {
+      "source_session_hash": "3ae55eabc93ccbf41af8b231c53181516c1ee36231bebba035b9a7f792e058be",
+      "status": "completed",
+      "timestamp": "2026-09-15T19:45:42.600Z",
+      "message_count": 14,
+      "tool_count": 80,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "d0da9a36d0c51733e6713296942a4dfad488f1b1bec66bf8f9ff5dba759ee2ab",
+      "status": "unknown",
+      "timestamp": "2026-09-15T19:34:08.474Z",
+      "message_count": 0,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": false,
+      "has_task_excerpt": false
+    },
+    {
+      "source_session_hash": "48d39c17df6f7711b090b3375670969e4ab6b1ecbb20a787df5a571ffb9ae72b",
+      "status": "blocked",
+      "timestamp": "2026-09-15T20:33:42.236Z",
+      "message_count": 12,
+      "tool_count": 17,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "04178a935a783725b5f27f8ec41b5e6e45999c91767ed4326d752ece09befaba",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-15T20:54:03.817Z",
+      "message_count": 20,
+      "tool_count": 34,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "8a4a6c921b5260d3fe7c0f51c78e5b7a890917d827a40a5ca5a2a04f27125948",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-15T21:02:33.930Z",
+      "message_count": 4,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "52fdc70f72f7b199acb59a1778366eea17f0151ad5b9da03251bb113ac5f43f4",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-15T21:11:45.867Z",
+      "message_count": 4,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "91c86f55be82d22742affd8b3591a90e92e3dff19ff8ee0799cfaa27170e79e3",
+      "status": "unknown",
+      "timestamp": "2026-09-15T21:21:25.775Z",
+      "message_count": 4,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": false,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "350ccaa04db50c47cdd903aa0f6b3fe9b2b83dbb661c09901f2554efa54a1d9e",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-15T21:24:51.376Z",
+      "message_count": 11,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "17f9edd7ab2a2033a311e51289e344ab4e59796b0dca577c62d9a26b10bdb807",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-15T22:14:17.445Z",
+      "message_count": 85,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "b73bc47c911ca613c73aef4a70bf8d275085e174ddf62da6bb903415f7acf3ea",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-15T21:54:07.691Z",
+      "message_count": 4,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "39b2f384f240a601f4a94b24d8b37c04c7a8fba7d98ee23d5a9a6fd0ea676265",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-15T22:22:47.180Z",
+      "message_count": 9,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "b40e0cdb0919e11e5fae4cea7f30b5d67bf4efc64415864f22bb2962e14c5a6e",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-15T22:50:27.132Z",
+      "message_count": 55,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "3ddb5fda0a0eac4114ddcdcd2cab116ca7d4ddcb59a24ad486eb4bef3d72c4e1",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-15T22:44:52.408Z",
+      "message_count": 18,
+      "tool_count": 17,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "022a4b655e5bbca9476369c39d2747aff804496ef38e5a00477f6cefd4c467ff",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-15T23:15:38.011Z",
+      "message_count": 33,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "ee09d3fc5362459101e61e3a44029757277c226a20e371e997f8c870f5bc3b11",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-15T23:12:18.244Z",
+      "message_count": 7,
+      "tool_count": 5,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "9a6f043d279cb4ce652d275e440840968cbbdd034ab5e34e5693a3cb74911b61",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-15T23:14:20.954Z",
+      "message_count": 8,
+      "tool_count": 6,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "5c1a51d72d4a29e204daa7bcca59d3f02730384dba4b936d8fc61f276796ec8c",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-15T23:14:52.347Z",
+      "message_count": 5,
+      "tool_count": 3,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "68c88cb3028149aac324b507ed12a88b1aec3e90c65d37ae6f980c832938a0ed",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-15T23:16:54.821Z",
+      "message_count": 8,
+      "tool_count": 6,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "479e376569cf81c43422d25fbc96aad46079de0a24e3e1f5db7c6a33a420da5a",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-15T23:17:46.159Z",
+      "message_count": 5,
+      "tool_count": 3,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "7e0d0e64bbc6d08de0c019a5455fd606e6bbecda5f6dad5bc8cad4fbfa027528",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-16T00:19:34.804Z",
+      "message_count": 4,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "d131278aa25f5a6893d0af23012f87a36af024c1a1f9757d1beccd73da0be055",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-16T20:52:31.589Z",
+      "message_count": 36,
+      "tool_count": 39,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "e9b04c288de7136357da8c1e318d34e0e4de8af9ecb9610102bfe1fc14089084",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-16T23:33:40.944Z",
+      "message_count": 4,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "3cbf7a0580cf55153d247f100fa3adfa013b4bfa79dbc11bea8a3f7363e4ef1f",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-17T06:22:29.901Z",
+      "message_count": 23,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "a0012536a9db8e828fea5aa838c038df572df0e819d89a3726125d54230d2d0d",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-17T06:36:04.147Z",
+      "message_count": 13,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "a5d4adc4edd15fa668d8ae2802622b1e047870724076f10036dc7427d03da9d2",
+      "status": "unknown",
+      "timestamp": "2026-09-18T17:56:19.607Z",
+      "message_count": 0,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": false,
+      "has_task_excerpt": false
+    },
+    {
+      "source_session_hash": "b20a22785af5f7b7f81f8c33af6e047dab2475bd04e96d09aeb2cfd0595afa4d",
+      "status": "unknown",
+      "timestamp": "2026-09-18T17:56:19.834Z",
+      "message_count": 0,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": false,
+      "has_task_excerpt": false
+    },
+    {
+      "source_session_hash": "7d1b77577ac1664f2327506635ffbf497c2adcf5e9873db8551d64185b580cbf",
+      "status": "unknown",
+      "timestamp": "2026-09-18T17:56:20.724Z",
+      "message_count": 0,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": false,
+      "has_task_excerpt": false
+    },
+    {
+      "source_session_hash": "2081b8226073c40e63730e9c8b4f9db1ca96505e0ed247f703a54a9b8156e590",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-18T18:27:50.164Z",
+      "message_count": 13,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "56c048837782fbcf0db6cbebd688b0e329aa23be482c369be33baee5ecefc23f",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-18T18:41:05.879Z",
+      "message_count": 19,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "bb4fcc2d9f611f1d4cf4b5b1473d6c75d9ea7aa79188b2c4c2909c0d72d2c3e6",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-19T06:34:57.097Z",
+      "message_count": 13,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "d83b43acf5f4d6f31d550dd3153697a78ab59569345e6a76077def15490c33a9",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-19T06:12:46.011Z",
+      "message_count": 51,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "7e3dc443c02d33208afb29e41e32d41386f75a56e786f0a331126275e06a04f4",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-19T06:53:57.469Z",
+      "message_count": 9,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "078a9f61d40a042ea56737b08b8b93c8a64e2b660e18707365626123748c2482",
+      "status": "completed",
+      "timestamp": "2026-09-20T01:36:40.440Z",
+      "message_count": 8,
+      "tool_count": 11,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "12dfe0466d6c3571b8c8b333da72962c9e3b2070a3837cece855a6c62b661e63",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-19T22:43:18.285Z",
+      "message_count": 7,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "94c288422ba1d2fb947345821b98dcff3e6eb4f532cdaafab7bd95735a980752",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-19T23:38:42.630Z",
+      "message_count": 7,
+      "tool_count": 9,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "8eb9c74f2f205240b7f0923c9333bb908929a0527dd5237ae751081c1f35bea5",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-19T23:49:30.106Z",
+      "message_count": 29,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "2dcb7850e832a618bea51cb6188d59d683fc7c3b082e05edeb36857296bf86ab",
+      "status": "completed",
+      "timestamp": "2026-09-20T04:12:12.990Z",
+      "message_count": 26,
+      "tool_count": 69,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "0e6be3e16e65455db3d3841f16087049a52a806bf71ce93b0d3703f89ecb76db",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-20T01:30:44.130Z",
+      "message_count": 19,
+      "tool_count": 22,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "64fd35968aa096db9690d4b27bdf1e33918e5e0db57fde30e6cdc026f9402fbb",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-20T03:09:10.034Z",
+      "message_count": 29,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "d34d928c444b973850dc0d389d249e4aa316933ca98fc22e6e35ef0e6f63e032",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-20T03:22:42.464Z",
+      "message_count": 33,
+      "tool_count": 0,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "a52525b29d8a08b32409af13c788427a1eec7ef4d7d7051ca51880dfcc3f28de",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-20T07:29:15.235Z",
+      "message_count": 61,
+      "tool_count": 1,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "ddf8c71b27a2250c33a4affe0c1845fe53e79567a346f979d60d79d0f23fa3f9",
+      "status": "blocked",
+      "timestamp": "2026-09-21T03:49:33.021Z",
+      "message_count": 35,
+      "tool_count": 116,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "0cac38db3bc0644c66d84c1baa527511b0c04abad1dce07f64c0cf2fcdd80f33",
+      "status": "blocked",
+      "timestamp": "2026-09-21T04:48:06.924Z",
+      "message_count": 67,
+      "tool_count": 531,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "5898bb8290bccf90dcadc2b4e176170294d516a3e7636fdf8c233b8c9f498cf3",
+      "status": "blocked",
+      "timestamp": "2026-09-21T16:44:23.101Z",
+      "message_count": 98,
+      "tool_count": 647,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "7e3c5f9114d617c8194683e1f1567d425cdffe8ff2a9d3fbc8e4d14a55ad937b",
+      "status": "active_or_unknown",
+      "timestamp": "2026-09-21T03:14:17.998Z",
+      "message_count": 42,
+      "tool_count": 84,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "4a0c8c530f48a4d6ccd049386e38e4db92542ea8f2b504fc7f3fcdab43ff28ad",
+      "status": "blocked",
+      "timestamp": "2026-09-21T04:01:17.975Z",
+      "message_count": 16,
+      "tool_count": 12,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "efc4bf9242cd1a1dfb617fb0e140ed4f59381ce137412268b8f3417df85ab47e",
+      "status": "blocked",
+      "timestamp": "2026-09-22T00:22:17.906Z",
+      "message_count": 150,
+      "tool_count": 779,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    },
+    {
+      "source_session_hash": "83ca7b076ddec734b70cd6d60556ea50c26031e52a3794254f3fb82b5ed1b444",
+      "status": "blocked",
+      "timestamp": "2026-09-22T01:53:21.472Z",
+      "message_count": 166,
+      "tool_count": 981,
+      "has_branch": false,
+      "has_latest_result": true,
+      "has_task_excerpt": true
+    }
+  ]
+}
