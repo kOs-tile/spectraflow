@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "benchmark": "spectraflow.reliability_lab.v1",
+  "generated_from": {
+    "historical_sessions": {
+      "source_repo": "kOs-tile/kavi-codex-state",
+      "source_path": "history/shard-0001.json",
+      "source_blob_sha": "01269b622da53cdda4176fd4552ca6503b3b8a34",
+      "records": 85
+    },
+    "execution_control": {
+      "source_repo": "kOs-tile/kavi-codex-state",
+      "source_path": "shared/execution-queue.json",
+      "source_blob_sha": "8a1abe2deb38a205ac2d27907a7f1b452e761177",
+      "records": 26
+    }
+  },
+  "real_corpus": {
+    "historical_agent_sessions": 85,
+    "execution_control_tasks": 26,
+    "total_records": 111
+  },
+  "historical_sessions": {
+    "status_distribution": {
+      "active_or_unknown": 60,
+      "blocked": 9,
+      "completed": 10,
+      "unknown": 6
+    },
+    "total_tool_calls_recorded": 4937,
+    "total_messages_recorded": 1991,
+    "tool_count": {
+      "count": 85,
+      "min": 0,
+      "median": 0,
+      "mean": 58.082352941176474,
+      "max": 1034
+    },
+    "message_count": {
+      "count": 85,
+      "min": 0,
+      "median": 9,
+      "mean": 23.423529411764704,
+      "max": 249
+    }
+  },
+  "execution_control": {
+    "status_distribution": {
+      "blocked": 1,
+      "completed": 8,
+      "failed": 15,
+      "ready": 2
+    },
+    "actor_distribution": {
+      "codex": 25,
+      "work": 1
+    },
+    "risk_distribution": {
+      "LOW": 26
+    },
+    "verified_pass": 5,
+    "completed_unverified": 3,
+    "explicit_failures": 15,
+    "blocked": 1,
+    "unresolved": 2,
+    "pre_model_failures": 5,
+    "post_model_failures": 10,
+    "timeout_failures": 8,
+    "total_attempts": 23,
+    "observed_retries": 0,
+    "total_model_invocations": 17,
+    "duration_seconds": {
+      "count": 12,
+      "min": 9,
+      "median": 929.5,
+      "mean": 1026.75,
+      "max": 4707
+    }
+  },
+  "metric_coverage": {
+    "task_success": {
+      "observed": 21,
+      "total": 26,
+      "fraction": 0.8076923076923077
+    },
+    "latency": {
+      "observed": 12,
+      "total": 26,
+      "fraction": 0.46153846153846156
+    },
+    "verification_evidence": {
+      "observed": 8,
+      "total": 26,
+      "fraction": 0.3076923076923077
+    },
+    "model_invocations": {
+      "observed": 26,
+      "total": 26,
+      "fraction": 1
+    },
+    "retries_and_attempts": {
+      "observed": 26,
+      "total": 26,
+      "fraction": 1
+    },
+    "actual_token_usage": {
+      "observed": 0,
+      "total": 26,
+      "fraction": 0
+    },
+    "actual_cost": {
+      "observed": 0,
+      "total": 26,
+      "fraction": 0
+    },
+    "human_intervention": {
+      "observed": 0,
+      "total": 26,
+      "fraction": 0
+    },
+    "committed_side_effects": {
+      "observed": 0,
+      "total": 26,
+      "fraction": 0
+    },
+    "unauthorized_action": {
+      "observed": 0,
+      "total": 26,
+      "fraction": 0
+    }
+  },
+  "controlled_policy_pair": {
+    "post_commit_timeout_naive": {
+      "attempts": 2,
+      "committed_side_effects": 2,
+      "duplicate_side_effects": 1,
+      "safe_completion": false
+    },
+    "post_commit_timeout_idempotent": {
+      "attempts": 2,
+      "committed_side_effects": 1,
+      "duplicate_side_effects": 0,
+      "safe_completion": true
+    }
+  },
+  "claim_boundary": {
+    "real_recovery_rate_available": false,
+    "reason": "The 26-task real execution-control snapshot contains no attempts>1 recovery event."
+  }
+}
