@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "provenance": {
+    "source_repo": "kOs-tile/kavi-codex-state",
+    "source_revision": "9491db887bbb757b7180fb84b23cc82c2760a2be",
+    "source_path": "shared/execution-queue.json",
+    "sanitization": "Task metadata only. Payload instructions, result excerpts, terminal-result bodies, credentials, paths, and raw transcripts are omitted.",
+    "evidence_note": "Runtime-derived historical task metadata; not a production reliability-rate estimate."
+  },
+  "tasks": [
+    {
+      "task_id": "handoff-20260919-004-e2e-001",
+      "actor": "codex",
+      "status": "completed",
+      "attempts": 1,
+      "model_invocations": 1,
+      "started_at": "2026-09-19T21:15:29Z",
+      "terminal_at": "2026-09-19T21:15:38Z"
+    },
+    {
+      "task_id": "codex-runner-diagnosis-001",
+      "actor": "codex",
+      "status": "failed",
+      "attempts": 1,
+      "model_invocations": 0,
+      "failure": "timeout: stale RUNNING execution exceeded timeout_seconds",
+      "started_at": "2026-09-20T03:14:49Z",
+      "terminal_at": "2026-09-20T04:33:16Z"
+    },
+    {
+      "task_id": "codex-recertification-20260920-001",
+      "actor": "codex",
+      "status": "completed",
+      "attempts": 1,
+      "model_invocations": 1,
+      "started_at": "2026-09-20T06:50:14Z",
+      "terminal_at": "2026-09-20T06:50:26Z"
+    },
+    {
+      "task_id": "relationship-graph-v0-003",
+      "actor": "codex",
+      "status": "failed",
+      "attempts": 1,
+      "model_invocations": 1,
+      "failure_phase": "postflight",
+      "failure": "terminal semantic result did not contain an explicit PASS marker",
+      "started_at": "2026-09-21T07:58:10Z"
+    },
+    {
+      "task_id": "work-sync-atomic-cert-20260920-006",
+      "actor": "codex",
+      "status": "failed",
+      "attempts": 1,
+      "model_invocations": 1,
+      "process_status": "timed_out",
+      "process_exit_code": 1,
+      "acceptance_status": "unknown",
+      "failure": "model execution timed out",
+      "started_at": "2026-09-20T23:22:07Z"
+    },
+    {
+      "task_id": "work-sync-bounded-cert-20260921-007",
+      "actor": "codex",
+      "status": "failed",
+      "attempts": 1,
+      "model_invocations": 0,
+      "failure_phase": "preflight",
+      "failure": "inbound sync is not a second unchanged no-op",
+      "started_at": "2026-09-21T04:11:07Z"
+    },
+    {
+      "task_id": "work-sync-final-closure-20260921-008",
+      "actor": "codex",
+      "status": "completed",
+      "attempts": 1,
+      "model_invocations": 1,
+      "process_status": "exited",
+      "process_exit_code": 0,
+      "acceptance_status": "pass",
+      "started_at": "2026-09-21T07:00:03Z",
+      "terminal_at": "2026-09-21T07:00:17Z"
+    },
+    {
+      "task_id": "work-execution-e2e-20260921-009",
+      "actor": "work",
+      "status": "completed",
+      "attempts": 1,
+      "model_invocations": 0,
+      "acceptance_status": "pass",
+      "final_status": "PASS",
+      "started_at": "2026-09-21T07:04:23Z",
+      "terminal_at": "2026-09-21T07:24:21.097000Z"
+    }
+  ]
+}
