@@ -81,8 +81,47 @@ The execution-trace evaluator records:
 
 This is still reproducible local execution evidence, not production-world reliability.
 
+## Runtime-derived KAVI corpus v0
+
+A third evidence layer uses a sanitized snapshot derived from real KAVI execution-control
+task metadata. The fixture is bound to source revision
+`9491db887bbb757b7180fb84b23cc82c2760a2be` from
+`kOs-tile/kavi-codex-state/shared/execution-queue.json`.
+
+The fixture intentionally excludes payload instructions, result excerpts,
+terminal-result bodies, credentials, local paths, and raw transcripts.
+
+Current eight-case checkpoint:
+
+- total task records: **8**
+- explicit verified PASS: **2**
+- completed without explicit acceptance/final-status evidence: **2**
+- explicit failed terminal records: **4**
+- pre-model failures: **2**
+- post-model failures: **2**
+- timeout failures: **2**
+- single-attempt records: **8**
+- records with both start and terminal timestamps: **5**
+
+A key evidence rule is fail-closed interpretation: a record with
+`status=completed` is **not** upgraded to verified PASS unless explicit
+`acceptance_status=pass` or `final_status=PASS` evidence exists.
+
+This corpus is runtime-derived historical evidence, not a production reliability
+rate. It also does not infer dispatcher calls or committed side effects because
+the source snapshot does not expose those fields.
+
+Run:
+
+    python -m benchmark.kavi_runtime_traces
+
+Regression coverage:
+
+    pytest -q tests/test_kavi_runtime_trace_benchmark.py
+
 ## Next evidence gate
 
-Connect the same trace contract to real agent/runtime executions or an external
-task corpus and add cost/latency plus human-intervention measurements. Keep both
-the deterministic fault suite and execution-trace suite as regression layers.
+Add normalized cost/token/latency and explicit human-intervention fields at the
+runtime source, then ingest a larger versioned task corpus. Keep deterministic
+fault injection, side-effect traces, and runtime-derived traces as separate
+evidence layers rather than collapsing them into one headline reliability score.
