@@ -15,6 +15,7 @@ on:
       - "tests/test_reliability_local_harness.py"
       - "tests/test_reliability_live_collector.py"
       - "tests/test_reliability_harness_cli.py"
+      - "tests/test_kavi_runtime_shim.py"
       - ".github/workflows/reliability-fast.yml"
   pull_request:
     paths:
@@ -52,3 +53,4 @@ jobs:
           tests/test_reliability_local_harness.py
           tests/test_reliability_live_collector.py
           tests/test_reliability_harness_cli.py
+          tests/test_kavi_runtime_shim.py
