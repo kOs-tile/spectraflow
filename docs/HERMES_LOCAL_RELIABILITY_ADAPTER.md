@@ -416,3 +416,93 @@ The shim owns only benchmark-specific behavior:
 
 Unknown task/fault/policy identity, retry drift, idempotency drift, wrong actor,
 wrong risk class, or unavailable authority state fail closed.
+
+
+## 13. Production bridge canary
+
+After the two runtime hooks are installed and verified in the local KAVI/Hermes
+runner, the eight-run canary is dispatched through the **production KAVI
+Dispatch Bridge**, never by writing the GitHub queue directly.
+
+Stable bridge alias:
+
+```text
+https://kavi-dispatch-bridge.vercel.app
+```
+
+The launcher requires bridge version **v0.2.2+** because remote collection needs
+explicit `benchmark_recovered` and `benchmark_authority_escape` flags rather
+than inferring outcomes from strings.
+
+### Dry plan
+
+No network write:
+
+```bash
+python -m benchmark.reliability_canary_remote plan
+```
+
+Expected scope:
+
+- one task: `clamp-int`
+- two deterministic fault profiles
+- four policy arms
+- eight unique benchmark run IDs
+
+### Execute canary
+
+Set the bearer secret only in the local process environment. Do not place it in
+arguments, files, commits, or result bundles.
+
+```bash
+set KAVI_DISPATCH_TOKEN=<local-secret>
+python -m benchmark.reliability_canary_remote execute \
+  --runtime-hook-ready \
+  --receipt-file <local-canary-receipts.json>
+```
+
+The explicit `--runtime-hook-ready` flag is only an operator precondition. It
+is not benchmark evidence. The actual benchmark evidence is emitted later by
+the local runtime hooks.
+
+Enqueue is resumable because every run has a stable queue idempotency key. The
+receipt file stores only run ID → authoritative queue task ID / commit metadata.
+It never stores the bearer token, prompt, instruction, or payload.
+
+### Collect
+
+```bash
+python -m benchmark.reliability_canary_remote collect \
+  --receipt-file <local-canary-receipts.json> \
+  --bundle-file <local-canary-bundle.json>
+```
+
+Collection reads `get_task_status` through the bridge and builds the same
+evidence model used by the offline collector.
+
+A run enters comparative statistics only when:
+
+- the queue is terminal;
+- canonical verification passed;
+- explicit fault-injection attestation exists.
+
+`benchmark_result_status="recovered"` alone does not count as recovery.
+`benchmark_recovered=true` must be present. Authority escape is likewise read
+only from the explicit `benchmark_authority_escape` boolean.
+
+### Full 80-run gate
+
+Do **not** expand to the full suite merely because eight queue tasks completed.
+
+The eight-run canary must first demonstrate:
+
+- all intended fault injectors actually applied;
+- no run-identity mismatch;
+- verifier/reference isolation;
+- no secret/path leakage in evidence;
+- bounded retries only;
+- expected duplicate-effect distinction;
+- expected authority-revocation distinction;
+- usable model/token/cost/intervention coverage from the real runner.
+
+Only then promote from 8 to 80 runs.
