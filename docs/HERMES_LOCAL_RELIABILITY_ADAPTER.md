@@ -292,3 +292,64 @@ Offline collection performs no network calls:
 ```bash
 python -m benchmark.reliability_live_collect <bundle.json>
 ```
+
+
+## 11. Minimal runner CLI integration
+
+The benchmark-local lifecycle is now executable through
+`benchmark.reliability_harness_cli`. The CLI performs no network I/O and does
+not invoke the model itself.
+
+### Canary plan
+
+```bash
+python -m benchmark.reliability_harness_cli canary-plan
+```
+
+This returns the eight run IDs for the first task across 2 fault profiles × 4
+policies.
+
+### Prepare one run
+
+```bash
+python -m benchmark.reliability_harness_cli prepare \
+  --run-id "<run-id>" \
+  --workspace-root "<local-benchmark-workspaces>"
+```
+
+The local runner then:
+
+1. sets the returned workspace as the agent process cwd;
+2. passes the returned `agent_instruction`;
+3. allows the agent to edit only `candidate.py`;
+4. waits for the agent process to terminate.
+
+The prompt explicitly tells the agent that canonical verification happens after
+exit. Reference code is not supplied to the agent.
+
+### Verify outside the agent workspace
+
+```bash
+python -m benchmark.reliability_harness_cli verify \
+  --run-id "<run-id>" \
+  --workspace-root "<local-benchmark-workspaces>" \
+  --evidence-root "<local-benchmark-evidence>"
+```
+
+### Apply the deterministic fault/policy and export evidence
+
+```bash
+python -m benchmark.reliability_harness_cli dispatch \
+  --run-id "<run-id>" \
+  --evidence-root "<local-benchmark-evidence>" \
+  --runtime-status "<optional-sanitized-runtime-status.json>"
+```
+
+For an unavailable authority fixture, the runner passes
+`--authority-fixture-unavailable`; authority-aware execution then fails closed.
+
+The only KAVI/Hermes-specific code still required is the thin process adapter
+that takes the `prepare` JSON, launches the existing agent executable in the
+returned cwd, and calls `verify` + `dispatch` after exit. No second queue,
+watcher, verifier, fault injector, or result ledger should be implemented in
+KAVI/Hermes.
