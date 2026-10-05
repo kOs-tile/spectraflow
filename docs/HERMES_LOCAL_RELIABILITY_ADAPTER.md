@@ -449,6 +449,29 @@ Expected scope:
 - four policy arms
 - eight unique benchmark run IDs
 
+### Readiness gate
+
+Before any production canary enqueue, bind the structural hook attestation to
+both the deployed runner bytes and the repair/source runner bytes:
+
+```bash
+python -m benchmark.reliability_canary_readiness \
+  --bridge-health-json <saved-bridge-health.json> \
+  --runtime-hook-attestation-json <local-runtime-hook-attestation.json> \
+  --deployed-runner-file <deployed-execution_control.py> \
+  --source-runner-file <repair-source-execution_control.py>
+```
+
+Required result:
+
+- `runtime_hook_binding.bound = true`
+- `runtime_hook_attested = true`
+- `canary_dispatch_ready = true`
+- `blockers = []`
+
+The attestation SHA, deployed runner SHA, and repair/source SHA must match. A
+previously valid attestation fails closed after runtime/source drift.
+
 ### Execute canary
 
 Set the bearer secret only in the local process environment. Do not place it in
