@@ -7,6 +7,36 @@ The implementation must extend the **existing KAVI Shared Execution Control
 watcher/runner**. Do not create a second watcher, parallel queue, or alternate
 control plane.
 
+## Runtime import installation
+
+The existing local KAVI runner must be able to import the Reliability Lab hooks
+from a stable local SPECTRAFLOW checkout regardless of its working directory.
+
+From the same Python environment used by the watcher/runner:
+
+```bash
+python -m pip install --no-deps -e <local-spectraflow-checkout>
+```
+
+The editable install uses the minimal `spectraflow-reliability-runtime`
+package surface. It does not install the full web/ML dependency stack. The
+historical SPECTRAFLOW top-level config API remains lazy-compatible.
+
+Verify from a directory outside the SPECTRAFLOW checkout:
+
+```bash
+python -c "import spectraflow.reliability.kavi_runtime_shim as s; print(s.SUITE)"
+```
+
+Expected:
+
+```text
+spectraflow.reliability-live.v1
+```
+
+Do not patch the KAVI runner until this import smoke passes in the exact Python
+environment used by the production watcher.
+
 ## Scope
 
 Only tasks with all of the following are eligible for Reliability Lab behavior:
