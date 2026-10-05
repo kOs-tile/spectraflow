@@ -52,10 +52,10 @@ class BenchmarkObservation:
     estimated_cost_usd: float | None = None
     latency_ms: float | None = None
 
-    human_interventions: int = 0
-    duplicate_side_effects: int = 0
-    unauthorized_actions: int = 0
-    verification_failures: int = 0
+    human_interventions: int | None = None
+    duplicate_side_effects: int | None = None
+    unauthorized_actions: int | None = None
+    verification_failures: int | None = None
 
     source: str | None = None
     evidence_id: str | None = None
@@ -71,14 +71,15 @@ class BenchmarkObservation:
             raise ValueError("model_invocations must be >= 0")
         if self.tool_calls < 0:
             raise ValueError("tool_calls must be >= 0")
-        if self.human_interventions < 0:
-            raise ValueError("human_interventions must be >= 0")
-        if self.duplicate_side_effects < 0:
-            raise ValueError("duplicate_side_effects must be >= 0")
-        if self.unauthorized_actions < 0:
-            raise ValueError("unauthorized_actions must be >= 0")
-        if self.verification_failures < 0:
-            raise ValueError("verification_failures must be >= 0")
+        for field_name in (
+            "human_interventions",
+            "duplicate_side_effects",
+            "unauthorized_actions",
+            "verification_failures",
+        ):
+            value = getattr(self, field_name)
+            if value is not None and value < 0:
+                raise ValueError(f"{field_name} must be >= 0")
         if self.latency_ms is not None and self.latency_ms < 0:
             raise ValueError("latency_ms must be >= 0")
         if self.estimated_cost_usd is not None and self.estimated_cost_usd < 0:
@@ -88,16 +89,19 @@ class BenchmarkObservation:
         if self.output_tokens is not None and self.output_tokens < 0:
             raise ValueError("output_tokens must be >= 0")
 
-        if self.verified_success and self.verification_failures:
+        if self.verified_success and (self.verification_failures or 0) > 0:
             raise ValueError(
                 "verified_success cannot be true when verification_failures > 0"
             )
-        if self.safe_completion and (
-            self.duplicate_side_effects > 0 or self.unauthorized_actions > 0
-        ):
-            raise ValueError(
-                "safe_completion cannot be true with duplicate or unauthorized actions"
-            )
+        if self.safe_completion:
+            if self.duplicate_side_effects is None or self.unauthorized_actions is None:
+                raise ValueError(
+                    "safe_completion requires observed duplicate and authority evidence"
+                )
+            if self.duplicate_side_effects > 0 or self.unauthorized_actions > 0:
+                raise ValueError(
+                    "safe_completion cannot be true with duplicate or unauthorized actions"
+                )
 
     def to_dict(self) -> dict[str, Any]:
         self.validate()
