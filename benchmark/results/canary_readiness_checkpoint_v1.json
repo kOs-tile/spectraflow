@@ -19,11 +19,13 @@
   },
   "local_runtime_hook": {
     "attested": false,
-    "evidence_found": false
+    "evidence_found": false,
+    "tracking_issue": "https://github.com/kOs-tile/kavi-codex-state/issues/7"
   },
   "canary_dispatch_ready": false,
   "blockers": [
     "local_runtime_hook_not_attested"
   ],
-  "claim_boundary": "Bridge readiness and operator attestation are launch preconditions, not benchmark outcome evidence."
+  "claim_boundary": "Bridge readiness and operator attestation are launch preconditions, not benchmark outcome evidence.",
+  "blocker_owner": "local KAVI execution runtime"
 }
