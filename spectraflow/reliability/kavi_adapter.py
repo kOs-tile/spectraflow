@@ -66,7 +66,7 @@ def build_enqueue_payload(
         f"Reliability Lab bounded candidate-generation run {run.run_id}. "
         f"Task contract: {task['objective']} "
         f"Return a candidate implementation for exactly the function {run.function}. "
-        "Do not edit files, run commands, call tools, access network services, or perform external side effects. "
+        "Do not edit files, run commands, call tools, or access network services. Do not perform external side effects. "
         "Do not simulate or narrate the benchmark fault profile; the harness injects faults at the control-plane boundary. "
         "The final answer must contain one compact JSON line beginning exactly with RLAB_CANDIDATE_JSON: "
         "and containing keys task_id, function, and candidate_source, followed by a final line RLAB_LIVE_RESULT: PASS. "
