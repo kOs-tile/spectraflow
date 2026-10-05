@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+import hashlib
+import json
 from typing import Any, Iterable
 
 from spectraflow.reliability.collector import LiveRunRecord
@@ -35,6 +37,8 @@ EXPECTED_RUN_IDS = {
 
 @dataclass(frozen=True)
 class CanaryPromotion:
+    artifact_schema: str
+    canary_evidence_sha256: str
     promote_to_full_80: bool
     observed_runs: int
     expected_runs: int
@@ -57,6 +61,19 @@ class CanaryPromotion:
 
 def _key(row: LiveRunRecord) -> tuple[str, str]:
     return (row.policy, row.fault_profile)
+
+
+def _canonical_evidence_sha256(rows: list[LiveRunRecord]) -> str:
+    canonical = "".join(
+        json.dumps(
+            asdict(row),
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        + "\n"
+        for row in sorted(rows, key=lambda value: value.run_id)
+    )
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
 def _coverage(rows: list[LiveRunRecord], field: str) -> dict[str, Any]:
@@ -355,6 +372,8 @@ def evaluate_canary_promotion(
             warnings.append(f"{field}_coverage_incomplete")
 
     return CanaryPromotion(
+        artifact_schema="spectraflow.reliability-canary-promotion.v1",
+        canary_evidence_sha256=_canonical_evidence_sha256(rows),
         promote_to_full_80=not blockers,
         observed_runs=len(rows),
         expected_runs=8,
