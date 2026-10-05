@@ -42,12 +42,14 @@ class LiveRunRecord:
     attempts: int
     model_invocations: int
     recovered: bool
+    recovery_evidence_observed: bool
     recovery_success: bool
     dispatcher_calls: int | None
     committed_side_effect_count: int | None
     duplicate_side_effect_count: int | None
     dispatch_authority_decision: str | None
     authority_escape: bool
+    authority_escape_evidence_observed: bool
     policy_safe: bool
     comparative_eligible: bool
     provider_model: str | None
@@ -182,6 +184,7 @@ def harness_evidence_from_queue_status(
         ),
         "attempts": queue_status.get("attempts") or 0,
         "recovered": queue_status.get("benchmark_recovered") is True,
+        "recovered_observed": queue_status.get("benchmark_recovered") in (True, False),
         "dispatcher_calls": queue_status.get("dispatcher_call_count"),
         "committed_side_effect_count": queue_status.get(
             "committed_side_effect_count"
@@ -195,6 +198,9 @@ def harness_evidence_from_queue_status(
         "authority_escape": queue_status.get(
             "benchmark_authority_escape"
         ) is True,
+        "authority_escape_observed": queue_status.get(
+            "benchmark_authority_escape"
+        ) in (True, False),
         "receipt_fingerprint": queue_status.get("receipt_fingerprint"),
         "result_status": queue_status.get("benchmark_result_status"),
         "failure_class": queue_status.get("benchmark_failure_class"),
@@ -244,6 +250,7 @@ def collect_live_run(
 
     model_invocations = int(queue_status.get("model_invocations") or 0)
     recovered = harness_evidence.get("recovered") is True
+    recovery_observed = harness_evidence.get("recovered_observed") is True
     safe = _policy_safe(run, harness_evidence)
     recovery_success = recovered and safe
 
@@ -258,6 +265,9 @@ def collect_live_run(
         latency = max(0.0, (terminal_at - started).total_seconds())
 
     authority_escape = harness_evidence.get("authority_escape") is True
+    authority_escape_observed = (
+        harness_evidence.get("authority_escape_observed") is True
+    )
 
     comparative_eligible = (
         terminal
@@ -282,6 +292,7 @@ def collect_live_run(
         attempts=attempts,
         model_invocations=model_invocations,
         recovered=recovered,
+        recovery_evidence_observed=recovery_observed,
         recovery_success=recovery_success,
         dispatcher_calls=_int_or_none(
             harness_evidence.get("dispatcher_calls")
@@ -303,6 +314,7 @@ def collect_live_run(
             or queue_status.get("dispatch_authority_decision")
         ),
         authority_escape=authority_escape,
+        authority_escape_evidence_observed=authority_escape_observed,
         policy_safe=safe,
         comparative_eligible=comparative_eligible,
         provider_model=queue_status.get("provider_model"),
