@@ -20,6 +20,7 @@ on:
       - "tests/test_reliability_remote_bridge.py"
       - "tests/test_reliability_canary_readiness.py"
       - "tests/test_reliability_hook_attestation.py"
+      - "tests/test_reliability_live_analysis.py"
       - ".github/workflows/reliability-fast.yml"
   pull_request:
     paths:
@@ -62,3 +63,4 @@ jobs:
           tests/test_reliability_remote_bridge.py
           tests/test_reliability_hook_attestation.py
           tests/test_reliability_canary_readiness.py
+          tests/test_reliability_live_analysis.py
