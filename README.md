@@ -242,6 +242,8 @@ The next live layer is already specified and regression-locked: **10 bounded cod
 
 **Important boundary:** the 80 live agent executions have **not** yet been collected. The current repository proves the corpus, task contracts, policy matrix, fail-closed KAVI payload mapping, and instrumentation contract; it does not publish live comparative success/recovery rates before those executions occur.
 
+The live analysis path is also implemented: once sanitized records exist, `benchmark.reliability_live_report` computes evidence-aware policy/fault breakdowns with Wilson 95% confidence intervals while excluding unknown telemetry from affected denominators.
+
 Evidence and implementation contracts:
 - [Reliability Lab v1 methodology + real-corpus checkpoint](docs/RELIABILITY_LAB_V1.md)
 - [Reliability validation layers](docs/RELIABILITY_VALIDATION.md)
