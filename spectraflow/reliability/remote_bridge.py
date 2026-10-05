@@ -381,6 +381,133 @@ def collect_canary(
     }
 
 
+def _load_canary_collector_records(
+    path: str | Path,
+) -> list[LiveRunRecord]:
+    payload = json.loads(
+        Path(path).expanduser().resolve().read_text(encoding="utf-8")
+    )
+    raw_records = payload.get("records")
+    if not isinstance(raw_records, list):
+        raise ValueError("canary_collector_records_missing")
+    return [LiveRunRecord(**row) for row in raw_records]
+
+
+def execute_remaining(
+    client: BridgeClient,
+    *,
+    receipt_path: str | Path,
+    canary_collector_path: str | Path,
+    runtime_preflight_ready: bool,
+) -> dict[str, Any]:
+    """Enqueue only the remaining 72 runs after a clean canary promotion."""
+
+    if not runtime_preflight_ready:
+        raise RuntimeError("fresh_runtime_preflight_required")
+
+    records = _load_canary_collector_records(canary_collector_path)
+    promotion = evaluate_canary_promotion(records)
+    if promotion["promoted"] is not True:
+        raise RuntimeError(
+            "canary_promotion_blocked:"
+            + ",".join(promotion["blockers"])
+        )
+
+    health = client.health()
+    receipt_file = Path(receipt_path).expanduser().resolve()
+    if not receipt_file.exists():
+        raise FileNotFoundError("canary_receipt_file_required")
+
+    receipt_data = json.loads(receipt_file.read_text(encoding="utf-8"))
+    receipts: dict[str, Any] = dict(receipt_data.get("receipts") or {})
+
+    full = full_payloads()
+    full_ids = {payload["benchmark_run_id"] for payload in full}
+    canary_ids = {
+        payload["benchmark_run_id"]
+        for payload in canary_payloads()
+    }
+
+    unknown_receipts = sorted(set(receipts) - full_ids)
+    if unknown_receipts:
+        raise ValueError("receipt_file_contains_unknown_run_id")
+
+    missing_canary = sorted(
+        run_id
+        for run_id in canary_ids
+        if not isinstance(receipts.get(run_id), dict)
+        or not receipts[run_id].get("task_id")
+    )
+    if missing_canary:
+        raise RuntimeError("canary_receipts_incomplete")
+
+    expected_ids = full_ids
+
+    def persist() -> None:
+        observed = sum(
+            isinstance(receipts.get(run_id), dict)
+            and bool(receipts[run_id].get("task_id"))
+            for run_id in expected_ids
+        )
+        _safe_write_json(
+            receipt_file,
+            {
+                "schema_version": 1,
+                "bridge_version": health["version"],
+                "phase": "full",
+                "canary_promoted": True,
+                "receipts": receipts,
+                "complete": observed == 80,
+            },
+        )
+
+    for payload in remaining_payloads_after_canary():
+        run_id = payload["benchmark_run_id"]
+        if (
+            run_id in receipts
+            and isinstance(receipts[run_id], dict)
+            and receipts[run_id].get("task_id")
+        ):
+            continue
+
+        try:
+            result = client.enqueue(payload)
+        except Exception:
+            persist()
+            raise
+
+        task_id = result.get("task_id")
+        if not isinstance(task_id, str) or not task_id:
+            persist()
+            raise RuntimeError("bridge_enqueue_missing_task_id")
+
+        receipts[run_id] = {
+            "task_id": task_id,
+            "created": result.get("created"),
+            "idempotent_replay": result.get("idempotent_replay"),
+            "commit_sha": result.get("commit_sha"),
+        }
+        persist()
+
+    persisted_count = sum(
+        isinstance(receipts.get(run_id), dict)
+        and bool(receipts[run_id].get("task_id"))
+        for run_id in expected_ids
+    )
+
+    return {
+        "bridge_version": health["version"],
+        "canary_promoted": True,
+        "expected_runs": 80,
+        "persisted_receipts": persisted_count,
+        "remaining_runs": 72,
+        "complete": persisted_count == 80,
+        "receipt_path": str(receipt_file),
+        "token_persisted": False,
+        "promotion": promotion,
+    }
+
+
 def client_from_environment(
     *,
     base_url: str = DEFAULT_BASE_URL,
