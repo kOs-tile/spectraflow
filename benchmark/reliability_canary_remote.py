@@ -15,6 +15,7 @@ from spectraflow.reliability.remote_bridge import (
     client_from_environment,
     collect_canary,
     execute_canary,
+    full_batch_plan_summary,
 )
 
 
@@ -23,6 +24,7 @@ def main() -> None:
     sub = parser.add_subparsers(dest="command")
 
     sub.add_parser("plan")
+    sub.add_parser("full-plan")
 
     execute = sub.add_parser("execute")
     execute.add_argument("--runtime-hook-ready", action="store_true")
@@ -39,6 +41,9 @@ def main() -> None:
 
     if command == "plan":
         print(json.dumps(canary_plan_summary(), indent=2))
+        return
+    if command == "full-plan":
+        print(json.dumps(full_batch_plan_summary(), indent=2))
         return
 
     client = client_from_environment(base_url=args.base_url)
