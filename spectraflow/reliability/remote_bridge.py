@@ -508,6 +508,79 @@ def execute_remaining(
     }
 
 
+def collect_full(
+    client: BridgeClient,
+    *,
+    receipt_path: str | Path,
+    bundle_path: str | Path,
+) -> dict[str, Any]:
+    """Collect current status/evidence for the full 80-run live matrix."""
+
+    health = client.health()
+    receipt_file = Path(receipt_path).expanduser().resolve()
+    receipt_data = json.loads(receipt_file.read_text(encoding="utf-8"))
+    receipts = receipt_data.get("receipts") or {}
+
+    manifest, runs = _manifest_and_runs()
+    if len(runs) != 80:
+        raise RuntimeError("full_live_plan_must_have_eighty_runs")
+
+    queue_statuses: dict[str, dict[str, Any]] = {}
+    harness_evidence: dict[str, dict[str, Any]] = {}
+    missing_receipts: list[str] = []
+
+    for run in runs:
+        receipt = receipts.get(run.run_id)
+        if not isinstance(receipt, dict) or not receipt.get("task_id"):
+            missing_receipts.append(run.run_id)
+            continue
+
+        status = client.status(receipt["task_id"])
+        queue_statuses[run.run_id] = status
+        harness_evidence[run.run_id] = harness_evidence_from_queue_status(
+            run,
+            status,
+        )
+
+    bundle = {
+        "schema_version": 1,
+        "suite": manifest["suite"],
+        "bridge_version": health["version"],
+        "phase": "full",
+        "expected_runs": 80,
+        "queue_statuses": queue_statuses,
+        "harness_evidence": harness_evidence,
+        "missing_receipts": missing_receipts,
+    }
+    _safe_write_json(bundle_path, bundle)
+
+    records: list[LiveRunRecord] = []
+    for run in runs:
+        if run.run_id not in queue_statuses:
+            continue
+        records.append(
+            collect_live_run(
+                run,
+                queue_status=queue_statuses[run.run_id],
+                harness_evidence=harness_evidence[run.run_id],
+            )
+        )
+
+    aggregate = aggregate_live_records(records)
+
+    return {
+        "bridge_version": health["version"],
+        "expected_runs": 80,
+        "statuses_collected": len(queue_statuses),
+        "missing_receipts": missing_receipts,
+        "terminal": aggregate["terminal"],
+        "comparative_eligible": aggregate["comparative_eligible"],
+        "complete_receipt_set": not missing_receipts,
+        "bundle_path": str(Path(bundle_path).expanduser().resolve()),
+        "aggregate": aggregate,
+    }
+
+
 def client_from_environment(
     *,
     base_url: str = DEFAULT_BASE_URL,
