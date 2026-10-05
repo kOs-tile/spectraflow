@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spectraflow-reliability-runtime"
+version = "0.1.0"
+description = "Minimal install surface for SPECTRAFLOW Reliability Lab runtime integration"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+  {name = "Onur Kavi"}
+]
+dependencies = []
+
+[tool.setuptools]
+packages = ["spectraflow", "spectraflow.reliability", "benchmark"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+benchmark = [
+  "*.json",
+  "live_fixture/*.py",
+]
