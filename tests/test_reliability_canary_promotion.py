@@ -1,5 +1,8 @@
-from dataclasses import replace
+from dataclasses import asdict, replace
+import json
 
+
+from benchmark.reliability_canary_promote import evaluate_collector_file
 from spectraflow.reliability.collector import LiveRunRecord
 from spectraflow.reliability.promotion import evaluate_canary_promotion
 
@@ -297,3 +300,27 @@ def test_missing_human_intervention_evidence_fails_closed():
 
     assert result.promote_to_full_80 is False
     assert "human_intervention_evidence_incomplete" in result.blockers
+
+
+
+def test_remote_collect_output_can_feed_promotion_directly(tmp_path):
+    rows = _clean_canary()
+    path = tmp_path / "canary-collect.json"
+    path.write_text(
+        json.dumps(
+            {
+                "bridge_version": "0.2.2",
+                "statuses_collected": 8,
+                "aggregate": {
+                    "records": [asdict(row) for row in rows],
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = evaluate_collector_file(path)
+
+    assert result["promote_to_full_80"] is True
+    assert result["observed_runs"] == 8
+    assert result["controlled_provider_model"] == "controlled-test-model"
