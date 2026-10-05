@@ -21,12 +21,14 @@ from typing import Any, Callable
 
 from benchmark.reliability_live_plan import MANIFEST
 from spectraflow.reliability.collector import (
+    LiveRunRecord,
     aggregate_live_records,
     collect_live_run,
     harness_evidence_from_queue_status,
 )
 from spectraflow.reliability.kavi_adapter import build_dispatch_batch
 from spectraflow.reliability.live import build_live_plan, load_live_manifest
+from spectraflow.reliability.promotion import evaluate_canary_promotion
 
 
 DEFAULT_BASE_URL = "https://kavi-dispatch-bridge.vercel.app"
@@ -190,6 +192,51 @@ def canary_plan_summary() -> dict[str, Any]:
         "bridge_base_url": DEFAULT_BASE_URL,
         "network_dispatch_performed": False,
         "requires_runtime_hook_ready_attestation": True,
+    }
+
+
+def full_payloads() -> list[dict[str, Any]]:
+    manifest, _runs = _manifest_and_runs()
+    payloads = build_dispatch_batch(manifest, isolation_ready=True)
+    if len(payloads) != 80:
+        raise RuntimeError("full_live_plan_must_have_eighty_runs")
+    return payloads
+
+
+def remaining_payloads_after_canary() -> list[dict[str, Any]]:
+    canary_ids = {
+        payload["benchmark_run_id"]
+        for payload in canary_payloads()
+    }
+    remaining = [
+        payload
+        for payload in full_payloads()
+        if payload["benchmark_run_id"] not in canary_ids
+    ]
+    if len(remaining) != 72:
+        raise RuntimeError("remaining_live_plan_must_have_seventy_two_runs")
+    return remaining
+
+
+def full_plan_summary() -> dict[str, Any]:
+    payloads = full_payloads()
+    remaining = remaining_payloads_after_canary()
+    return {
+        "suite": payloads[0]["benchmark_suite"],
+        "runs": len(payloads),
+        "canary_runs": 8,
+        "remaining_runs": len(remaining),
+        "unique_task_ids": len(
+            {payload["benchmark_task_id"] for payload in payloads}
+        ),
+        "policies": sorted({payload["benchmark_policy"] for payload in payloads}),
+        "fault_profiles": sorted(
+            {payload["benchmark_fault_profile"] for payload in payloads}
+        ),
+        "bridge_base_url": DEFAULT_BASE_URL,
+        "network_dispatch_performed": False,
+        "requires_canary_promotion": True,
+        "requires_fresh_runtime_preflight": True,
     }
 
 
