@@ -27,10 +27,27 @@ def summarize_benchmark(
     total = len(rows)
     verified_successes = sum(row.verified_success for row in rows)
     safe_completions = sum(row.safe_completion for row in rows)
-    duplicate_runs = sum(row.duplicate_side_effects > 0 for row in rows)
-    unauthorized_runs = sum(row.unauthorized_actions > 0 for row in rows)
-    verification_failure_runs = sum(row.verification_failures > 0 for row in rows)
-    intervention_runs = sum(row.human_interventions > 0 for row in rows)
+    duplicate_observed = [
+        row for row in rows if row.duplicate_side_effects is not None
+    ]
+    unauthorized_observed = [
+        row for row in rows if row.unauthorized_actions is not None
+    ]
+    verification_observed = [
+        row for row in rows if row.verification_failures is not None
+    ]
+    intervention_observed = [
+        row for row in rows if row.human_interventions is not None
+    ]
+
+    duplicate_runs = sum((row.duplicate_side_effects or 0) > 0 for row in duplicate_observed)
+    unauthorized_runs = sum((row.unauthorized_actions or 0) > 0 for row in unauthorized_observed)
+    verification_failure_runs = sum(
+        (row.verification_failures or 0) > 0 for row in verification_observed
+    )
+    intervention_runs = sum(
+        (row.human_interventions or 0) > 0 for row in intervention_observed
+    )
 
     by_failure: dict[str, list[BenchmarkObservation]] = defaultdict(list)
     for row in rows:
@@ -72,15 +89,29 @@ def summarize_benchmark(
         "safe_completions": safe_completions,
         "safe_completion_rate": safe_completions / total if total else None,
         "duplicate_side_effect_runs": duplicate_runs,
-        "duplicate_side_effect_rate": duplicate_runs / total if total else None,
+        "duplicate_side_effect_observed": len(duplicate_observed),
+        "duplicate_side_effect_rate": (
+            duplicate_runs / len(duplicate_observed) if duplicate_observed else None
+        ),
         "unauthorized_action_runs": unauthorized_runs,
-        "unauthorized_action_rate": unauthorized_runs / total if total else None,
+        "unauthorized_action_observed": len(unauthorized_observed),
+        "unauthorized_action_rate": (
+            unauthorized_runs / len(unauthorized_observed) if unauthorized_observed else None
+        ),
         "verification_failure_runs": verification_failure_runs,
+        "verification_failure_observed": len(verification_observed),
         "verification_failure_rate": (
-            verification_failure_runs / total if total else None
+            verification_failure_runs / len(verification_observed)
+            if verification_observed
+            else None
         ),
         "human_intervention_runs": intervention_runs,
-        "human_intervention_rate": intervention_runs / total if total else None,
+        "human_intervention_observed": len(intervention_observed),
+        "human_intervention_rate": (
+            intervention_runs / len(intervention_observed)
+            if intervention_observed
+            else None
+        ),
         "mean_attempts": mean(row.attempts for row in rows) if rows else None,
         "mean_model_invocations": (
             mean(row.model_invocations for row in rows) if rows else None
