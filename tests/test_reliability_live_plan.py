@@ -27,6 +27,34 @@ def test_live_plan_is_exactly_eighty_isolated_runs():
         assert sum(run.task_id == task["task_id"] for run in runs) == 8
 
 
+def test_clamp_contract_includes_inverted_range_rejection():
+    manifest = load_live_manifest(MANIFEST)
+    task = next(row for row in manifest["tasks"] if row["task_id"] == "clamp-int")
+
+    assert {"args": [5, 10, 0]} in task["cases"]
+    assert {"args": ["7", 0, 10]} in task["cases"]
+    assert len(task["cases"]) == 5
+
+
+def test_live_task_contract_contains_critical_hidden_edges():
+    manifest = load_live_manifest(MANIFEST)
+    tasks = {row["task_id"]: row for row in manifest["tasks"]}
+
+    assert {"args": [" "]} in tasks["retry-after"]["cases"]
+    assert {"args": [[]]} in tasks["stable-unique"]["cases"]
+    assert {"args": ["authorization: bearer lowerCASE"]} in tasks["redact-bearer"]["cases"]
+    assert {"args": ["TIMED_OUT", None]} in tasks["timeout-classifier"]["cases"]
+    assert {"args": [{"a": 1, "b": 2}]} in tasks["canonical-digest"]["cases"]
+    assert {"args": ["ready", "completed"]} in tasks["state-transition"]["cases"]
+    assert {"args": ["queued", "ready"]} in tasks["state-transition"]["cases"]
+    assert {
+        "args": [
+            "2026-10-04T05:00:00-05:00",
+            "2026-10-04T10:00:00Z",
+        ]
+    } in tasks["expiry-boundary"]["cases"]
+
+
 def test_baseline_fixture_is_genuinely_broken_for_every_task():
     manifest = load_live_manifest(MANIFEST)
 
