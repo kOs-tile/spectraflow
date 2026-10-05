@@ -116,7 +116,8 @@ def summarize_benchmark(
         "mean_model_invocations": (
             mean(row.model_invocations for row in rows) if rows else None
         ),
-        "mean_tool_calls": mean(row.tool_calls for row in rows) if rows else None,
+        "tool_calls": _optional_mean(row.tool_calls for row in rows),
+        "dispatcher_calls": _optional_mean(row.dispatcher_calls for row in rows),
         "input_tokens": _optional_mean(row.input_tokens for row in rows),
         "output_tokens": _optional_mean(row.output_tokens for row in rows),
         "estimated_cost_usd": _optional_mean(
