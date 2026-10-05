@@ -21,6 +21,7 @@ on:
       - "tests/test_reliability_canary_readiness.py"
       - "tests/test_reliability_hook_attestation.py"
       - "tests/test_reliability_live_analysis.py"
+      - "tests/test_reliability_canary_promotion.py"
       - ".github/workflows/reliability-fast.yml"
   pull_request:
     paths:
@@ -64,3 +65,4 @@ jobs:
           tests/test_reliability_hook_attestation.py
           tests/test_reliability_canary_readiness.py
           tests/test_reliability_live_analysis.py
+          tests/test_reliability_canary_promotion.py
