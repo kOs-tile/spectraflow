@@ -122,6 +122,8 @@ def test_clean_canary_promotes_to_full_80():
     result = evaluate_canary_promotion(_clean_canary())
 
     assert result.promote_to_full_80 is True
+    assert result.artifact_schema == "spectraflow.reliability-canary-promotion.v1"
+    assert len(result.canary_evidence_sha256) == 64
     assert result.blockers == ()
     assert result.warnings == ()
     assert result.observed_runs == 8
@@ -137,6 +139,27 @@ def test_clean_canary_promotes_to_full_80():
     assert result.zero_intervention_runs == 8
     assert result.controlled_provider_model == "controlled-test-model"
     assert all(result.checks.values())
+
+
+def test_promotion_artifact_binds_to_order_independent_canary_digest():
+    rows = _clean_canary()
+
+    forward = evaluate_canary_promotion(rows)
+    reverse = evaluate_canary_promotion(list(reversed(rows)))
+
+    assert forward.artifact_schema == "spectraflow.reliability-canary-promotion.v1"
+    assert len(forward.canary_evidence_sha256) == 64
+    assert forward.canary_evidence_sha256 == reverse.canary_evidence_sha256
+
+
+def test_canary_evidence_mutation_changes_promotion_digest():
+    rows = _clean_canary()
+    original = evaluate_canary_promotion(rows)
+
+    rows[0] = replace(rows[0], input_tokens=101)
+    changed = evaluate_canary_promotion(rows)
+
+    assert original.canary_evidence_sha256 != changed.canary_evidence_sha256
 
 
 def test_wrong_run_identity_blocks_promotion():
