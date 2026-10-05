@@ -27,6 +27,14 @@ def test_live_plan_is_exactly_eighty_isolated_runs():
         assert sum(run.task_id == task["task_id"] for run in runs) == 8
 
 
+def test_clamp_contract_includes_inverted_range_rejection():
+    manifest = load_live_manifest(MANIFEST)
+    task = next(row for row in manifest["tasks"] if row["task_id"] == "clamp-int")
+
+    assert {"args": [5, 10, 0]} in task["cases"]
+    assert len(task["cases"]) == 4
+
+
 def test_baseline_fixture_is_genuinely_broken_for_every_task():
     manifest = load_live_manifest(MANIFEST)
 
