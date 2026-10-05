@@ -502,6 +502,23 @@ Required result:
 The attestation SHA, deployed runner SHA, and repair/source SHA must match. A
 previously valid attestation fails closed after runtime/source drift.
 
+
+For the normal local operator path, use the combined offline preflight:
+
+```bash
+python -m benchmark.reliability_local_preflight \
+  --bridge-health-json <saved-bridge-health.json> \
+  --deployed-runner-file <deployed-execution_control.py> \
+  --source-runner-file <repair-source-execution_control.py> \
+  --attestation-output <local-runtime-hook-attestation.json> \
+  --preflight-output <local-canary-preflight.json>
+```
+
+This command performs no network call and never enqueues the canary. It emits a
+sanitized structural attestation, verifies source/runtime hash equality, evaluates
+the repository/bridge/runtime readiness gate, and renders the eight-run canary
+plan in one artifact.
+
 ### Execute canary
 
 Set the bearer secret only in the local process environment. Do not place it in
