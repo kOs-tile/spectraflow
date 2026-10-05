@@ -219,17 +219,58 @@ def remaining_payloads() -> list[dict[str, Any]]:
     return selected
 
 
+def remaining_waves() -> list[dict[str, Any]]:
+    """Split the remaining 72 runs into nine deterministic 8-run task waves."""
+
+    manifest, _runs = _manifest_and_runs()
+    payloads = remaining_payloads()
+    by_task: dict[str, list[dict[str, Any]]] = {}
+    for payload in payloads:
+        by_task.setdefault(payload["benchmark_task_id"], []).append(payload)
+
+    waves = []
+    for index, task in enumerate(manifest["tasks"][1:], start=1):
+        task_id = task["task_id"]
+        rows = by_task.get(task_id, [])
+        run_ids = [row["benchmark_run_id"] for row in rows]
+        if len(rows) != 8 or len(set(run_ids)) != 8:
+            raise RuntimeError("remaining_wave_must_have_eight_unique_runs")
+        waves.append(
+            {
+                "wave": index,
+                "task_id": task_id,
+                "runs": len(rows),
+                "run_ids": run_ids,
+                "payloads": rows,
+            }
+        )
+
+    if len(waves) != 9:
+        raise RuntimeError("remaining_plan_must_have_nine_waves")
+    return waves
+
+
 def full_batch_plan_summary() -> dict[str, Any]:
     """Describe the remaining 72-run batch. This function never dispatches."""
 
     payloads = remaining_payloads()
-    task_ids = sorted({payload["benchmark_task_id"] for payload in payloads})
+    waves = remaining_waves()
+    task_ids = [wave["task_id"] for wave in waves]
     return {
         "suite": payloads[0]["benchmark_suite"],
         "tasks": len(task_ids),
         "task_ids": task_ids,
         "runs": len(payloads),
         "run_ids": [payload["benchmark_run_id"] for payload in payloads],
+        "waves": [
+            {
+                "wave": wave["wave"],
+                "task_id": wave["task_id"],
+                "runs": wave["runs"],
+                "run_ids": wave["run_ids"],
+            }
+            for wave in waves
+        ],
         "policies": sorted({payload["benchmark_policy"] for payload in payloads}),
         "fault_profiles": sorted(
             {payload["benchmark_fault_profile"] for payload in payloads}
@@ -237,6 +278,7 @@ def full_batch_plan_summary() -> dict[str, Any]:
         "bridge_base_url": DEFAULT_BASE_URL,
         "network_dispatch_performed": False,
         "requires_canary_promotion_pass": True,
+        "requires_previous_wave_reconciliation": True,
         "requires_runtime_hook_ready_attestation": True,
     }
 
