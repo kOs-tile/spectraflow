@@ -53,3 +53,11 @@ assert shim.SUITE == "spectraflow.reliability-live.v1"
     )
 
     assert result.returncode == 0, result.stderr
+
+
+
+def test_historical_top_level_config_api_remains_available():
+    from spectraflow import Settings, get_settings
+
+    assert Settings is not None
+    assert callable(get_settings)
