@@ -186,3 +186,62 @@ def validate_hook_attestation(payload: dict[str, Any]) -> bool:
         and hooks.get(hook, {}).get("called_in_execution_function") is True
         for hook in REQUIRED_HOOKS
     )
+
+
+def validate_hook_attestation_binding(
+    payload: dict[str, Any],
+    *,
+    deployed_runner_path: str | Path,
+    source_runner_path: str | Path | None = None,
+) -> dict[str, Any]:
+    """Bind a structural attestation to the current deployed/source runner bytes.
+
+    The returned object is sanitized: it exposes digests and booleans only, never
+    the local paths used for verification.
+    """
+
+    attestation_valid = validate_hook_attestation(payload)
+
+    deployed = Path(deployed_runner_path).expanduser().resolve()
+    deployed_raw = deployed.read_bytes()
+    deployed_sha256 = _sha256(deployed_raw)
+
+    source_sha256 = None
+    source_matches_deployed = None
+    source_matches_attestation = None
+    if source_runner_path is not None:
+        source = Path(source_runner_path).expanduser().resolve()
+        source_raw = source.read_bytes()
+        source_sha256 = _sha256(source_raw)
+        source_matches_deployed = source_sha256 == deployed_sha256
+        source_matches_attestation = (
+            source_sha256 == payload.get("source_sha256")
+        )
+
+    deployed_matches_attestation = (
+        deployed_sha256 == payload.get("source_sha256")
+    )
+
+    bound = (
+        attestation_valid
+        and deployed_matches_attestation
+        and (
+            source_runner_path is None
+            or (
+                source_matches_deployed is True
+                and source_matches_attestation is True
+            )
+        )
+    )
+
+    return {
+        "bound": bound,
+        "attestation_valid": attestation_valid,
+        "attested_source_sha256": payload.get("source_sha256"),
+        "deployed_sha256": deployed_sha256,
+        "deployed_matches_attestation": deployed_matches_attestation,
+        "source_sha256": source_sha256,
+        "source_matches_deployed": source_matches_deployed,
+        "source_matches_attestation": source_matches_attestation,
+        "local_path_exported": False,
+    }
