@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "checkpoint": "spectraflow.reliability-canary-readiness.v1",
+  "observed_at": "2026-10-05T00:24:05Z",
+  "repository_contract_ready": true,
+  "production_bridge": {
+    "base_url": "https://kavi-dispatch-bridge.vercel.app",
+    "http_status": 200,
+    "ok": true,
+    "configured": true,
+    "version": "0.2.2",
+    "authority": "kOs-tile/kavi-codex-state",
+    "production_deployment_sha": "12c5049928c59cbdf4e0fdf6b3eb59ed0a4a7080",
+    "required_env_keys_present": [
+      "KAVI_GITHUB_TOKEN",
+      "KAVI_DISPATCH_TOKEN"
+    ],
+    "secret_values_observed": false
+  },
+  "local_runtime_hook": {
+    "attested": false,
+    "evidence_found": false
+  },
+  "canary_dispatch_ready": false,
+  "blockers": [
+    "local_runtime_hook_not_attested"
+  ],
+  "claim_boundary": "Bridge readiness and operator attestation are launch preconditions, not benchmark outcome evidence."
+}
