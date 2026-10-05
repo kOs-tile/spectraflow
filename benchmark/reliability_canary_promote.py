@@ -15,9 +15,13 @@ from spectraflow.reliability.promotion import (
 
 def evaluate_collector_file(path: Path) -> dict:
     payload = json.loads(path.read_text(encoding="utf-8"))
+    raw_records = payload.get("records")
+    if raw_records is None:
+        aggregate = payload.get("aggregate")
+        raw_records = aggregate.get("records") if isinstance(aggregate, dict) else None
     records = [
         LiveRunRecord(**row)
-        for row in (payload.get("records") or [])
+        for row in (raw_records or [])
     ]
     return promotion_to_dict(evaluate_canary_promotion(records))
 
