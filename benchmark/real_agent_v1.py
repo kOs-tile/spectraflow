@@ -25,7 +25,16 @@ def observation_from_mapping(payload: dict) -> BenchmarkObservation:
         safe_completion=bool(payload["safe_completion"]),
         attempts=int(payload["attempts"]),
         model_invocations=int(payload["model_invocations"]),
-        tool_calls=int(payload["tool_calls"]),
+        tool_calls=(
+            int(payload["tool_calls"])
+            if payload.get("tool_calls") is not None
+            else None
+        ),
+        dispatcher_calls=(
+            int(payload["dispatcher_calls"])
+            if payload.get("dispatcher_calls") is not None
+            else None
+        ),
         input_tokens=payload.get("input_tokens"),
         output_tokens=payload.get("output_tokens"),
         estimated_cost_usd=payload.get("estimated_cost_usd"),
