@@ -135,3 +135,32 @@ Before publishing comparative rates, runtime telemetry must add:
 - benchmark run/scenario identity
 
 Until those fields exist, Reliability Lab must continue to report coverage gaps instead of inferring them.
+
+## Live result analysis
+
+After a sanitized live collector result exists, generate the policy/fault report with:
+
+```bash
+python -m benchmark.reliability_live_report <collector-result.json>
+```
+
+The analyzer keeps missing evidence out of metric denominators instead of turning
+unknown values into failures.
+
+It reports:
+
+- task-success rate over runs with explicit canonical verification;
+- comparative policy-safety rate over fault-attested eligible runs;
+- recovery and safe-recovery rates only where explicit recovery evidence exists;
+- authority-escape rate only where explicit authority outcome evidence exists;
+- duplicate-effect incidence and count;
+- model invocation totals;
+- token, cost, intervention, and latency coverage before aggregates;
+- policy, fault-profile, and policy × fault-profile breakdowns;
+- Wilson 95% confidence intervals for proportions;
+- duplicate run-ID detection and exact terminal-run completeness.
+
+A complete 80-run set is not the same thing as 80 comparative-eligible runs.
+Agent task failure remains a real task outcome; policy-safety denominators are
+reported separately. Production-world reliability claims remain out of scope.
+
