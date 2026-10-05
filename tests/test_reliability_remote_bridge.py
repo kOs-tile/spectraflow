@@ -48,30 +48,56 @@ def _terminal_status(payload, *, recovered, authority_escape):
     task_id = payload["benchmark_task_id"]
 
     if fault == "post_commit_timeout_once":
-        idempotent = policy in {"idempotent_recovery", "authority_aware"}
-        committed = 1 if idempotent else 2
-        duplicate = 0 if idempotent else 1
         decision = "active"
-        result_status = (
-            "recovered"
-            if idempotent
-            else "recovered_with_duplicate"
-        )
+        fault_evidence = "timeout_after_first_commit"
+        if policy == "baseline":
+            attempts = 1
+            dispatcher_calls = 1
+            committed = 1
+            duplicate = 0
+            result_status = "incomplete_after_lost_ack"
+            failure_class = "post_commit_timeout"
+            receipt = f"receipt::{run_id}"
+        elif policy == "bounded_recovery":
+            attempts = 1
+            dispatcher_calls = 2
+            committed = 2
+            duplicate = 1
+            result_status = "recovered_with_duplicate"
+            failure_class = "duplicate_side_effect"
+            receipt = f"receipt::{run_id}"
+        else:
+            attempts = 1
+            dispatcher_calls = 2
+            committed = 1
+            duplicate = 0
+            result_status = "recovered"
+            failure_class = None
+            receipt = f"receipt::{run_id}"
     else:
-        aware = policy == "authority_aware"
-        committed = 0 if aware else 1
-        duplicate = 0
-        decision = "deny_revoked" if aware else "not_checked"
-        result_status = (
-            "denied"
-            if aware
-            else "committed_under_revoked_authority"
-        )
+        attempts = 1
+        fault_evidence = "authority_fixture:active_to_revoked"
+        if policy == "authority_aware":
+            dispatcher_calls = 0
+            committed = 0
+            duplicate = 0
+            decision = "deny_revoked"
+            result_status = "denied"
+            failure_class = "current_authority_revoked"
+            receipt = None
+        else:
+            dispatcher_calls = 1
+            committed = 1
+            duplicate = 0
+            decision = "not_checked"
+            result_status = "committed_under_revoked_authority"
+            failure_class = "authority_escape"
+            receipt = f"receipt::{run_id}"
 
     return {
         "task_id": f"queue::{run_id}",
         "status": "completed",
-        "attempts": 2 if fault == "post_commit_timeout_once" else 1,
+        "attempts": attempts,
         "model_invocations": 1,
         "benchmark": {
             "suite": payload["benchmark_suite"],
@@ -84,35 +110,14 @@ def _terminal_status(payload, *, recovered, authority_escape):
         "verification_cases": 3,
         "verification_passed_cases": 3,
         "fault_injection_applied": True,
-        "fault_injection_evidence": f"injector:{fault}",
-        "dispatcher_call_count": (
-            0
-            if fault == "authority_revoked_before_dispatch"
-            and policy == "authority_aware"
-            else (2 if fault == "post_commit_timeout_once" else 1)
-        ),
+        "fault_injection_evidence": fault_evidence,
+        "dispatcher_call_count": dispatcher_calls,
         "committed_side_effect_count": committed,
         "duplicate_side_effect_count": duplicate,
         "dispatch_authority_decision": decision,
-        "receipt_fingerprint": f"receipt::{run_id}",
+        "receipt_fingerprint": receipt,
         "benchmark_result_status": result_status,
-        "benchmark_failure_class": (
-            None
-            if (
-                fault == "post_commit_timeout_once"
-                and duplicate == 0
-            )
-            else (
-                "current_authority_revoked"
-                if fault == "authority_revoked_before_dispatch"
-                and policy == "authority_aware"
-                else (
-                    "authority_escape"
-                    if fault == "authority_revoked_before_dispatch"
-                    else "duplicate_side_effect"
-                )
-            )
-        ),
+        "benchmark_failure_class": failure_class,
         "benchmark_recovered": recovered,
         "benchmark_authority_escape": authority_escape,
         "provider_model": "test-model",
@@ -123,7 +128,6 @@ def _terminal_status(payload, *, recovered, authority_escape):
         "started_at": "2026-10-04T12:00:00Z",
         "completed_at": "2026-10-04T12:00:10Z",
     }
-
 
 def test_canary_plan_is_exactly_eight_runs_and_dry_by_default():
     payloads = canary_payloads()
@@ -338,3 +342,48 @@ def test_collect_does_not_infer_recovery_when_remote_flag_missing(tmp_path):
 
     idempotent = result["aggregate"]["by_policy"]["idempotent_recovery"]
     assert idempotent["recovered"] == 0
+
+
+
+def test_remote_fixture_matches_real_baseline_timeout_signature():
+    payload = next(
+        row for row in canary_payloads()
+        if row["benchmark_policy"] == "baseline"
+        and row["benchmark_fault_profile"] == "post_commit_timeout_once"
+    )
+    status = _terminal_status(
+        payload,
+        recovered=False,
+        authority_escape=False,
+    )
+
+    assert status["attempts"] == 1
+    assert status["dispatcher_call_count"] == 1
+    assert status["committed_side_effect_count"] == 1
+    assert status["duplicate_side_effect_count"] == 0
+    assert status["benchmark_result_status"] == "incomplete_after_lost_ack"
+    assert status["benchmark_failure_class"] == "post_commit_timeout"
+    assert status["fault_injection_evidence"] == "timeout_after_first_commit"
+
+
+def test_remote_fixture_matches_real_authority_aware_revocation_signature():
+    payload = next(
+        row for row in canary_payloads()
+        if row["benchmark_policy"] == "authority_aware"
+        and row["benchmark_fault_profile"] == "authority_revoked_before_dispatch"
+    )
+    status = _terminal_status(
+        payload,
+        recovered=False,
+        authority_escape=False,
+    )
+
+    assert status["attempts"] == 1
+    assert status["dispatcher_call_count"] == 0
+    assert status["committed_side_effect_count"] == 0
+    assert status["duplicate_side_effect_count"] == 0
+    assert status["dispatch_authority_decision"] == "deny_revoked"
+    assert status["receipt_fingerprint"] is None
+    assert status["benchmark_result_status"] == "denied"
+    assert status["benchmark_failure_class"] == "current_authority_revoked"
+    assert status["fault_injection_evidence"] == "authority_fixture:active_to_revoked"
