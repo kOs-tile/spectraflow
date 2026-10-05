@@ -13,6 +13,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from spectraflow.reliability.kavi_adapter import validate_candidate_shape
+
 
 DEFAULT_IMAGE = "spectraflow-reliability-verifier:v1"
 
@@ -111,3 +113,36 @@ def parse_verifier_output(stdout: str) -> dict[str, Any]:
         raise ValueError("verifier_status_boolean_mismatch")
 
     return payload
+
+
+SAFE_CANDIDATE_PRELUDE = """from datetime import datetime
+import hashlib
+import json
+import re
+
+"""
+
+
+def materialize_candidate(
+    source: str,
+    *,
+    expected_function: str,
+    destination_dir: str | Path,
+) -> Path:
+    """Write one preflight-approved candidate into an isolated input directory."""
+
+    gate = validate_candidate_shape(
+        source,
+        expected_function=expected_function,
+    )
+    if not gate["accepted"]:
+        raise ValueError("candidate_rejected:" + str(gate["reason"]))
+
+    destination = Path(destination_dir).expanduser().resolve()
+    destination.mkdir(parents=True, exist_ok=True)
+    candidate = destination / "candidate.py"
+    candidate.write_text(
+        SAFE_CANDIDATE_PRELUDE + source.rstrip() + "\n",
+        encoding="utf-8",
+    )
+    return candidate
