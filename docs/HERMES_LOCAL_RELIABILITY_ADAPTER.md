@@ -510,13 +510,17 @@ arguments, files, commits, or result bundles.
 ```bash
 set KAVI_DISPATCH_TOKEN=<local-secret>
 python -m benchmark.reliability_canary_remote execute \
-  --runtime-hook-ready \
+  --runtime-hook-attestation-json <local-runtime-hook-attestation.json> \
+  --deployed-runner-file <deployed-execution_control.py> \
+  --source-runner-file <repair-source-execution_control.py> \
   --receipt-file <local-canary-receipts.json>
 ```
 
-The explicit `--runtime-hook-ready` flag is only an operator precondition. It
-is not benchmark evidence. The actual benchmark evidence is emitted later by
-the local runtime hooks.
+The execute command re-validates the attestation against the **current**
+deployed and repair/source runner bytes immediately before network enqueue.
+A manually asserted readiness boolean is not accepted. Source drift, deployed
+runtime drift, a stale/tampered attestation, or a structural hook failure stops
+before any canary task is enqueued.
 
 Enqueue is resumable because every run has a stable queue idempotency key. The
 receipt file stores only run ID → authoritative queue task ID / commit metadata.
