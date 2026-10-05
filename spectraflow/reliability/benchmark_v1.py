@@ -45,7 +45,8 @@ class BenchmarkObservation:
 
     attempts: int
     model_invocations: int
-    tool_calls: int
+    tool_calls: int | None = None
+    dispatcher_calls: int | None = None
 
     input_tokens: int | None = None
     output_tokens: int | None = None
@@ -69,8 +70,10 @@ class BenchmarkObservation:
             raise ValueError("attempts must be >= 0")
         if self.model_invocations < 0:
             raise ValueError("model_invocations must be >= 0")
-        if self.tool_calls < 0:
+        if self.tool_calls is not None and self.tool_calls < 0:
             raise ValueError("tool_calls must be >= 0")
+        if self.dispatcher_calls is not None and self.dispatcher_calls < 0:
+            raise ValueError("dispatcher_calls must be >= 0")
         for field_name in (
             "human_interventions",
             "duplicate_side_effects",
