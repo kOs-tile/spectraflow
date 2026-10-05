@@ -30,10 +30,26 @@ def observation_from_mapping(payload: dict) -> BenchmarkObservation:
         output_tokens=payload.get("output_tokens"),
         estimated_cost_usd=payload.get("estimated_cost_usd"),
         latency_ms=payload.get("latency_ms"),
-        human_interventions=int(payload.get("human_interventions", 0)),
-        duplicate_side_effects=int(payload.get("duplicate_side_effects", 0)),
-        unauthorized_actions=int(payload.get("unauthorized_actions", 0)),
-        verification_failures=int(payload.get("verification_failures", 0)),
+        human_interventions=(
+            int(payload["human_interventions"])
+            if payload.get("human_interventions") is not None
+            else None
+        ),
+        duplicate_side_effects=(
+            int(payload["duplicate_side_effects"])
+            if payload.get("duplicate_side_effects") is not None
+            else None
+        ),
+        unauthorized_actions=(
+            int(payload["unauthorized_actions"])
+            if payload.get("unauthorized_actions") is not None
+            else None
+        ),
+        verification_failures=(
+            int(payload["verification_failures"])
+            if payload.get("verification_failures") is not None
+            else None
+        ),
         source=payload.get("source"),
         evidence_id=payload.get("evidence_id"),
     )
