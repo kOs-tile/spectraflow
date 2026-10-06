@@ -10,6 +10,9 @@ from spectraflow.reliability.remote_bridge import (
     canary_plan_summary,
     collect_canary,
     execute_canary,
+    full_batch_plan_summary,
+    remaining_payloads,
+    remaining_waves,
 )
 
 
@@ -141,6 +144,54 @@ def test_canary_plan_is_exactly_eight_runs_and_dry_by_default():
     assert plan["bridge_base_url"] == DEFAULT_BASE_URL
     assert {payload["benchmark_task_id"] for payload in payloads} == {
         "clamp-int"
+    }
+
+
+def test_remaining_full_batch_plan_is_exactly_72_unique_non_canary_runs():
+    canary = canary_payloads()
+    remaining = remaining_payloads()
+    plan = full_batch_plan_summary()
+
+    canary_ids = {
+        payload["benchmark_run_id"] for payload in canary
+    }
+    remaining_ids = {
+        payload["benchmark_run_id"] for payload in remaining
+    }
+
+    assert len(remaining) == 72
+    assert len(remaining_ids) == 72
+    assert canary_ids.isdisjoint(remaining_ids)
+    assert len(canary_ids | remaining_ids) == 80
+
+    waves = remaining_waves()
+    assert len(waves) == 9
+    assert all(wave["runs"] == 8 for wave in waves)
+    assert len({wave["task_id"] for wave in waves}) == 9
+    assert sum(wave["runs"] for wave in waves) == 72
+    assert all(
+        len(set(wave["run_ids"])) == 8
+        for wave in waves
+    )
+
+    assert plan["runs"] == 72
+    assert plan["tasks"] == 9
+    assert len(plan["waves"]) == 9
+    assert all(wave["runs"] == 8 for wave in plan["waves"])
+    assert "clamp-int" not in plan["task_ids"]
+    assert plan["network_dispatch_performed"] is False
+    assert plan["requires_canary_promotion_pass"] is True
+    assert plan["requires_previous_wave_reconciliation"] is True
+    assert plan["requires_runtime_hook_ready_attestation"] is True
+    assert set(plan["policies"]) == {
+        "baseline",
+        "bounded_recovery",
+        "idempotent_recovery",
+        "authority_aware",
+    }
+    assert set(plan["fault_profiles"]) == {
+        "post_commit_timeout_once",
+        "authority_revoked_before_dispatch",
     }
 
 
