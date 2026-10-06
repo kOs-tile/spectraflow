@@ -20,6 +20,7 @@ on:
       - "tests/test_reliability_remote_bridge.py"
       - "tests/test_reliability_canary_readiness.py"
       - "tests/test_reliability_canary_readiness_cli.py"
+      - "tests/test_reliability_canary_remote_cli.py"
       - "tests/test_reliability_local_preflight.py"
       - "tests/test_reliability_hook_attestation.py"
       - "tests/test_reliability_live_analysis.py"
@@ -87,6 +88,7 @@ jobs:
           tests/test_reliability_hook_attestation.py
           tests/test_reliability_canary_readiness.py
           tests/test_reliability_canary_readiness_cli.py
+          tests/test_reliability_canary_remote_cli.py
           tests/test_reliability_local_preflight.py
           tests/test_reliability_live_analysis.py
           tests/test_benchmark_v1_schema.py
