@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "checkpoint": "spectraflow.reliability-canary-readiness.v1",
-  "observed_at": "2026-10-05T00:24:05Z",
+  "observed_at": "2026-10-06T06:17:01Z",
   "repository_contract_ready": true,
   "production_bridge": {
     "base_url": "https://kavi-dispatch-bridge.vercel.app",
@@ -26,6 +26,17 @@
   "blockers": [
     "local_runtime_hook_not_attested"
   ],
-  "claim_boundary": "Bridge readiness and operator attestation are launch preconditions, not benchmark outcome evidence.",
-  "blocker_owner": "local KAVI execution runtime"
+  "claim_boundary": "Repository/bridge readiness and runtime-hook attestation are launch preconditions, not live benchmark outcome evidence. No 8/80 comparative live rates have been collected yet.",
+  "blocker_owner": "local KAVI execution runtime",
+  "repository_live_pipeline": {
+    "repository_side_complete": true,
+    "local_preflight": true,
+    "bound_canary_execute": true,
+    "canary_collect": true,
+    "canary_promotion_gate": true,
+    "remaining_72_plan": true,
+    "chained_wave_execute_collect_reconcile": true,
+    "final_80_run_corpus_finalizer": true,
+    "live_execution_performed": false
+  }
 }
