@@ -51,13 +51,25 @@ def collect_bundle(bundle: dict) -> dict:
     return result
 
 
+def _safe_write(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    encoded = json.dumps(payload, indent=2, sort_keys=True) + "\n"
+    if "Bearer " in encoded or "KAVI_DISPATCH_TOKEN" in encoded:
+        raise ValueError("secret_persistence_rejected")
+    path.write_text(encoded, encoding="utf-8")
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("bundle", type=Path)
+    parser.add_argument("--output", type=Path)
     args = parser.parse_args()
 
     data = json.loads(args.bundle.read_text(encoding="utf-8"))
-    print(json.dumps(collect_bundle(data), indent=2))
+    result = collect_bundle(data)
+    if args.output:
+        _safe_write(args.output.expanduser().resolve(), result)
+    print(json.dumps(result, indent=2, sort_keys=True))
 
 
 if __name__ == "__main__":
