@@ -18,7 +18,6 @@ from spectraflow.reliability.policy_signatures import (
 
 
 CANARY_TASK_ID = "clamp-int"
-CANARY_TASK_ID = "clamp-int"
 EXPECTED_RUN_IDS = expected_run_ids(CANARY_TASK_ID)
 
 
@@ -44,6 +43,22 @@ class CanaryPromotion:
     warnings: tuple[str, ...]
     checks: dict[str, bool]
     telemetry_coverage: dict[str, dict[str, Any]]
+
+
+def _canonical_evidence_sha256(rows: list[LiveRunRecord]) -> str:
+    """Bind the promotion artifact to the exact sanitized canary evidence."""
+
+    canonical_rows = [
+        asdict(row)
+        for row in sorted(rows, key=lambda row: row.run_id)
+    ]
+    encoded = json.dumps(
+        canonical_rows,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
 
 
 def _coverage(rows: list[LiveRunRecord], field: str) -> dict[str, Any]:
