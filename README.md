@@ -2,7 +2,7 @@
 
 > **Status — Research-active agent reliability / observability subsystem.** SPECTRAFLOW combines semantic/authority-drift observation with executable recovery evaluation. Reliability Lab v1 now includes a sanitized real KAVI corpus and an 80-run controlled live experiment plan. SPECTRAFLOW observes and evaluates; KCC remains the authority/enforcement plane.
 
-> **Canary readiness — blocked on one local-runtime gate.** The production KAVI Dispatch Bridge is deployed, configured, and verified at v0.2.2; the 8-run canary launcher, collector, isolated verifier, readiness gate, and evidence-aware analyzer are implemented. Canary dispatch remains fail-closed until the existing local KAVI runner installs and attests the SPECTRAFLOW two-hook integration. Tracking: [kavi-codex-state#7](https://github.com/kOs-tile/kavi-codex-state/issues/7). No live 8/80 comparative rates are claimed yet.
+> **Live Reliability Lab pipeline — repository side complete; blocked on one local-runtime gate.** The production KAVI Dispatch Bridge is deployed, configured, and verified at v0.2.2. SPECTRAFLOW now implements the bound local preflight, authenticated 8-run canary execute/collect flow, evidence-bound 8→80 promotion gate, nine chained 8-run post-canary wave execute/collect/reconcile stages, and deterministic 80-run corpus finalizer. Network dispatch remains fail-closed until the existing local KAVI runner installs and source/runtime-attests the SPECTRAFLOW two-hook integration. Tracking: [kavi-codex-state#7](https://github.com/kOs-tile/kavi-codex-state/issues/7). No live 8/80 comparative rates are claimed yet.
 
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
