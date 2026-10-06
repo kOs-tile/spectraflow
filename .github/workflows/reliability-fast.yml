@@ -30,6 +30,7 @@ on:
       - "tests/test_live_benchmark_v1_adapter.py"
       - "tests/test_reliability_live_benchmark_v1.py"
       - "tests/test_reliability_canary_promotion.py"
+      - "tests/test_reliability_live_corpus.py"
       - "tests/test_reliability_runtime_package.py"
       - ".github/workflows/reliability-fast.yml"
   pull_request:
@@ -97,4 +98,5 @@ jobs:
           tests/test_live_benchmark_v1_adapter.py
           tests/test_reliability_live_benchmark_v1.py
           tests/test_reliability_canary_promotion.py
+          tests/test_reliability_live_corpus.py
           tests/test_reliability_runtime_package.py
