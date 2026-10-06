@@ -32,6 +32,7 @@ on:
       - "tests/test_reliability_live_benchmark_v1.py"
       - "tests/test_reliability_canary_promotion.py"
       - "tests/test_reliability_wave_reconciliation.py"
+      - "tests/test_reliability_wave_remote.py"
       - "tests/test_reliability_live_corpus.py"
       - "tests/test_reliability_runtime_package.py"
       - ".github/workflows/reliability-fast.yml"
@@ -102,5 +103,6 @@ jobs:
           tests/test_reliability_live_benchmark_v1.py
           tests/test_reliability_canary_promotion.py
           tests/test_reliability_wave_reconciliation.py
+          tests/test_reliability_wave_remote.py
           tests/test_reliability_live_corpus.py
           tests/test_reliability_runtime_package.py
