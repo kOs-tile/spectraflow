@@ -96,3 +96,12 @@ footer{padding:28px clamp(20px,4.1vw,74px);display:flex;justify-content:space-be
   .intro h1{font-size:clamp(45px,12.6vw,51px)}
   .intro-deck{margin-top:72px}
 }
+
+
+/* Narrative motion is tied to reading progression: moving content, not
+   unmotivated global fade-up blocks. CSS falls back to static when unsupported. */
+@media(prefers-reduced-motion:no-preference) {
+  .intro h1{transform:translate3d(0,calc(var(--scene-intro,0) * -64px),0)}
+  .interlude-content{transform:translate3d(0,calc(var(--scene-interlude,0) * -34px),0)}
+  .paper-number{transform:translate3d(0,calc(var(--scene-paper,0) * -28px),0)}
+}
