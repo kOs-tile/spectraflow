@@ -83,3 +83,16 @@ footer{padding:28px clamp(20px,4.1vw,74px);display:flex;justify-content:space-be
 @media(max-width:370px){
   .intro h1{font-size:clamp(45px,13vw,54px)}
 }
+
+
+/* Second screenshot QA correction: four-line headline must fit short windows.
+   Preserve its serif/sans alternation; do not hide overflow to fake a pass. */
+.intro h1{font-size:clamp(54px,min(10vw,10vh),160px)}
+@media(max-width:760px){
+  .intro h1{font-size:clamp(51px,13.3vw,88px)}
+  .intro-deck{margin-top:94px}
+}
+@media(max-width:370px){
+  .intro h1{font-size:clamp(45px,12.6vw,51px)}
+  .intro-deck{margin-top:72px}
+}
