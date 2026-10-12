@@ -1,5 +1,8 @@
 # SPECTRAFLOW
 
+> **Engineering research & motion explainers (Oct 2026):** [Public engineering evidence hub](docs/ENGINEERING_PORTFOLIO.md) · [Full agentic systems reference architecture (14 layers / 7 loops / 5 graphs)](research/ANATOMY_OF_PRODUCTION_AGENTIC_SYSTEMS_2026.md) · [Standalone motion portfolio](portfolio/index.html). The demos have separate synthetic and historical evidence boundaries; no uncompleted live trial is presented as a result.
+
+
 > **Status — Research-active agent reliability / observability subsystem.** SPECTRAFLOW combines semantic/authority-drift observation with executable recovery evaluation. Reliability Lab v1 now includes a sanitized real KAVI corpus and an 80-run controlled live experiment plan. SPECTRAFLOW observes and evaluates; KCC remains the authority/enforcement plane.
 
 > **Live Reliability Lab pipeline — repository side complete; blocked on one local-runtime gate.** The production KAVI Dispatch Bridge is deployed, configured, and verified at v0.2.2. SPECTRAFLOW now implements the bound local preflight, authenticated 8-run canary execute/collect flow, evidence-bound 8→80 promotion gate, nine chained 8-run post-canary wave execute/collect/reconcile stages, and deterministic 80-run corpus finalizer. Network dispatch remains fail-closed until the existing local KAVI runner installs and source/runtime-attests the SPECTRAFLOW two-hook integration. Tracking: [kavi-codex-state#7](https://github.com/kOs-tile/kavi-codex-state/issues/7). No live 8/80 comparative rates are claimed yet.
