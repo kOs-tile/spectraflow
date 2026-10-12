@@ -87,7 +87,7 @@ footer{background:var(--carbon);color:#d4e0d0;padding:37px clamp(22px,5vw,95px);
 /* Desktop composition correction from first real screenshot: hero text and
    the source artifact must not collide on 650-750px-height laptops. */
 @media(min-width:801px) and (max-height:850px){
- .specimen-table{height:min(39vh,360px);top:62%;transform:translate(-50%,-40%) rotate(-3.5deg)}
+ .specimen-table{height:min(36vh,340px);top:62%;transform:translate(-50%,-40%) rotate(-3.5deg)}
  .autopsy-sticky h1{top:18%}
  .hero-stage-footer{bottom:19px}
 }
