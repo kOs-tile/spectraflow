@@ -82,3 +82,12 @@ footer{background:var(--carbon);color:#d4e0d0;padding:37px clamp(22px,5vw,95px);
 .autopsy-sticky h1{font-size:clamp(41px,10.4vw,53px);top:21%}.hero-side-note{top:34%}.specimen-table{width:85%;top:60%;height:32vh;min-height:245px}.transcript strong{font-size:24px}.sheet-topline span:nth-child(2),.sheet-bottomline span:nth-child(2){display:none}.evidence-num{font-size:68px}.scene-identity span:last-child{display:none}.memory-inspector .inspector-choices{grid-template-columns:repeat(3,1fr)}.memory-inspector .inspector-choices button:nth-child(3){border-right:0}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.autopsy-scroll{height:100svh;min-height:650px}.sheet:not(.sheet-claim){display:none}}
+
+
+/* Desktop composition correction from first real screenshot: hero text and
+   the source artifact must not collide on 650-750px-height laptops. */
+@media(min-width:801px) and (max-height:850px){
+ .specimen-table{height:min(39vh,360px);top:62%;transform:translate(-50%,-40%) rotate(-3.5deg)}
+ .autopsy-sticky h1{top:18%}
+ .hero-stage-footer{bottom:19px}
+}
