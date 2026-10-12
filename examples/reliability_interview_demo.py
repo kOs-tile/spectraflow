@@ -231,6 +231,11 @@ def run_demo(*, controls_only=False):
     }
     print("KAVI control-plane assertions:", controls["check_count"], "PASS")
     if not controls_only:
+        # Direct script execution places examples/ on sys.path, not the repo root.
+        import sys
+        root = str(Path(__file__).resolve().parents[1])
+        if root not in sys.path:
+            sys.path.insert(0, root)
         # Reuse pre-existing SPECTRAFLOW evaluators, rather than inventing metrics.
         from benchmark.execution_traces import run_benchmark as synthetic_dispatch_benchmark
         from benchmark.kavi_runtime_traces import run_benchmark as runtime_benchmark
