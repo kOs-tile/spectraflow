@@ -105,3 +105,8 @@ footer{padding:28px clamp(20px,4.1vw,74px);display:flex;justify-content:space-be
   .interlude-content{transform:translate3d(0,calc(var(--scene-interlude,0) * -34px),0)}
   .paper-number{transform:translate3d(0,calc(var(--scene-paper,0) * -28px),0)}
 }
+
+
+/* Third visual-QA correction: a 900px minimum prevented the complete first
+   chapter from fitting shorter laptop viewports, despite a 100svh target. */
+@media(min-width:761px){.intro{min-height:680px}}
