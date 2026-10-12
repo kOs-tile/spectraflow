@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-label="KAVI reliability animated explainer: durable task states, semantic verification and bounded retries">
+<title>KAVI — verify before completion</title>
+<defs><style>
+.bg{fill:#0f171b}.ink{fill:#e8efed}.sub{fill:#9baba9}.mint{fill:#6fceb1}.coral{fill:#ef8f6f}.grid{stroke:#40535a;stroke-width:1;stroke-opacity:.48}.box{fill:#1d2a2f;stroke:#506269}.mono{font:14px monospace}.title{font:700 31px Inter,Arial,sans-serif}.body{font:16px Inter,Arial,sans-serif}
+.enter{animation:reveal 20s infinite ease-out}.pulse{animation:glow 20s infinite ease-in-out}.failure{animation:fail 20s infinite ease-in-out}.path{stroke:#6fceb1;stroke-width:3;stroke-dasharray:650;stroke-dashoffset:650;fill:none;animation:trace 20s infinite ease-in-out}
+@keyframes reveal{0%,7%{opacity:0;transform:translateY(10px)}15%,92%{opacity:1;transform:translateY(0)}100%{opacity:0}}
+@keyframes glow{0%,34%,92%{opacity:.3}45%,65%{opacity:1}}
+@keyframes fail{0%,47%,92%{opacity:0}56%,78%{opacity:1}}
+@keyframes trace{0%,20%{stroke-dashoffset:650}57%,80%{stroke-dashoffset:0}100%{stroke-dashoffset:-650}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}.path{stroke-dashoffset:0}}
+</style><pattern id="grid" width="90" height="90" patternUnits="userSpaceOnUse"><path d="M90 0H0V90" class="grid" fill="none"/></pattern></defs>
+<rect width="960" height="540" class="bg"/><rect width="960" height="540" fill="url(#grid)"/>
+<text x="48" y="37" class="mono ink">KAVI / ENGINEERING EVIDENCE</text><text x="786" y="37" class="mono ink">02 / RUNTIME</text><path d="M48 57H912" stroke="#46545a"/>
+<g class="enter"><text x="48" y="123" class="title ink">Recovery is a bounded state machine.</text><text x="50" y="158" class="body sub">A process exit is not a verified result.</text>
+<path d="M215 267H306 M447 267H535 M676 267H753" stroke="#5c766f" stroke-width="2"/>
+<path d="M215 267H306 M447 267H535 M676 267H753" class="path"/>
+<rect x="74" y="222" width="141" height="73" rx="10" class="box"/><rect x="306" y="222" width="141" height="73" rx="10" class="box"/><rect x="535" y="222" width="141" height="73" rx="10" class="box"/><rect x="753" y="222" width="141" height="73" rx="10" class="box"/>
+<text x="99" y="265" class="mono ink">READY</text><text x="328" y="265" class="mono ink">CLAIMED</text><text x="562" y="265" class="mono ink">VERIFY</text><text x="784" y="265" class="mono mint pulse">PASS</text>
+<g class="failure"><path d="M605 299V363H456" stroke="#ef8f6f" stroke-width="2" fill="none"/><rect x="184" y="348" width="290" height="32" rx="16" fill="#633d36"/><text x="199" y="368" class="mono ink">SEMANTIC FAIL → CONTINUATION</text></g>
+<text x="49" y="445" class="mono coral">BLIND RETRY: 2 COMMITS</text><text x="538" y="445" class="mono mint">IDEMPOTENT: 1 COMMIT</text></g>
+<path d="M48 493H912" stroke="#506469"/><text x="48" y="521" class="mono sub">ACCEPTANCE EVIDENCE BEFORE TERMINAL PASS</text>
+</svg>
