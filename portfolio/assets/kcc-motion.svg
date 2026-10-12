@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-label="KCC animated explainer: task scope, capsule, guard and host dispatcher; blocked tool calls never execute">
+<title>KCC — authority before dispatch</title>
+<defs>
+<style>
+.bg{fill:#f3f1eb}.ink{fill:#1b2929}.sub{fill:#647168}.amber{fill:#b86a3e}.green{fill:#437669}.grid{stroke:#c5c6bc;stroke-opacity:.35;stroke-width:1}.card{fill:#f9f7f1;stroke:#b2b6af;stroke-width:1.1}.mono{font:14px monospace}.inter{font-family:Inter,Arial,sans-serif}.title{font:700 31px Inter,Arial,sans-serif}.body{font:16px Inter,Arial,sans-serif}
+.enter{animation:appear 20s infinite ease-out}.flow{stroke:#437669;stroke-width:4;fill:none;stroke-dasharray:640;stroke-dashoffset:640;animation:flow 20s infinite ease-in-out}.b{animation:deny 20s infinite ease-out}.n1{animation:spot 20s infinite ease-in-out}.n2{animation:spot 20s infinite ease-in-out 1.2s}.n3{animation:spot 20s infinite ease-in-out 2.4s}
+@keyframes appear{0%,8%{opacity:0;transform:translateY(12px)}14%,92%{opacity:1;transform:translateY(0)}100%{opacity:0}}
+@keyframes flow{0%,22%{stroke-dashoffset:640}52%,79%{stroke-dashoffset:0}100%{stroke-dashoffset:-640}}
+@keyframes deny{0%,51%{opacity:0;transform:translateY(9px)}60%,91%{opacity:1;transform:translateY(0)}100%{opacity:0}}
+@keyframes spot{0%,20%,95%{opacity:.15}43%,72%{opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}.flow{stroke-dashoffset:0}}
+</style>
+<pattern id="g" width="90" height="90" patternUnits="userSpaceOnUse"><path d="M90 0H0V90" class="grid" fill="none"/></pattern>
+</defs>
+<rect width="960" height="540" class="bg"/><rect width="960" height="540" fill="url(#g)" opacity=".75"/>
+<text x="48" y="37" class="mono ink">KAVI / ENGINEERING EVIDENCE</text><text x="795" y="37" class="mono ink">01 / KCC</text><path d="M48 57H912" stroke="#b2b7af"/>
+<g class="enter">
+<text x="48" y="123" class="title ink">A capsule stands before dispatch.</text>
+<text x="50" y="158" class="body sub">One task. One grant. A bounded parameter surface.</text>
+<path d="M225 269H305 M465 269H525 M685 269H738" stroke="#68736d" stroke-width="2"/>
+<rect x="80" y="225" width="145" height="94" rx="13" class="card"/>
+<rect x="306" y="225" width="158" height="94" rx="13" class="card"/>
+<rect x="526" y="225" width="158" height="94" rx="13" class="card"/>
+<rect x="739" y="225" width="157" height="94" rx="13" class="card"/>
+<text x="99" y="255" class="mono ink n1">TASK</text><text x="99" y="286" class="body ink">read customer</text>
+<text x="325" y="255" class="mono amber n2">CAPSULE</text><text x="325" y="286" class="body ink">id = 001</text>
+<text x="545" y="255" class="mono ink n3">GUARD</text><text x="545" y="286" class="body ink">authorize</text>
+<text x="758" y="255" class="mono ink">DISPATCH</text><text x="758" y="286" class="body ink">host callback</text>
+<path d="M173 361H800" stroke="#b4c4ba" stroke-width="4"/><path d="M173 361H800" class="flow"/>
+<rect x="287" y="381" width="220" height="33" rx="16" fill="#daebe0"/><text x="300" y="402" class="mono green">ALLOW / GRANTED READ</text>
+<g class="b"><rect x="287" y="427" width="282" height="33" rx="16" fill="#f4d9c4"/><text x="303" y="448" class="mono amber">BLOCK / UNGRANTED DELETE</text></g>
+</g>
+<path d="M48 493H912" stroke="#b4b5ab"/><text x="48" y="521" class="mono sub">DENIED CALLS NEVER REACH THE HOST DISPATCHER</text>
+</svg>
