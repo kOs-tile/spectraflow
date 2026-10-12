@@ -2,6 +2,12 @@
 
 A reproducible, no-credentials companion to the [KAVI Shared Execution Reliability case study](https://github.com/kOs-tile/kOs-tile/blob/main/case-studies/kavi-runtime-reliability.md) and SPECTRAFLOW's existing synthetic and sanitized historical benchmarks.
 
+## Motion explainer — durable verification
+
+![Animated agent reliability state machine](media/KAVI_Reliability_Explainer_Animated.svg)
+
+**Watch it alongside the executable demo.** The animation depicts intended task transitions and a failed verification leading to a fresh continuation; actual counts and test evidence are in the source below. See the [public evidence portfolio](https://kavi-engineering-evidence.vercel.app/).
+
 ## Run from the SPECTRAFLOW checkout
 
 Python 3.11+:
