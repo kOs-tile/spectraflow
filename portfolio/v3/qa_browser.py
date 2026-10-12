@@ -87,9 +87,10 @@ async def run():
                     await inspect(page, label + "/hero", issues)
                     # The evidence needs to actually peel during scroll.
                     if label != "small-mobile":
-                        await page.evaluate("""() => window.scrollTo(
-                            0, Math.round(document.querySelector(".autopsy-scroll").offsetHeight * .42)
-                        )""")
+                        await page.evaluate("""() => window.scrollTo({
+                            top: Math.round(document.querySelector(".autopsy-scroll").offsetHeight * .42),
+                            behavior: "instant"
+                        })""")
                         await page.wait_for_timeout(250)
                         state = await page.locator("#stage-counter").inner_text()
                         assert state != "01 / 04", f"{label}: autopsy timeline did not advance"
