@@ -85,6 +85,20 @@ async def run():
                     assert response and response.status == 200
                     await page.screenshot(path=str(OUT / (label + "-hero.png")))
                     await inspect(page, label + "/hero", issues)
+                    # The evidence needs to actually peel during scroll.
+                    if label != "small-mobile":
+                        await page.evaluate("""() => window.scrollTo(
+                            0, Math.round(document.querySelector(".autopsy-scroll").offsetHeight * .42)
+                        )""")
+                        await page.wait_for_timeout(250)
+                        state = await page.locator("#stage-counter").inner_text()
+                        assert state != "01 / 04", f"{label}: autopsy timeline did not advance"
+                        transform = await page.locator(".sheet-claim").evaluate(
+                            "(el) => getComputedStyle(el).transform"
+                        )
+                        assert transform != "none", f"{label}: specimen never peeled"
+                        await page.screenshot(path=str(OUT / (label + "-mid-peel.png")))
+                        await page.evaluate("window.scrollTo(0,0)")
                     for anchor in ("authority", "reliability", "memory", "research"):
                         await page.locator("#" + anchor).scroll_into_view_if_needed()
                         await page.screenshot(
