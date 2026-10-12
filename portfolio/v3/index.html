@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#e7e1d5">
+<meta name="description" content="Agent Autopsy — an interactive forensic examination of AI execution: authority, external commits, memory and verified evidence. Source-linked KAVI engineering.">
+<meta property="og:title" content="Agent Autopsy | KAVI Engineering">
+<meta property="og:description" content="The model said it worked. The ledger tells a different story.">
+<title>AGENT AUTOPSY — A KAVI Engineering Examination</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+<script defer src="./app.js"></script>
+</head>
+<body>
+<a class="skip" href="#specimen">Skip to the examination</a>
+<div class="site-head">
+ <a class="brand" href="#specimen" aria-label="KAVI Engineering home"><span class="brand-glyph">k<span>.</span></span><span class="brand-caption">KAVI / FIELD RESEARCH<br>NO. 001 — OPEN EVIDENCE</span></a>
+ <nav aria-label="Dossier index"><a href="#authority">I — Permission</a><a href="#reliability">II — Consequence</a><a href="#memory">III — Memory</a><a href="#research">IV — Paper</a></nav>
+ <span class="record-indicator"><i aria-hidden="true"></i> CASE OPEN</span>
+</div>
+<main>
+<section id="specimen" class="autopsy-scroll" aria-labelledby="hero-heading">
+<div class="autopsy-sticky">
+  <div class="laboratory-grid" aria-hidden="true"></div>
+  <div class="scene-aside left"><span>EXAMINATION // 0001</span><span class="vertical-line"></span><span>SCROLL TO PEEL THE EVIDENCE</span></div>
+  <div class="scene-aside right"><span>CLASSIFICATION: PUBLIC</span><span>INPUT / AUTHORITY / RECEIPT / TRUTH</span></div>
+  <div class="scene-identity">
+    <span class="red-rule"></span><span>THE AGENT AUTOPSY</span><span>2026 / V.03</span>
+  </div>
+  <h1 id="hero-heading"><span>WE DISSECT</span><em>A DECISION.</em></h1>
+  <p class="hero-side-note">Not another agent diagram.<br>An examination of the moment<br>software becomes accountable.</p>
+  <div class="specimen-table" id="specimen-table" aria-label="Four translucent examination sheets showing the states of one synthetic agent action">
+    <div class="sheet sheet-claim" aria-hidden="true">
+      <div class="sheet-topline"><span>01 / TESTIMONY</span><span>MODEL OUTPUT</span><span>UNVERIFIED</span></div>
+      <div class="sheet-center"><span class="evidence-num">01</span><div class="transcript"><small>ASSISTANT CLAIM</small><strong>“The action<br>is complete.”</strong><span class="caption-italic">Words are not receipts.</span></div></div>
+      <div class="sheet-bottomline"><span>ORIGIN: GENERATED TEXT</span><span>TRUST LEVEL / LOW</span></div>
+    </div>
+    <div class="sheet sheet-authority" aria-hidden="true">
+      <div class="sheet-topline"><span>02 / ADMISSION</span><span>CAPABILITY CAPSULE</span><span>SCOPE-LOCKED</span></div>
+      <div class="sheet-center"><span class="evidence-num">02</span><div class="transcript"><small>PERMITTED OPERATION</small><strong>read_customer<br><span class="small-type">customer_id = 001</span></strong><div class="large-mark">AUTHORIZED<span>✓</span></div></div></div>
+      <div class="sheet-bottomline"><span>DENIED: DELETE / DRIFT / EXPIRY</span><span>HOST GUARD</span></div>
+    </div>
+    <div class="sheet sheet-dispatch" aria-hidden="true">
+      <div class="sheet-topline"><span>03 / EXTERNAL WORLD</span><span>TOOL DISPATCH</span><span>ONE RECEIPT</span></div>
+      <div class="sheet-center"><span class="evidence-num">03</span><div class="transcript"><small>THE COMMIT BOUNDARY</small><div class="receipt-art"><span>OPERATION_ID</span><b>op:001/intent:v4</b><span>DISPATCH RECEIPT</span><b>COMMITTED</b><span>RETRY POLICY</span><b>RECONCILE FIRST</b></div></div></div>
+      <div class="sheet-bottomline"><span>ACK MAY BE LOST</span><span>DO NOT BLIND RETRY</span></div>
+    </div>
+    <div class="sheet sheet-verdict" aria-hidden="true">
+      <div class="sheet-topline"><span>04 / EXAMINER VERDICT</span><span>ACCEPTANCE GATE</span><span>VERIFIABLE</span></div>
+      <div class="sheet-center"><span class="evidence-num">04</span><div class="transcript"><small>EXTERNAL EVIDENCE REQUIRED</small><div class="verdict-art">PASS<span class="underline-stroke"></span></div><span class="caption-italic">Only when the verifier agrees.</span></div></div>
+      <div class="sheet-bottomline"><span>PROCESS EXIT ≠ OBJECTIVE ACHIEVED</span><span>FINAL VERDICT</span></div>
+    </div>
+    <div class="specimen-needle" aria-hidden="true"><span>TRACE<br>004819</span><i></i></div>
+    <div class="specimen-crosshair" aria-hidden="true"></div>
+  </div>
+  <div class="hero-stage-footer">
+    <div class="stage-status"><span class="stage-counter" id="stage-counter">01 / 04</span><div class="stage-progress" aria-hidden="true"><span id="stage-progress"></span></div><span id="stage-label">THE CLAIM</span></div>
+    <p class="stage-caption" id="stage-caption" aria-live="off">The model speaks. No external state has yet been proven.</p>
+    <span class="drag-instruction">THE SHEETS SEPARATE AS YOU SCROLL ↓</span>
+  </div>
+</div>
+</section>
+
+<section class="chapter-intro" id="authority">
+  <div class="chapter-number"><span>EXHIBIT / 01</span><b>I.</b><span>CAPABILITY SECURITY</span></div>
+  <div class="chapter-question">
+    <span class="eyebrow">FIRST QUESTION / BEFORE THE TOOL RUNS</span>
+    <h2>Who said<br>it <em>could?</em></h2>
+    <p>An operation can exist in a tool registry without belonging to the current task. Try the operation below. The real test is whether denial happens <i>before</i> the host dispatches anything.</p>
+    <a href="https://github.com/kOs-tile/kavi-capability-compiler/blob/main/examples/recruiter_demo.py" target="_blank" rel="noopener noreferrer" class="source-link">OPEN EXECUTABLE KCC PROOF <span>↗</span></a>
+  </div>
+  <div class="control-case" aria-label="Interactive synthetic capability test">
+    <div class="control-case-header"><span>CASE 001 / DISPATCH REQUEST</span><span>SYNTHETIC INTERACTION / NO LIVE CALLS</span></div>
+    <div class="mechanism">
+      <div class="mechanism-input">
+        <span class="eyebrow">REQUESTED ACTION</span>
+        <div class="switchbox" role="group" aria-label="Test operation">
+          <button type="button" class="action-choice selected" data-action="read" aria-pressed="true"><span>READ</span><small>customer / 001</small></button>
+          <button type="button" class="action-choice" data-action="delete" aria-pressed="false"><span>DELETE</span><small>customer / 001</small></button>
+        </div>
+        <div class="input-serial">PERMISSION MANIFEST: <strong>read_customer(id:001)</strong></div>
+      </div>
+      <div class="mechanism-spine" aria-hidden="true"><div class="mechanism-track"><span id="mechanism-pulse"></span></div><span>PRE-DISPATCH CHECK</span></div>
+      <div class="mechanism-outcome" aria-live="polite">
+        <span class="eyebrow">HOST DISPATCH RECORD</span>
+        <strong id="action-verdict">ALLOWED</strong>
+        <p id="action-explanation">The requested read matches the scoped authority capsule.</p>
+        <div class="terminal-line"><span>HOST_CALLBACK</span><b id="callback-count">1</b><span>GUARD_STATE</span><b id="guard-state">PASS</b></div>
+      </div>
+    </div>
+    <div class="control-foot"><span>THIS IS A UI MODEL, NOT AN ACTIVE KCC PROCESS</span><span>VERIFY RESULTS IN THE LINKED PYTHON DEMO</span></div>
+  </div>
+</section>
+
+<section class="long-divider" aria-label="Transition to side-effect reliability"><div class="torn-edge" aria-hidden="true"></div><span>AN AUTHORIZED ACTION MAY STILL FAIL AFTER IT SUCCEEDS</span><div class="clock-number" aria-hidden="true">00:00:03.081</div></section>
+
+<section id="reliability" class="reliability-section" aria-labelledby="reliability-title">
+  <div class="chapter-number dark-number"><span>EXHIBIT / 02</span><b>II.</b><span>DURABLE EXECUTION</span></div>
+  <div class="reliability-heading"><span class="eyebrow">SECOND QUESTION / AFTER THE TOOL RUNS</span><h2 id="reliability-title">What actually<br><em>happened?</em></h2><p>The request commits. The acknowledgement disappears. Would you send it again?</p></div>
+  <div class="ledger-wall">
+    <div class="ledger-top"><span>COMPARATIVE RECORD / 002</span><span>POST-COMMIT TIMEOUT INJECTED</span></div>
+    <div class="ledger-columns">
+      <div class="ledger-column" data-kind="unsafe"><span class="ledger-kicker">POLICY A / BLIND RETRY</span><div class="effect-counter"><strong id="unsafe-count">02</strong><span>COMMITTED<br>EFFECTS</span></div><div class="receipt-strip" aria-hidden="true"><div class="receipt"><small>REQUEST 001</small><b>COMMIT</b><span>ACK LOST</span></div><div class="receipt duplicate"><small>REQUEST 002</small><b>COMMIT</b><span>DUPLICATE</span></div></div><p>Two attempts create two effects because the caller interprets a lost reply as a failed action.</p></div>
+      <div class="ledger-divider"><span>vs</span></div>
+      <div class="ledger-column" data-kind="safe"><span class="ledger-kicker">POLICY B / STABLE KEY</span><div class="effect-counter"><strong id="safe-count">01</strong><span>COMMITTED<br>EFFECT</span></div><div class="receipt-strip" aria-hidden="true"><div class="receipt"><small>REQUEST 001</small><b>COMMIT</b><span>ACK LOST</span></div><div class="receipt echo"><small>REQUEST 002</small><b>REUSED</b><span>SAME OP ID</span></div></div><p>The second request reuses the operation identity, preserving one ledger commit in the synthetic benchmark.</p></div>
+    </div>
+    <div class="ledger-bottom"><button id="replay" type="button">REPLAY LOSS OF ACKNOWLEDGEMENT <span aria-hidden="true">↺</span></button><span id="replay-result" aria-live="polite">READY / TWO POLICIES</span><a href="https://github.com/kOs-tile/spectraflow/blob/main/examples/reliability_interview_demo.py" target="_blank" rel="noopener noreferrer">REPRODUCE LOCALLY ↗</a></div>
+  </div>
+  <div class="reliability-boundary">In the historical, sanitized eight-task fixture, <strong>2 verified PASS · 2 completed-unverified · 4 failed.</strong> Those records do not contain external side-effect counts. The comparison above is an independent synthetic ledger.</div>
+</section>
+
+<section id="memory" class="memory-section" aria-labelledby="memory-title">
+  <div class="chapter-number"><span>EXHIBIT / 03</span><b>III.</b><span>CONTEXT + MEMORY ENGINEERING</span></div>
+  <div class="memory-header"><span class="eyebrow">THIRD QUESTION / WHAT DOES THE SYSTEM KNOW?</span><h2 id="memory-title">A memory<br>is not <em>a fact.</em></h2><p>Every layer has its own lifetime, origin and write authority. Peel through the specimen to reveal what the agent should—not merely can—remember.</p></div>
+  <div class="memory-lab">
+    <div class="laminate-stack" aria-label="Illustrative cross-section of distinct agent memory stores">
+      <div class="stratum s1"><span>CONTEXT</span><small>BOUND TO A SINGLE INFERENCE</small></div>
+      <div class="stratum s2"><span>TASK STATE</span><small>DURABLE RUN / EXECUTION TRUTH</small></div>
+      <div class="stratum s3"><span>EPISODES</span><small>WHAT HAPPENED &amp; WHEN</small></div>
+      <div class="stratum s4"><span>KNOWLEDGE</span><small>CLAIMS / RELATIONS / PROVENANCE</small></div>
+      <div class="stratum s5"><span>PROCEDURES</span><small>VERSIONED EXECUTION METHODS</small></div>
+      <div class="stratum-marker" aria-hidden="true"><span id="stratum-marker">02</span><i></i></div>
+    </div>
+    <div class="memory-inspector">
+      <div class="inspector-top"><span>MICROSCOPE 003 / SELECT A STRATUM</span><span id="memory-numeric">02 / 05</span></div>
+      <div class="inspector-choices" role="tablist" aria-label="Memory strata">
+        <button role="tab" id="tab-context" aria-controls="memory-panel" aria-selected="false" tabindex="-1" data-memory="context">01 Context</button>
+        <button role="tab" id="tab-state" aria-controls="memory-panel" aria-selected="true" tabindex="0" data-memory="state">02 Task state</button>
+        <button role="tab" id="tab-episode" aria-controls="memory-panel" aria-selected="false" tabindex="-1" data-memory="episode">03 Episodes</button>
+        <button role="tab" id="tab-knowledge" aria-controls="memory-panel" aria-selected="false" tabindex="-1" data-memory="knowledge">04 Graph</button>
+        <button role="tab" id="tab-procedure" aria-controls="memory-panel" aria-selected="false" tabindex="-1" data-memory="procedure">05 Procedure</button>
+      </div>
+      <div id="memory-panel" role="tabpanel" tabindex="0" aria-labelledby="tab-state" class="memory-readout">
+        <span class="eyebrow" id="memory-label">DURABLE EXECUTION</span>
+        <h3 id="memory-name">Task state is not a summary.</h3>
+        <p id="memory-copy">The canonical task ledger records ownership, attempts, receipts and terminal acceptance. It cannot be rewritten by an LLM-generated recap.</p>
+        <div class="memory-seal"><span>WRITE AUTHORITY</span><strong id="memory-authority">Control-plane transaction</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="research" class="publication" aria-labelledby="publication-heading">
+  <div class="publication-index"><span>OPEN RESEARCH / NO. 001</span><span>PUBLICATION DATE — OCT 2026</span></div>
+  <div class="publication-cover"><div class="cover-side">AN ENGINEERING<br>FIELD MONOGRAPH</div><div class="publication-title"><span>THE COMPLETE<br>REFERENCE ANATOMY</span><h2 id="publication-heading">14 layers.<br>7 loops.<br><em>5 different graphs.</em></h2></div><div class="cover-abstract"><span>ABSTRACT / 01</span><p>Knowledge graphs are not execution graphs. Context is not memory. Discovering a tool is not permission. A durable agent system is a chain of independent, inspectable responsibilities.</p><a href="https://github.com/kOs-tile/spectraflow/blob/main/research/ANATOMY_OF_PRODUCTION_AGENTIC_SYSTEMS_2026.md" target="_blank" rel="noopener noreferrer">READ THE RESEARCH / FULL PAPER <span aria-hidden="true">↗</span></a></div></div>
+  <div class="publication-map"><span>THE EXAMINED SYSTEM</span><div><b>IDENTITY</b><i></i><b>CONTRACT</b><i></i><b>CONTEXT</b><i></i><b>GUARD</b><i></i><b>DISPATCH</b><i></i><b>VERIFY</b><i></i><b>RECOVER</b></div><small>REFERENCE ARCHITECTURE / NOT A CLAIM OF COMPLETE DEPLOYMENT</small></div>
+</section>
+</main>
+<footer><span>KAVI / ONUR KAVI / ENGINEERING EVIDENCE</span><a href="https://github.com/kOs-tile" target="_blank" rel="noopener noreferrer">SOURCE REPOSITORIES ↗</a><span>NO LIVE FINANCIAL OR PRODUCTION SIDE EFFECTS</span><a href="#specimen">BACK TO EXAMINATION ↑</a></footer>
+</body>
+</html>
