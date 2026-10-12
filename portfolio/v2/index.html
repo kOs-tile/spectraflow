@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#eee9df">
+<title>KAVI — The Engineering of Agentic Systems</title>
+<meta name="description" content="An editorial field guide to agent authority, durable execution, memory, and graph engineering. Runnable evidence, not promises.">
+<meta property="og:title" content="KAVI — The Engineering of Agentic Systems">
+<meta property="og:description" content="Who allowed the action? What actually committed? What proves it worked?">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css"><script src="./app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="read-progress" aria-hidden="true"><span id="read-progress"></span></div>
+<header class="topbar">
+  <a class="wordmark" href="#top" aria-label="KAVI Engineering top"><span class="mark">k.</span><span>engineering / field notes</span></a>
+  <nav aria-label="Primary navigation"><a href="#proof-one">01 / authority</a><a href="#proof-two">02 / reliability</a><a href="#paper">03 / the anatomy</a></nav>
+  <a class="top-cta" href="https://github.com/kOs-tile" target="_blank" rel="noopener noreferrer">Repository index <span aria-hidden="true">↗</span></a>
+</header>
+<main id="main">
+<section id="top" class="intro" aria-labelledby="intro-title">
+ <div class="grain" aria-hidden="true"></div>
+ <div class="intro-topline"><span>KAVI / ENGINEERING DOSSIER 001</span><span>OCT 2026 — REV 01</span></div>
+ <div class="intro-stage">
+   <div class="tiny-orbit" aria-hidden="true"><span>01</span></div>
+   <h1 id="intro-title"><span class="line"><span>The right</span></span><span class="line offset"><em>to act.</em></span><span class="line"><span>The proof</span></span><span class="line offset"><em>it worked.</em></span></h1>
+   <p class="intro-deck">An agent can propose an action.<br>Only a system can prove it was <i>permitted</i>—and <i>completed.</i></p>
+ </div>
+ <div class="intro-bottom"><div class="intro-rule"><span aria-hidden="true"></span></div><span>SCROLL THROUGH TWO FAILURE BOUNDARIES</span><span class="intro-arrow" aria-hidden="true">↓</span></div>
+ <div class="folio folio-intro" aria-hidden="true">001</div>
+</section>
+
+<section id="manifesto" class="manifesto" aria-labelledby="manifesto-title">
+  <div class="margin-label">EDITORIAL NOTE / 00</div>
+  <div class="manifesto-wrap">
+    <p class="eyebrow">Why the architecture matters</p>
+    <h2 id="manifesto-title">Intelligence is not <span>permission.</span><br>Execution is not <span>success.</span></h2>
+    <div class="manifesto-columns"><p>Models do not own the source of truth. They don't get to grant themselves authority, rewrite failed history, or call a timeout a completed job.</p><p>Below are two small, executable proofs of the control boundaries that make long-running agent systems auditable. No inflated production metrics. No decorative frameworks.</p></div>
+  </div>
+</section>
+
+<section id="proof-one" class="case case-authority" aria-labelledby="authority-title">
+  <div class="case-index"><span>FIELD STUDY</span><strong>01</strong><span>THE AUTHORITY BOUNDARY</span></div>
+  <div class="case-body">
+   <div class="case-editorial">
+    <div class="eyebrow"><span class="status-dot"></span> ENGINEERING EVIDENCE / KCC</div>
+    <h2 id="authority-title">A tool exists.<br><em>May it be used?</em></h2>
+    <p>A model requests an operation. A task-scoped capability capsule meets that request at the dispatch boundary. The host—never the model—makes the final decision.</p>
+    <a class="text-link" href="https://github.com/kOs-tile/kavi-capability-compiler/blob/main/examples/recruiter_demo.py" target="_blank" rel="noopener noreferrer">Inspect the executable Python demo <span aria-hidden="true">↗</span></a>
+    <p class="case-small">Stable release v0.1.1 · local synthetic customer record · no live customer data</p>
+   </div>
+   <div class="apparatus" aria-label="Interactive capability authorization demonstration">
+    <div class="apparatus-head"><span>EXHIBIT A / DISPATCH GUARD</span><span class="live-label">INTERACTIVE MODEL</span></div>
+    <div class="apparatus-window">
+       <div class="stage-label"><span>REQUEST</span><span>AUTHORIZATION</span><span>RESULT</span></div>
+       <svg class="authority-svg" viewBox="0 0 880 350" role="img" aria-labelledby="auth-svg-title">
+        <title id="auth-svg-title">An operation request travels from agent through task scope and guard to a guarded host dispatcher</title>
+        <path class="wire" d="M140 170H740"/><path class="wire-dashed" d="M140 170H740"/>
+        <g class="node"><rect x="22" y="122" width="210" height="96"/><text class="node-id" x="42" y="145">AGENT INTENT</text><text class="node-name" id="intent-node" x="42" y="186">read_customer</text></g>
+        <g class="node"><rect x="285" y="122" width="180" height="96"/><text class="node-id" x="305" y="145">TASK CAPSULE</text><text class="node-name" x="305" y="186">READ / id:001</text></g>
+        <g class="node"><rect x="520" y="122" width="150" height="96"/><text class="node-id" x="540" y="145">KCC GUARD</text><text class="node-name" x="540" y="186">authorize()</text></g>
+        <g class="node host-node"><rect x="712" y="122" width="158" height="96"/><text class="node-id" x="730" y="145">HOST</text><text class="node-name" x="730" y="186">dispatch()</text></g>
+        <circle id="request-packet" class="packet" cx="140" cy="170" r="9"/>
+        <g class="denial-cross" id="denial-cross"><path d="M665 155l28 28m0-28l-28 28"/></g>
+        <path d="M525 263H668" class="result-rule"/><text id="guard-verdict" class="verdict" x="525" y="292">AUTHORIZED</text>
+       </svg>
+       <div class="apparatus-rail" aria-hidden="true"><span>001</span><span>NO SILENT PRIVILEGE ESCALATION</span><span>004</span></div>
+    </div>
+    <div class="apparatus-controls">
+      <span class="control-prompt">TRY A REQUEST</span>
+      <div class="switcher" role="group" aria-label="Choose an operation to authorize">
+        <button type="button" class="op-btn active" data-operation="read" aria-pressed="true">Read customer</button>
+        <button type="button" class="op-btn" data-operation="delete" aria-pressed="false">Delete customer</button>
+      </div>
+      <div class="decision" aria-live="polite"><strong id="decision-word">ALLOWED</strong><span id="decision-detail">1 authorized host dispatch</span></div>
+    </div>
+   </div>
+  </div>
+  <div class="case-foot"><div><b>GRANT</b><span>read_customer / id:001</span></div><div><b>DENIED DISPATCHES</b><span>0 calls passed to host</span></div><div><b>VERIFICATION</b><span>Inspect source + regression tests</span></div></div>
+</section>
+
+<section id="interlude" class="interlude">
+  <div class="interlude-giant" aria-hidden="true">02</div>
+  <div class="interlude-content"><span class="eyebrow">The second boundary</span><blockquote>The most dangerous retry begins <em>after</em> the operation succeeds.</blockquote><p>A timeout can mean the server never saw the request—or that it committed and the acknowledgment disappeared.</p></div>
+</section>
+
+<section id="proof-two" class="case case-reliability" aria-labelledby="reliability-title">
+  <div class="case-index"><span>FIELD STUDY</span><strong>02</strong><span>THE EXECUTION BOUNDARY</span></div>
+  <div class="case-body reliability-layout">
+    <div class="case-editorial">
+      <div class="eyebrow"><span class="status-dot"></span> ENGINEERING EVIDENCE / SPECTRAFLOW</div>
+      <h2 id="reliability-title">The request<br><em>committed.</em><br>The reply vanished.</h2>
+      <p>Retry without reconciling state and the effect may happen twice. A stable idempotency key stops duplicate commits in our reproducible in-memory ledger.</p>
+      <a class="text-link" href="https://github.com/kOs-tile/spectraflow/blob/main/examples/reliability_interview_demo.py" target="_blank" rel="noopener noreferrer">Run the 5-minute reliability demonstration <span aria-hidden="true">↗</span></a>
+      <p class="case-small">Synthetic ledger data, not production payment events · separate 8-record sanitized historical evidence</p>
+    </div>
+    <div class="retry-apparatus">
+      <div class="retry-head"><span>EXHIBIT B / POST-COMMIT TIMEOUT</span><span>2 STRATEGIES</span></div>
+      <div class="retry-chart" role="group" aria-label="Compare side effects from blind retry and idempotent retry">
+        <div class="retry-track" data-track="blind"><div class="retry-description"><span>01 / BLIND RETRY</span><b>Two dispatches. <em>Two</em> effects.</b></div><div class="commit-bars"><div class="commit-bar"><span>COMMIT 1</span></div><div class="commit-bar duplicate"><span>DUPLICATE 2</span></div></div><span class="tiny-note">SECOND ATTEMPT REPEATS EXTERNAL EFFECT</span></div>
+        <div class="retry-track" data-track="safe"><div class="retry-description"><span>02 / STABLE KEY</span><b>Two dispatches. <em>One</em> effect.</b></div><div class="commit-bars"><div class="commit-bar"><span>COMMIT 1</span></div><div class="receipt-bar"><span>RECEIPT REUSED</span></div></div><span class="tiny-note">THE RETRY FINDS THE FIRST OPERATION</span></div>
+      </div>
+      <div class="retry-controls"><button type="button" id="replay-btn">Replay the failure <span aria-hidden="true">↗</span></button><span id="replay-status" aria-live="polite">READY TO REPLAY</span></div>
+    </div>
+  </div>
+  <div class="case-foot"><div><b>REFERENCE RUNNER</b><span>12 deterministic checks</span></div><div><b>HISTORICAL METADATA</b><span>8 sanitized records</span></div><div><b>NO CLAIM</b><span>Production-wide exactly-once guarantee</span></div></div>
+</section>
+
+<section id="paper" class="paper" aria-labelledby="paper-title">
+ <div class="paper-top"><span>RESEARCH / PUBLIC NOTE 001</span><span>14 LAYERS — 7 LOOPS — 5 GRAPHS</span></div>
+ <div class="paper-intro">
+    <div class="paper-number" aria-hidden="true">03.</div>
+    <div><div class="eyebrow">Beyond the agent loop</div><h2 id="paper-title">The anatomy<br>of an <em>agentic</em><br>system.</h2></div>
+    <div class="paper-deck"><p>A technical field guide to the boundaries between decision-making, durable state, provenance-aware memory, knowledge graphs, capability authority and execution.</p><a class="text-link" href="https://github.com/kOs-tile/spectraflow/blob/main/research/ANATOMY_OF_PRODUCTION_AGENTIC_SYSTEMS_2026.md" target="_blank" rel="noopener noreferrer">Read the full research note <span aria-hidden="true">↗</span></a></div>
+ </div>
+ <div class="layers">
+   <div class="layers-header"><h3>The system is a sequence<br>of accountable boundaries.</h3><p>Select a domain to examine the underlying work, and the failure it must prevent.</p></div>
+   <div class="layer-nav" role="tablist" aria-label="Architecture layers">
+     <button role="tab" type="button" aria-selected="true" aria-controls="layer-panel" id="tab-control" data-layer="control">01 / CONTROL</button>
+     <button role="tab" type="button" aria-selected="false" aria-controls="layer-panel" id="tab-cognition" data-layer="cognition">02 / COGNITION</button>
+     <button role="tab" type="button" aria-selected="false" aria-controls="layer-panel" id="tab-knowledge" data-layer="knowledge">03 / KNOWLEDGE</button>
+     <button role="tab" type="button" aria-selected="false" aria-controls="layer-panel" id="tab-evidence" data-layer="evidence">04 / EVIDENCE</button>
+   </div>
+   <div class="layer-panel" id="layer-panel" role="tabpanel" aria-labelledby="tab-control" tabindex="0">
+     <div class="layer-visual" aria-hidden="true">
+       <svg viewBox="0 0 600 370"><g id="layer-network"></g></svg>
+       <span class="layer-legend">BOUNDARIES ARE NOT PROMPTS</span>
+     </div>
+     <div class="layer-description"><span class="eyebrow" id="layer-kicker">DOMAIN 01 / CONTROL</span><h4 id="layer-title">The right to execute.</h4><p id="layer-copy">Contracts, ownership, authorization and idempotent dispatch turn a suggestion into a bounded action.</p><div id="layer-tags" class="layer-tags"><span>Task contract</span><span>Authority</span><span>Dispatcher</span></div></div>
+   </div>
+ </div>
+ <div class="research-note"><div class="big-quote">Shared <em>state.</em><br>Not shared <em>transcripts.</em></div><div class="note-right"><span>ENGINEERING THESIS</span><p>A knowledge graph is not a task graph. Memory is not context. Tool discovery is not permission. None of these alone proves completion.</p><a href="https://github.com/kOs-tile/spectraflow/blob/main/research/ANATOMY_OF_PRODUCTION_AGENTIC_SYSTEMS_2026.md" target="_blank" rel="noopener noreferrer">THE FULL 4,500-WORD PAPER <span aria-hidden="true">↗</span></a></div></div>
+</section>
+<section class="ending" aria-labelledby="ending-title"><span class="eyebrow">A system is only as good as its evidence.</span><h2 id="ending-title">Show what <em>broke.</em><br>Show what <em>changed.</em><br>Prove the outcome.</h2><div class="ending-bottom"><a href="https://github.com/kOs-tile" target="_blank" rel="noopener noreferrer">Explore the repositories ↗</a><a href="https://linkedin.com/in/onurcankavi" target="_blank" rel="noopener noreferrer">Connect on LinkedIn ↗</a></div></section>
+</main>
+<footer><span>© 2026 KAVI — ONUR KAVI</span><span>ARCHITECTURE RESEARCH · EXECUTABLE PROOFS · NO PRODUCTION SLA</span><a href="#top">BACK TO TOP ↑</a></footer>
+</body>
+</html>
