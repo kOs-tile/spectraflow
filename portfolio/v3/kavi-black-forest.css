@@ -1,0 +1,175 @@
+/* KAVI BLACK FOREST / graphite + jade, editorial contrast
+   Applied after base V3. Art direction remains Agent Autopsy / Living Evidence.
+   Brand tokens are explicitly portable to other KAVI products.
+*/
+:root{
+  --kavi-void:#07120f;
+  --kavi-black:#0b1914;
+  --kavi-forest:#122b22;
+  --kavi-pine:#1c3b30;
+  --kavi-jade:#356e54;
+  --kavi-sage:#8dc9a4;
+  --kavi-signal:#c1dc91;
+  --kavi-paper:#e4ecdd;
+  --kavi-muted:#a1b7a7;
+  --kavi-edge:#416552;
+  --bone:var(--kavi-black);
+  --paper:var(--kavi-paper);
+  --carbon:var(--kavi-void);
+  --carbon2:var(--kavi-forest);
+  --oxide:var(--kavi-sage);
+  --oxide-light:#c0dec9;
+  --ink:var(--kavi-paper);
+  --muted:var(--kavi-muted);
+  --vermillion:var(--kavi-signal);
+  --acid:var(--kavi-signal);
+  --rule:var(--kavi-edge);
+}
+body{background:var(--kavi-black);color:var(--kavi-paper)}
+::selection{background:var(--kavi-signal);color:var(--kavi-void)}
+a:focus-visible,button:focus-visible,[tabindex="0"]:focus-visible{
+  outline-color:var(--kavi-signal)
+}
+.skip{background:var(--kavi-paper);color:var(--kavi-void)}
+.site-head{background:#091812bd;border-bottom:1px solid var(--kavi-edge);color:var(--kavi-paper)}
+.brand-glyph span,.record-indicator i{color:var(--kavi-signal)}
+.record-indicator i{background:var(--kavi-signal)}
+.site-head nav a:hover{border-color:var(--kavi-signal);color:var(--kavi-signal)}
+.autopsy-sticky{
+  background:radial-gradient(ellipse 61% 70% at 60% 73%,#25583a8e 0%,#142e256a 46%,transparent 78%),
+             linear-gradient(131deg,#081610,#0b2118 50%,#06120f);
+}
+.laboratory-grid{opacity:.39;background:
+ linear-gradient(90deg,transparent 0%,transparent 49.9%,#62927955 50%,transparent 50.1%),
+ repeating-linear-gradient(0deg,transparent 0 43px,#6a98774a 43px 44px),
+ repeating-linear-gradient(90deg,transparent 0 43px,#6a98774a 43px 44px)}
+.scene-aside,.hero-side-note{color:#b1c9b5}
+.vertical-line{background:var(--kavi-edge)}
+.scene-identity{color:var(--kavi-paper)}
+.red-rule{background:var(--kavi-signal)}
+.autopsy-sticky h1{color:#e9f2e6}
+.autopsy-sticky h1 em{color:var(--kavi-signal)}
+/* Evidence plates become smoked glass, not charcoal boxes. The physical
+   receipt within remains bone paper for forensic document contrast. */
+.sheet{color:#e1efe5;border-color:#789b89a8;
+  box-shadow:3px 7px 0 #29463b5e,16px 22px 40px #000b06b5;
+  backdrop-filter:blur(4px)}
+.sheet::before{border-color:#a9c4ac7e}
+.sheet::after{background:repeating-linear-gradient(90deg,transparent 0 10px,#c1deba11 10px 11px)}
+.sheet-claim{background:#1b352ce8}
+.sheet-authority{background:#214835e8}
+.sheet-dispatch{background:#23483feb}
+.sheet-verdict{background:#305a42eb}
+.sheet-topline,.sheet-bottomline{color:#deebe0;border-color:#94b5a17a}
+.evidence-num{color:#a8d4ad65}
+.transcript small{color:#c1d6c3}
+.transcript strong{color:#f0f3e8}
+.transcript .caption-italic{color:var(--kavi-signal)}
+.large-mark{color:var(--kavi-signal);border-color:var(--kavi-signal)}
+.receipt-art{background:#e3ead9;color:#143526;box-shadow:5px 5px 0 #93b29d9e;border-color:#366750}
+.receipt-art span{color:#4b6a56}
+.receipt-art b{color:#123426}
+.verdict-art{color:var(--kavi-signal)}
+.underline-stroke{background:#bbd99a}
+.specimen-needle{color:var(--kavi-signal)}
+.specimen-needle i{background:var(--kavi-signal)}
+.specimen-crosshair{border-color:#8fbf9eaa}
+.specimen-crosshair::before,.specimen-crosshair::after{background:#8fbf9eaa}
+.hero-stage-footer{border-color:var(--kavi-edge);color:#d4e7d3}
+.stage-progress{background:#405e4b}
+.stage-progress span{background:var(--kavi-signal)}
+.stage-caption{color:#a8cbab}
+/* Chapter I — dark jade wall and sculptural switch. */
+.chapter-intro{background:#11251d;color:var(--kavi-paper)}
+.chapter-number{border-color:#4d705d;color:#e1eee0}
+.chapter-question h2 em{color:var(--kavi-signal)}
+.chapter-question p{color:#bed0bd}
+.source-link{border-color:#7da187;color:#dcebd9}
+.source-link:hover{color:var(--kavi-signal)}
+.control-case{background:#1a392c;border-color:#577962;box-shadow:14px 17px 0 #05110b}
+.control-case-header,.control-foot{border-color:#54765e;color:#bfd6be}
+.mechanism-input,.mechanism-outcome,.input-serial{color:#dcebd9}
+.action-choice{border-color:#6c9880;color:#e0ecdd;background:#203d2d}
+.action-choice.selected{background:#c1dc91;border-color:#c1dc91;color:#10261b}
+.action-choice:hover:not(.selected){background:#315a40}
+.input-serial{color:#b2cbb8}
+.input-serial strong{color:#d4ecaa}
+.mechanism-spine{color:#b5d8bd}
+.mechanism-track{background:#5b8063}
+.mechanism-outcome{border-color:#53745d}
+.mechanism-outcome strong{color:#c1dc91}
+.mechanism-outcome.is-denied strong{color:#e4eddf}
+.mechanism-outcome p{color:#baceb8}
+.terminal-line{border-color:#52765e;color:#dceadb}
+.control-foot{color:#bdcfbd}
+/* Interlude: no red warning-banner impression; oxidized green stamp. */
+.long-divider{background:#2a563d;color:#eaf1df}
+.torn-edge{background:linear-gradient(130deg,#11251d 25%,transparent 25%) 0 0/22px 22px,
+                    linear-gradient(230deg,#11251d 25%,transparent 25%) 0 0/22px 22px}
+/* Chapter II — black ledger with pale mint receipts. */
+.reliability-section{background:#07120e;color:var(--kavi-paper)}
+.reliability-section .chapter-number{border-color:#45634e}
+.reliability-heading h2 em{color:var(--kavi-signal)}
+.reliability-heading p{color:#aec6b3}
+.ledger-wall{border-color:#3b664c}
+.ledger-top,.ledger-bottom{color:#c3dcc4}
+.ledger-column{background:#14281e;border-color:#41664b}
+.ledger-column[data-kind=safe]{background:#193c2c}
+.ledger-kicker{color:#d4e9d0}
+.effect-counter strong,.ledger-column[data-kind=safe] .effect-counter strong{color:#c1dc91}
+.receipt{background:#e4eadb;color:#153624;border-color:#e4eadb;box-shadow:0 13px 0 #020c0766}
+.receipt.duplicate{background:#b4c4a1;color:#163a21;border-color:#b4c4a1}
+.receipt.echo{color:#d6eacb;border-color:#93bf99}
+.ledger-column p{color:#b8d0bb}
+.ledger-bottom button{border-color:#91b89a;color:#dbeed9}
+.ledger-bottom button:hover{background:#25533a}
+.ledger-bottom a{border-color:#79a58a}
+.reliability-boundary{color:#bfd5c3}
+/* Chapter III: museum field cross-section of five storage lifecycles. */
+.memory-section{background:#10231b;color:var(--kavi-paper)}
+.memory-header h2 em{color:var(--kavi-signal)}
+.memory-header p{color:#c0d2bf}
+.memory-lab{background:#1a3628;border-color:#527d5f}
+.laminate-stack{background:linear-gradient(140deg,#0c1a13,#27503c 56%,#183826)}
+.laminate-stack::before{background:
+ repeating-linear-gradient(0deg,#74a37a27 0 1px,transparent 1px 35px),
+ repeating-linear-gradient(90deg,#74a37a27 0 1px,transparent 1px 35px)}
+.stratum{background:#234737d8;color:#e1efda;border-color:#94be98a3;box-shadow:10px 17px 0 #030f095e}
+.stratum.s2{background:#2b5440e3}
+.stratum.s3{background:#245440e3}
+.stratum.s4{background:#315845e3}
+.stratum.s5{background:#1c4935e3}
+.stratum.active{background:#557b57;color:#f5f7e4;box-shadow:15px 17px 0 #05150bb5}
+.stratum-marker{color:var(--kavi-signal)}
+.stratum-marker i{background:var(--kavi-signal)}
+.memory-inspector{border-color:#51765c}
+.inspector-top,.inspector-choices{border-color:#537960}
+.inspector-choices button{border-color:#537960;color:#c4d6c3}
+.inspector-choices button[aria-selected=true]{background:#c0dc90;color:#132619}
+.inspector-choices button:hover:not([aria-selected=true]){background:#2f593e}
+.memory-readout{background:#1b372a}
+.memory-readout h3{color:#eff3e5}
+.memory-readout p{color:#bdd1bf}
+.memory-seal{border-color:#587960}
+.memory-seal span{color:#b8ceb9}
+.memory-seal strong{color:#d9edca}
+/* Publication is a single purposeful light-paper relief after a dark
+   evidence trail: light stock feels like the physical monograph. */
+.publication{background:#dce7d6;color:#13271b}
+.publication-index{border-color:#879e88}
+.publication-title h2 em{color:#245f3e}
+.cover-abstract{border-color:#8ba18e}
+.cover-abstract p{color:#344e3b}
+.cover-abstract a{border-color:#658a6d}
+.publication-map{border-color:#8aa38c}
+.publication-map b{border-color:#92aa93}
+.publication-map i{background:#417e53}
+footer{background:#050f0b;color:#d0e8cf}
+footer a{border-color:#81ad8a}
+/* Clear fallback when blur is unsupported or motion is disabled. */
+@supports not (backdrop-filter:blur(2px)){
+ .sheet-claim{background:#1b352c}
+ .sheet-authority{background:#214835}
+ .sheet-dispatch{background:#23483f}
+ .sheet-verdict{background:#305a42}
+}
