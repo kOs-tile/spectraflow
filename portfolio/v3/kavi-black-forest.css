@@ -10,6 +10,7 @@
   --kavi-jade:#356e54;
   --kavi-sage:#8dc9a4;
   --kavi-signal:#c1dc91;
+  --kavi-denied:#e5b49a;
   --kavi-paper:#e4ecdd;
   --kavi-muted:#a1b7a7;
   --kavi-edge:#416552;
@@ -98,7 +99,7 @@ a:focus-visible,button:focus-visible,[tabindex="0"]:focus-visible{
 .mechanism-track{background:#5b8063}
 .mechanism-outcome{border-color:#53745d}
 .mechanism-outcome strong{color:#c1dc91}
-.mechanism-outcome.is-denied strong{color:#e4eddf}
+.mechanism-outcome.is-denied strong{color:var(--kavi-denied)}
 .mechanism-outcome p{color:#baceb8}
 .terminal-line{border-color:#52765e;color:#dceadb}
 .control-foot{color:#bdcfbd}
