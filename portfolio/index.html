@@ -1,57 +1,155 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#f1f0e9">
-<title>KAVI Engineering — Systems That Can Prove What Happened</title>
-<meta name="description" content="Onur Kavi's source-linked agent engineering portfolio: KCC capability security, SPECTRAFLOW reliability, and a research architecture for agentic systems.">
-<meta property="og:title" content="KAVI Engineering — Evidence Before Claims"><meta property="og:type" content="website"><meta property="og:description" content="Agent authority, durable execution, and agentic systems research. Source code, replayable demos, and honest evaluation boundaries.">
-<style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap');
-:root{--ivory:#f2f1e9;--white:#f9f8f3;--ink:#1b2a2b;--sub:#5d6d68;--line:#cdd0c5;--clay:#a95931;--green:#47756a;--dark:#111d22;--mint:#8bd3b7}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--ivory);font-family:'DM Sans',Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}a{color:inherit}.mono,.eyebrow,nav a,.micro,.fact-key{font-family:'DM Mono',monospace}a:focus-visible{outline:3px solid var(--clay);outline-offset:4px}button:focus-visible{outline:3px solid var(--clay)}
-nav{height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:0 max(24px,6vw);gap:16px}nav .brand{font-weight:700;letter-spacing:-.04em;font-size:22px;text-decoration:none}nav .brand b{color:var(--clay)}nav .links{display:flex;gap:26px;align-items:center}nav a:not(.brand){font-size:12px;text-decoration:none;color:var(--sub);text-transform:uppercase;letter-spacing:.08em}
-main{overflow:hidden}.hero{min-height:590px;display:grid;grid-template-columns:1.18fr .82fr;align-items:center;max-width:1500px;margin:auto;padding:70px max(24px,6vw) 80px;gap:45px}
-.eyebrow{font-size:11px;color:var(--clay);letter-spacing:.10em;text-transform:uppercase}.hero h1{max-width:830px;margin:25px 0;font-size:clamp(54px,7.8vw,112px);line-height:.91;letter-spacing:-.075em;font-weight:700}.hero h1 em{font-style:normal;color:var(--green)}.hero p{font-size:18px;line-height:1.7;max-width:520px;color:var(--sub)}.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:31px}.action{display:inline-flex;justify-content:center;align-items:center;border:1px solid var(--ink);text-decoration:none;font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;padding:15px 21px;transition:transform .25s,background .25s,color .25s}.action:hover{transform:translateY(-3px)}.action.primary{background:var(--ink);color:#f5f4ed}.action.secondary:hover{background:var(--ink);color:#f5f4ed}
-.blueprint{height:440px;position:relative;display:flex;align-items:center;justify-content:center;background-image:linear-gradient(to right,rgba(83,100,95,.12) 1px,transparent 1px),linear-gradient(to bottom,rgba(83,100,95,.12) 1px,transparent 1px);background-size:39px 39px;border:1px solid var(--line)}.orbit{position:absolute;border:1px solid rgba(86,111,101,.3);border-radius:50%;width:72%;aspect-ratio:1;animation:rotate 38s linear infinite}.orbit.two{width:49%;animation-duration:25s;animation-direction:reverse;border-color:rgba(169,89,49,.4)}.point{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--clay);top:1%;left:49%;box-shadow:0 0 0 9px rgba(169,89,49,.08)}.core{width:204px;height:204px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--ink);color:var(--white);border-radius:50%;z-index:3;gap:10px;box-shadow:0 20px 45px rgba(17,32,29,.13)}.core b{font-size:27px;letter-spacing:-.05em}.core span{font-family:'DM Mono';font-size:10px;text-transform:uppercase;color:var(--mint);letter-spacing:.1em}.corner{position:absolute;font:10px 'DM Mono';color:var(--sub)}.c1{top:15px;left:15px}.c2{bottom:15px;right:15px}
-.band{border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);gap:0}.fact{padding:27px 6vw;border-right:1px solid var(--line)}.fact:last-child{border:0}.fact-key{font-size:11px;letter-spacing:.08em;color:var(--clay)}.fact strong{display:block;margin-top:9px;font-size:18px;letter-spacing:-.025em}
-.section{max-width:1450px;margin:auto;padding:105px max(24px,6vw)}.section-title{display:flex;justify-content:space-between;align-items:end;border-bottom:1px solid var(--line);padding-bottom:26px;gap:25px}.section-title h2{font-size:clamp(36px,5.3vw,73px);line-height:1.02;letter-spacing:-.065em;max-width:820px;margin:9px 0 0}.micro{font-size:12px;color:var(--sub)}.proofs{display:grid;grid-template-columns:1fr 1fr;gap:22px;padding-top:36px}.proof{background:var(--white);border:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column;min-width:0}.proof:nth-child(2){background:var(--dark);color:var(--white);border-color:var(--dark)}.proof h3{font-size:32px;letter-spacing:-.055em;margin:14px 0 11px}.proof>div:first-child{padding:28px 28px 25px}.proof .subtitle{font-size:14px;line-height:1.6;max-width:500px;margin:0;color:var(--sub)}.proof:nth-child(2) .subtitle{color:#a7b7b3}.proof .eyebrow{color:var(--clay)}.proof:nth-child(2) .eyebrow{color:var(--mint)}.visual{display:block;aspect-ratio:16/9;background:var(--ivory);width:100%;border-top:1px solid var(--line);border-bottom:1px solid var(--line);object-fit:cover}.proof:nth-child(2) .visual{background:var(--dark);border-color:#31434b}.bottom{padding:24px 28px 31px;display:flex;flex-direction:column;gap:19px;flex:1}.bottom p{font-size:14px;line-height:1.7;color:var(--sub);margin:0}.proof:nth-child(2) .bottom p{color:#b3bfbd}.linkrow{margin-top:auto;display:flex;gap:18px;flex-wrap:wrap}.linkrow a{font-size:12px;letter-spacing:.03em;text-underline-offset:5px;font-weight:700}.proof:nth-child(2) .linkrow a{color:#c3eddf}
-.research{background:#dee6dd;border-top:1px solid #c2d2c5;border-bottom:1px solid #c2d2c5}.research .section{padding-top:100px;padding-bottom:100px}.research-intro{display:grid;grid-template-columns:1.15fr .85fr;gap:70px}.research h2{font-size:clamp(38px,5.6vw,77px);letter-spacing:-.065em;line-height:1.02;margin:24px 0 25px}.research p{font-size:17px;line-height:1.7;max-width:690px;color:#4c6159}.research-list{padding-top:13px}.research-list .item{border-bottom:1px solid #b5c7b9;display:flex;align-items:center;justify-content:space-between;padding:24px 0}.research-list .item span{font:12px 'DM Mono';color:#4a7566}.research-list .item strong{font-size:23px;letter-spacing:-.04em}.research .action{margin-top:18px}
-.evidence{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding-top:38px}.note{padding:25px;border-left:3px solid var(--clay);background:rgba(255,255,255,.45)}.note h3{margin:0 0 9px;font-size:19px}.note p{line-height:1.7;font-size:14px;color:var(--sub);margin:0}
-.cta{text-align:center;padding:120px max(24px,6vw) 110px;background:var(--ink);color:var(--ivory)}.cta h2{font-size:clamp(42px,6vw,82px);letter-spacing:-.06em;line-height:1.06;margin:22px auto;max-width:800px}.cta p{margin:0 auto 29px;color:#bacbc4;font-size:16px;line-height:1.6;max-width:580px}.cta .action{color:var(--ivory);border-color:#bacbc4}.cta .action:hover{background:var(--ivory);color:var(--ink)}footer{padding:32px max(24px,6vw);display:flex;justify-content:space-between;gap:24px;font-size:12px;color:var(--sub)}footer a{color:var(--sub)}.reveal{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s ease}.reveal.visible{opacity:1;transform:translateY(0)}
-@keyframes rotate{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none}.orbit{animation:none}.action{transition:none}}
-@media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:55px}.blueprint{height:310px}.orbit{width:250px}.orbit.two{width:180px}.core{width:145px;height:145px}.core b{font-size:20px}.proofs,.research-intro,.evidence{grid-template-columns:1fr}.research-intro{gap:20px}.section{padding-top:75px;padding-bottom:75px}.band{grid-template-columns:1fr}.fact{border-right:0;border-bottom:1px solid var(--line);padding:18px 6vw}nav .links{gap:10px}nav a:not(.brand){font-size:10px}.section-title{align-items:start;flex-direction:column}}
-</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#e7e1d5">
+<meta name="description" content="Agent Autopsy — an interactive forensic examination of AI execution: authority, external commits, memory and verified evidence. Source-linked KAVI engineering.">
+<meta property="og:title" content="Agent Autopsy | KAVI Engineering">
+<meta property="og:description" content="The model said it worked. The ledger tells a different story.">
+<title>AGENT AUTOPSY — A KAVI Engineering Examination</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./v3/style.css">
+<link rel="stylesheet" href="./v3/kavi-black-forest.css">
+<script defer src="./v3/app.js"></script>
 </head>
 <body>
-<nav><a class="brand" href="#">KAVI<b>.</b>ENGINEERING</a><div class="links"><a href="#proof">The proofs</a><a href="#research">The architecture</a><a href="https://github.com/kOs-tile">GitHub ↗</a></div></nav>
+<a class="skip" href="#specimen">Skip to the examination</a>
+<div class="site-head">
+ <a class="brand" href="#specimen" aria-label="KAVI Engineering home"><span class="brand-glyph">k<span>.</span></span><span class="brand-caption">KAVI / FIELD RESEARCH<br>NO. 001 — OPEN EVIDENCE</span></a>
+ <nav aria-label="Dossier index"><a href="#authority">I — Permission</a><a href="#reliability">II — Consequence</a><a href="#memory">III — Memory</a><a href="#research">IV — Paper</a></nav>
+ <span class="record-indicator"><i aria-hidden="true"></i> CASE OPEN</span>
+</div>
 <main>
-<section class="hero">
-<div class="reveal">
-<div class="eyebrow">Onur Kavi / AI systems engineering / 2026</div>
-<h1>Systems that <em>prove</em> what happened.</h1>
-<p>Agent authority. Durable execution. Verified results. A public engineering evidence library for systems that act across tools, contexts and time.</p>
-<div class="hero-actions"><a class="action primary" href="#proof">Explore the proofs ↓</a><a class="action secondary" href="#research">Read the architecture ↗</a></div>
-</div>
-<div class="blueprint reveal" aria-label="Architectural rings representing decision, state and verification">
-<div class="orbit"><div class="point"></div></div><div class="orbit two"><div class="point"></div></div>
-<div class="core"><span>task / state</span><b>CONTROL</b><b>PLANE</b><span>evidence-first</span></div>
-<div class="corner c1">14 LAYERS / 7 LOOPS</div><div class="corner c2">LEAST AUTHORITY</div>
+<section id="specimen" class="autopsy-scroll" aria-labelledby="hero-heading">
+<div class="autopsy-sticky">
+  <div class="laboratory-grid" aria-hidden="true"></div>
+  <div class="scene-aside left"><span>EXAMINATION // 0001</span><span class="vertical-line"></span><span>SCROLL TO PEEL THE EVIDENCE</span></div>
+  <div class="scene-aside right"><span>CLASSIFICATION: PUBLIC</span><span>INPUT / AUTHORITY / RECEIPT / TRUTH</span></div>
+  <div class="scene-identity">
+    <span class="red-rule"></span><span>THE AGENT AUTOPSY</span><span>2026 / V.03</span>
+  </div>
+  <h1 id="hero-heading"><span>WE DISSECT</span><em>A DECISION.</em></h1>
+  <p class="hero-side-note">Not another agent diagram.<br>An examination of the moment<br>software becomes accountable.</p>
+  <div class="specimen-table" id="specimen-table" aria-label="Four translucent examination sheets showing the states of one synthetic agent action">
+    <div class="sheet sheet-claim" aria-hidden="true">
+      <div class="sheet-topline"><span>01 / TESTIMONY</span><span>MODEL OUTPUT</span><span>UNVERIFIED</span></div>
+      <div class="sheet-center"><span class="evidence-num">01</span><div class="transcript"><small>ASSISTANT CLAIM</small><strong>“The action<br>is complete.”</strong><span class="caption-italic">Words are not receipts.</span></div></div>
+      <div class="sheet-bottomline"><span>ORIGIN: GENERATED TEXT</span><span>TRUST LEVEL / LOW</span></div>
+    </div>
+    <div class="sheet sheet-authority" aria-hidden="true">
+      <div class="sheet-topline"><span>02 / ADMISSION</span><span>CAPABILITY CAPSULE</span><span>SCOPE-LOCKED</span></div>
+      <div class="sheet-center"><span class="evidence-num">02</span><div class="transcript"><small>PERMITTED OPERATION</small><strong>read_customer<br><span class="small-type">customer_id = 001</span></strong><div class="large-mark">AUTHORIZED<span>✓</span></div></div></div>
+      <div class="sheet-bottomline"><span>DENIED: DELETE / DRIFT / EXPIRY</span><span>HOST GUARD</span></div>
+    </div>
+    <div class="sheet sheet-dispatch" aria-hidden="true">
+      <div class="sheet-topline"><span>03 / EXTERNAL WORLD</span><span>TOOL DISPATCH</span><span>ONE RECEIPT</span></div>
+      <div class="sheet-center"><span class="evidence-num">03</span><div class="transcript"><small>THE COMMIT BOUNDARY</small><div class="receipt-art"><span>OPERATION_ID</span><b>op:001/intent:v4</b><span>DISPATCH RECEIPT</span><b>COMMITTED</b><span>RETRY POLICY</span><b>RECONCILE FIRST</b></div></div></div>
+      <div class="sheet-bottomline"><span>ACK MAY BE LOST</span><span>DO NOT BLIND RETRY</span></div>
+    </div>
+    <div class="sheet sheet-verdict" aria-hidden="true">
+      <div class="sheet-topline"><span>04 / EXAMINER VERDICT</span><span>ACCEPTANCE GATE</span><span>VERIFIABLE</span></div>
+      <div class="sheet-center"><span class="evidence-num">04</span><div class="transcript"><small>EXTERNAL EVIDENCE REQUIRED</small><div class="verdict-art">PASS<span class="underline-stroke"></span></div><span class="caption-italic">Only when the verifier agrees.</span></div></div>
+      <div class="sheet-bottomline"><span>PROCESS EXIT ≠ OBJECTIVE ACHIEVED</span><span>FINAL VERDICT</span></div>
+    </div>
+    <div class="specimen-needle" aria-hidden="true"><span>TRACE<br>004819</span><i></i></div>
+    <div class="specimen-crosshair" aria-hidden="true"></div>
+  </div>
+  <div class="hero-stage-footer">
+    <div class="stage-status"><span class="stage-counter" id="stage-counter">01 / 04</span><div class="stage-progress" aria-hidden="true"><span id="stage-progress"></span></div><span id="stage-label">THE CLAIM</span></div>
+    <p class="stage-caption" id="stage-caption" aria-live="off">The model speaks. No external state has yet been proven.</p>
+    <span class="drag-instruction">THE SHEETS SEPARATE AS YOU SCROLL ↓</span>
+  </div>
 </div>
 </section>
-<div class="band"><div class="fact"><div class="fact-key">PROOF 01</div><strong>Scope before dispatch.</strong></div><div class="fact"><div class="fact-key">PROOF 02</div><strong>Verify before PASS.</strong></div><div class="fact"><div class="fact-key">RESEARCH NOTE 01</div><strong>Shared state, not transcripts.</strong></div></div>
-<section id="proof" class="section">
-<div class="section-title reveal"><div><div class="eyebrow">01 / Executable evidence</div><h2>Two boundaries.<br>Two working proofs.</h2></div><div class="micro">ANIMATED EXPLAINERS / SOURCE-LINKED</div></div>
-<div class="proofs">
-<article class="proof reveal"><div><div class="eyebrow">01 — KCC / AUTHORITY</div><h3>Not every tool should execute.</h3><p class="subtitle">The model proposes a tool call. A task-scoped capsule and host guard determine if it can reach the dispatcher.</p></div><img class="visual" src="assets/kcc-motion.svg" alt="Animated task-to-capsule-to-guard-to-dispatcher diagram showing blocked deletion" loading="lazy"><div class="bottom"><p><strong>Proof:</strong> one authorized read reaches the host callback; five denied or approval-required conditions do not. This is an in-process SDK demonstration, not a production penetration test.</p><div class="linkrow"><a href="https://github.com/kOs-tile/kavi-capability-compiler/blob/main/examples/recruiter_demo.py" target="_blank" rel="noopener">View source ↗</a><a href="https://github.com/kOs-tile/kavi-capability-compiler/blob/main/docs/DEMO_5_MINUTES.md" target="_blank" rel="noopener">5-minute walkthrough ↗</a></div></div></article>
-<article class="proof reveal"><div><div class="eyebrow">02 — SPECTRAFLOW / RELIABILITY</div><h3>Completion needs evidence.</h3><p class="subtitle">A process can exit cleanly, but terminal PASS must come from verified state — not a confident model response.</p></div><img class="visual" src="assets/reliability-motion.svg" alt="Animated ready-claimed-verify-pass state machine showing a semantic failure continuation" loading="lazy"><div class="bottom"><p><strong>Proof:</strong> a separate 12-check synthetic reference runner plus existing deterministic side-effect and 8-record historical-metadata evaluations. Historical records do not reveal actual side-effect totals.</p><div class="linkrow"><a href="https://github.com/kOs-tile/spectraflow/blob/main/examples/reliability_interview_demo.py" target="_blank" rel="noopener">View source ↗</a><a href="https://github.com/kOs-tile/spectraflow/blob/main/docs/RELIABILITY_INTERVIEW_DEMO.md" target="_blank" rel="noopener">5-minute walkthrough ↗</a></div></div></article>
-</div>
+
+<section class="chapter-intro" id="authority">
+  <div class="chapter-number"><span>EXHIBIT / 01</span><b>I.</b><span>CAPABILITY SECURITY</span></div>
+  <div class="chapter-question">
+    <span class="eyebrow">FIRST QUESTION / BEFORE THE TOOL RUNS</span>
+    <h2>Who said<br>it <em>could?</em></h2>
+    <p>An operation can exist in a tool registry without belonging to the current task. Try the operation below. The real test is whether denial happens <i>before</i> the host dispatches anything.</p>
+    <a href="https://github.com/kOs-tile/kavi-capability-compiler/blob/main/examples/recruiter_demo.py" target="_blank" rel="noopener noreferrer" class="source-link">OPEN EXECUTABLE KCC PROOF <span>↗</span></a>
+  </div>
+  <div class="control-case" aria-label="Interactive synthetic capability test">
+    <div class="control-case-header"><span>CASE 001 / DISPATCH REQUEST</span><span>SYNTHETIC INTERACTION / NO LIVE CALLS</span></div>
+    <div class="mechanism">
+      <div class="mechanism-input">
+        <span class="eyebrow">REQUESTED ACTION</span>
+        <div class="switchbox" role="group" aria-label="Test operation">
+          <button type="button" class="action-choice selected" data-action="read" aria-pressed="true"><span>READ</span><small>customer / 001</small></button>
+          <button type="button" class="action-choice" data-action="delete" aria-pressed="false"><span>DELETE</span><small>customer / 001</small></button>
+        </div>
+        <div class="input-serial">PERMISSION MANIFEST: <strong>read_customer(id:001)</strong></div>
+      </div>
+      <div class="mechanism-spine" aria-hidden="true"><div class="mechanism-track"><span id="mechanism-pulse"></span></div><span>PRE-DISPATCH CHECK</span></div>
+      <div class="mechanism-outcome" aria-live="polite">
+        <span class="eyebrow">HOST DISPATCH RECORD</span>
+        <strong id="action-verdict">ALLOWED</strong>
+        <p id="action-explanation">The requested read matches the scoped authority capsule.</p>
+        <div class="terminal-line"><span>HOST_CALLBACK</span><b id="callback-count">1</b><span>GUARD_STATE</span><b id="guard-state">PASS</b></div>
+      </div>
+    </div>
+    <div class="control-foot"><span>THIS IS A UI MODEL, NOT AN ACTIVE KCC PROCESS</span><span>VERIFY RESULTS IN THE LINKED PYTHON DEMO</span></div>
+  </div>
 </section>
-<div id="research" class="research"><section class="section">
-<div class="research-intro"><div class="reveal"><div class="eyebrow">02 / Engineering research / October 2026</div><h2>The anatomy of a production-grade agentic system.</h2><p>A source-grounded reference architecture mapping a full agent stack — from intent and context compilation to graph retrieval, memory admission, authorization, durable execution, failure recovery and evaluation.</p><a class="action primary" href="https://github.com/kOs-tile/spectraflow/blob/main/research/ANATOMY_OF_PRODUCTION_AGENTIC_SYSTEMS_2026.md" target="_blank" rel="noopener">Read the full technical note ↗</a></div><div class="research-list reveal"><div class="item"><strong>System layers</strong><span>14</span></div><div class="item"><strong>Feedback loops</strong><span>07</span></div><div class="item"><strong>Distinct graph types</strong><span>05</span></div><div class="item"><strong>Reference sources</strong><span>13</span></div><div class="item"><strong>Trust principle</strong><span>evidence &gt; claims</span></div></div></div>
-<div class="evidence reveal"><div class="note"><h3>Context is not memory.</h3><p>A bounded context packet, durable task state, episodic history and a knowledge graph have different purposes and write permissions. Mixing them creates stale recall and uncontrolled authority.</p></div><div class="note"><h3>An architecture is not a benchmark.</h3><p>Published demonstrations are narrow. The long-form article identifies which behaviors were tested synthetically, which facts came from sanitized task history, and which live experiments remain incomplete.</p></div></div>
-</section></div>
-<section class="cta reveal"><div class="eyebrow" style="color:#9abbaa">source → execution → evidence</div><h2>Show what broke.<br>Show what changed.<br>Prove the outcome.</h2><p>Source-linked systems engineering, reproducible tests and explicit limitations — intended for technical reviewers, not marketing claims.</p><a class="action" href="https://github.com/kOs-tile" target="_blank" rel="noopener">Explore KAVI on GitHub ↗</a></section>
-</main><footer><span>© 2026 KAVI / Onur Kavi. Engineering evidence, not a commercial SLA.</span><span><a href="https://github.com/kOs-tile/spectraflow" target="_blank" rel="noopener">Source repository</a> · <a href="https://linkedin.com/in/onurcankavi" target="_blank" rel="noopener">LinkedIn</a></span></footer>
-<script>const targets=document.querySelectorAll('.reveal');if('IntersectionObserver'in window){const ob=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');ob.unobserve(e.target)}}),{threshold:.10});targets.forEach(x=>ob.observe(x))}else targets.forEach(x=>x.classList.add('visible'));</script>
-</body></html>
+
+<section class="long-divider" aria-label="Transition to side-effect reliability"><div class="torn-edge" aria-hidden="true"></div><span>AN AUTHORIZED ACTION MAY STILL FAIL AFTER IT SUCCEEDS</span><div class="clock-number" aria-hidden="true">00:00:03.081</div></section>
+
+<section id="reliability" class="reliability-section" aria-labelledby="reliability-title">
+  <div class="chapter-number dark-number"><span>EXHIBIT / 02</span><b>II.</b><span>DURABLE EXECUTION</span></div>
+  <div class="reliability-heading"><span class="eyebrow">SECOND QUESTION / AFTER THE TOOL RUNS</span><h2 id="reliability-title">What actually<br><em>happened?</em></h2><p>The request commits. The acknowledgement disappears. Would you send it again?</p></div>
+  <div class="ledger-wall">
+    <div class="ledger-top"><span>COMPARATIVE RECORD / 002</span><span>POST-COMMIT TIMEOUT INJECTED</span></div>
+    <div class="ledger-columns">
+      <div class="ledger-column" data-kind="unsafe"><span class="ledger-kicker">POLICY A / BLIND RETRY</span><div class="effect-counter"><strong id="unsafe-count">02</strong><span>COMMITTED<br>EFFECTS</span></div><div class="receipt-strip" aria-hidden="true"><div class="receipt"><small>REQUEST 001</small><b>COMMIT</b><span>ACK LOST</span></div><div class="receipt duplicate"><small>REQUEST 002</small><b>COMMIT</b><span>DUPLICATE</span></div></div><p>Two attempts create two effects because the caller interprets a lost reply as a failed action.</p></div>
+      <div class="ledger-divider"><span>vs</span></div>
+      <div class="ledger-column" data-kind="safe"><span class="ledger-kicker">POLICY B / STABLE KEY</span><div class="effect-counter"><strong id="safe-count">01</strong><span>COMMITTED<br>EFFECT</span></div><div class="receipt-strip" aria-hidden="true"><div class="receipt"><small>REQUEST 001</small><b>COMMIT</b><span>ACK LOST</span></div><div class="receipt echo"><small>REQUEST 002</small><b>REUSED</b><span>SAME OP ID</span></div></div><p>The second request reuses the operation identity, preserving one ledger commit in the synthetic benchmark.</p></div>
+    </div>
+    <div class="ledger-bottom"><button id="replay" type="button">REPLAY LOSS OF ACKNOWLEDGEMENT <span aria-hidden="true">↺</span></button><span id="replay-result" aria-live="polite">READY / TWO POLICIES</span><a href="https://github.com/kOs-tile/spectraflow/blob/main/examples/reliability_interview_demo.py" target="_blank" rel="noopener noreferrer">REPRODUCE LOCALLY ↗</a></div>
+  </div>
+  <div class="reliability-boundary">In the historical, sanitized eight-task fixture, <strong>2 verified PASS · 2 completed-unverified · 4 failed.</strong> Those records do not contain external side-effect counts. The comparison above is an independent synthetic ledger.</div>
+</section>
+
+<section id="memory" class="memory-section" aria-labelledby="memory-title">
+  <div class="chapter-number"><span>EXHIBIT / 03</span><b>III.</b><span>CONTEXT + MEMORY ENGINEERING</span></div>
+  <div class="memory-header"><span class="eyebrow">THIRD QUESTION / WHAT DOES THE SYSTEM KNOW?</span><h2 id="memory-title">A memory<br>is not <em>a fact.</em></h2><p>Every layer has its own lifetime, origin and write authority. Peel through the specimen to reveal what the agent should—not merely can—remember.</p></div>
+  <div class="memory-lab">
+    <div class="laminate-stack" aria-label="Illustrative cross-section of distinct agent memory stores">
+      <div class="stratum s1"><span>CONTEXT</span><small>BOUND TO A SINGLE INFERENCE</small></div>
+      <div class="stratum s2"><span>TASK STATE</span><small>DURABLE RUN / EXECUTION TRUTH</small></div>
+      <div class="stratum s3"><span>EPISODES</span><small>WHAT HAPPENED &amp; WHEN</small></div>
+      <div class="stratum s4"><span>KNOWLEDGE</span><small>CLAIMS / RELATIONS / PROVENANCE</small></div>
+      <div class="stratum s5"><span>PROCEDURES</span><small>VERSIONED EXECUTION METHODS</small></div>
+      <div class="stratum-marker" aria-hidden="true"><span id="stratum-marker">02</span><i></i></div>
+    </div>
+    <div class="memory-inspector">
+      <div class="inspector-top"><span>MICROSCOPE 003 / SELECT A STRATUM</span><span id="memory-numeric">02 / 05</span></div>
+      <div class="inspector-choices" role="tablist" aria-label="Memory strata">
+        <button role="tab" id="tab-context" aria-controls="memory-panel" aria-selected="false" tabindex="-1" data-memory="context">01 Context</button>
+        <button role="tab" id="tab-state" aria-controls="memory-panel" aria-selected="true" tabindex="0" data-memory="state">02 Task state</button>
+        <button role="tab" id="tab-episode" aria-controls="memory-panel" aria-selected="false" tabindex="-1" data-memory="episode">03 Episodes</button>
+        <button role="tab" id="tab-knowledge" aria-controls="memory-panel" aria-selected="false" tabindex="-1" data-memory="knowledge">04 Graph</button>
+        <button role="tab" id="tab-procedure" aria-controls="memory-panel" aria-selected="false" tabindex="-1" data-memory="procedure">05 Procedure</button>
+      </div>
+      <div id="memory-panel" role="tabpanel" tabindex="0" aria-labelledby="tab-state" class="memory-readout">
+        <span class="eyebrow" id="memory-label">DURABLE EXECUTION</span>
+        <h3 id="memory-name">Task state is not a summary.</h3>
+        <p id="memory-copy">The canonical task ledger records ownership, attempts, receipts and terminal acceptance. It cannot be rewritten by an LLM-generated recap.</p>
+        <div class="memory-seal"><span>WRITE AUTHORITY</span><strong id="memory-authority">Control-plane transaction</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="research" class="publication" aria-labelledby="publication-heading">
+  <div class="publication-index"><span>OPEN RESEARCH / NO. 001</span><span>PUBLICATION DATE — OCT 2026</span></div>
+  <div class="publication-cover"><div class="cover-side">AN ENGINEERING<br>FIELD MONOGRAPH</div><div class="publication-title"><span>THE COMPLETE<br>REFERENCE ANATOMY</span><h2 id="publication-heading">14 layers.<br>7 loops.<br><em>5 different graphs.</em></h2></div><div class="cover-abstract"><span>ABSTRACT / 01</span><p>Knowledge graphs are not execution graphs. Context is not memory. Discovering a tool is not permission. A durable agent system is a chain of independent, inspectable responsibilities.</p><a href="https://github.com/kOs-tile/spectraflow/blob/main/research/ANATOMY_OF_PRODUCTION_AGENTIC_SYSTEMS_2026.md" target="_blank" rel="noopener noreferrer">READ THE RESEARCH / FULL PAPER <span aria-hidden="true">↗</span></a></div></div>
+  <div class="publication-map"><span>THE EXAMINED SYSTEM</span><div><b>IDENTITY</b><i></i><b>CONTRACT</b><i></i><b>CONTEXT</b><i></i><b>GUARD</b><i></i><b>DISPATCH</b><i></i><b>VERIFY</b><i></i><b>RECOVER</b></div><small>REFERENCE ARCHITECTURE / NOT A CLAIM OF COMPLETE DEPLOYMENT</small></div>
+</section>
+</main>
+<footer><span>KAVI / ONUR KAVI / ENGINEERING EVIDENCE</span><a href="https://github.com/kOs-tile" target="_blank" rel="noopener noreferrer">SOURCE REPOSITORIES ↗</a><span>NO LIVE FINANCIAL OR PRODUCTION SIDE EFFECTS</span><a href="#specimen">BACK TO EXAMINATION ↑</a></footer>
+</body>
+</html>
