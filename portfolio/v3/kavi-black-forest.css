@@ -1,19 +1,19 @@
-/* KAVI BLACK FOREST / graphite + jade, editorial contrast
+/* KAVI NIGHT SIGNAL / black forest + controlled neon green
    Applied after base V3. Art direction remains Agent Autopsy / Living Evidence.
    Brand tokens are explicitly portable to other KAVI products.
 */
 :root{
-  --kavi-void:#07120f;
+  --kavi-void:#040806;
   --kavi-black:#0b1914;
-  --kavi-forest:#122b22;
-  --kavi-pine:#1c3b30;
-  --kavi-jade:#356e54;
-  --kavi-sage:#8dc9a4;
-  --kavi-signal:#c1dc91;
+  --kavi-forest:#0b1d13;
+  --kavi-pine:#133022;
+  --kavi-jade:#247547;
+  --kavi-sage:#70eda1;
+  --kavi-signal:#91ff45;
   --kavi-denied:#e5b49a;
-  --kavi-paper:#e4ecdd;
-  --kavi-muted:#a1b7a7;
-  --kavi-edge:#416552;
+  --kavi-paper:#edf5e9;
+  --kavi-muted:#a5c0aa;
+  --kavi-edge:#335c42;
   --bone:var(--kavi-black);
   --paper:var(--kavi-paper);
   --carbon:var(--kavi-void);
@@ -49,7 +49,7 @@ a:focus-visible,button:focus-visible,[tabindex="0"]:focus-visible{
 .scene-identity{color:var(--kavi-paper)}
 .red-rule{background:var(--kavi-signal)}
 .autopsy-sticky h1{color:#e9f2e6}
-.autopsy-sticky h1 em{color:var(--kavi-signal)}
+.autopsy-sticky h1 em{color:var(--kavi-signal);text-shadow:0 0 38px #91ff451c}
 /* Evidence plates become smoked glass, not charcoal boxes. The physical
    receipt within remains bone paper for forensic document contrast. */
 .sheet{color:#e1efe5;border-color:#789b89a8;
@@ -158,7 +158,7 @@ a:focus-visible,button:focus-visible,[tabindex="0"]:focus-visible{
    evidence trail: light stock feels like the physical monograph. */
 .publication{background:#dce7d6;color:#13271b}
 .publication-index{border-color:#879e88}
-.publication-title h2 em{color:#245f3e}
+.publication-title h2 em{color:#1a6635}
 .cover-abstract{border-color:#8ba18e}
 .cover-abstract p{color:#344e3b}
 .cover-abstract a{border-color:#658a6d}
@@ -174,3 +174,27 @@ footer a{border-color:#81ad8a}
  .sheet-dispatch{background:#23483f}
  .sheet-verdict{background:#305a42}
 }
+
+/* Night Signal — the *same* forensic composition, darker backgrounds and
+   neon only at active evidence/permission states. Never a neon HUD. */
+body{background:#040806}
+.site-head{background:#040806e5}
+.autopsy-sticky{
+  background:radial-gradient(ellipse 56% 56% at 62% 65%,#1953316e 0%,transparent 72%),
+             linear-gradient(128deg,#030705 0%,#07150b 60%,#030805 100%);
+}
+.chapter-intro{background:#07150d}
+.memory-section{background:#091a12}
+.reliability-section{background:#030806}
+.long-divider{background:#12492d}
+.torn-edge{background:linear-gradient(130deg,#07150d 25%,transparent 25%) 0 0/22px 22px,
+                    linear-gradient(230deg,#07150d 25%,transparent 25%) 0 0/22px 22px}
+.red-rule,.stage-progress span{background:var(--kavi-signal)}
+.action-choice.selected,.inspector-choices button[aria-selected=true]{
+  background:var(--kavi-signal);color:#071309;border-color:var(--kavi-signal)
+}
+.mechanism-outcome:not(.is-denied) strong,.large-mark,.verdict-art{
+  color:var(--kavi-signal)
+}
+.large-mark{border-color:var(--kavi-signal)}
+.receipt.duplicate{background:#c2caae;color:#153323;border-color:#c2caae}
