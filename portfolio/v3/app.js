@@ -80,7 +80,7 @@ function setAction(action){
  q("#guard-state").textContent=item.code;
  const p=q("#mechanism-pulse");
  if(p){
-  p.style.background=item.allowed?"#285c61":"#c65337";
+  p.style.background=item.allowed?"var(--kavi-sage, #8dc9a4)":"var(--kavi-denied, #e5b49a)";
   const travel=item.allowed?"100%":"51%";
   p.animate?.([{left:"0"},{left:travel}],{duration:reduce.matches?0:700,easing:"ease-in-out",fill:"forwards"});
   p.style.left=travel;
