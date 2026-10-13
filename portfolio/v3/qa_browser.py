@@ -83,6 +83,15 @@ async def run():
                         wait_until="domcontentloaded"
                     )
                     assert response and response.status == 200
+                    # Company palette is a testable skin, not a screenshot-only promise.
+                    brand = await page.evaluate("""() => ({
+                        token:getComputedStyle(document.documentElement).getPropertyValue('--kavi-black').trim(),
+                        theme:[...document.querySelectorAll('link[rel="stylesheet"]')]
+                            .some(el=>el.href.includes('kavi-black-forest.css'))
+                    })""")
+                    assert brand["token"] == "#0b1914" and brand["theme"], (
+                        f"{label}: KAVI Black Forest theme not active: {brand}"
+                    )
                     await page.screenshot(path=str(OUT / (label + "-hero.png")))
                     await inspect(page, label + "/hero", issues)
                     # The evidence needs to actually peel during scroll.
