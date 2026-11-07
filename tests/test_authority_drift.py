@@ -153,3 +153,81 @@ def test_evaluation_fingerprint_binds_decision():
     violating = evaluate(ctx, operation="close")
 
     assert clean.evaluation_fingerprint != violating.evaluation_fingerprint
+
+
+def _literal_tenant_context():
+    """A patched KCC capsule: tenant ID is a literal mandatory grant."""
+    inventory = kcc.scan_manifest(
+        kcc.adapt_capabilities(
+            "generic",
+            {"tools": [{
+                "name": "read_record",
+                "description": "Read a synthetic customer record",
+                "input_schema": {
+                    "type": "object",
+                    "properties": {"customer_id": {"type": "string"}},
+                    "required": ["customer_id"],
+                },
+            }]},
+            namespace="spectraflow-security-regression",
+        )
+    )
+    cid = inventory["capabilities"][0]["id"]
+    capsule = kcc.compile_capsule(
+        inventory,
+        {
+            "task": "Read only tenant-a-001",
+            "capabilities": [cid],
+            "ttl_seconds": 300,
+            "capability_constraints": {
+                cid: {
+                    "operations": ["read"],
+                    "parameters": {"customer_id": "tenant-a-001"},
+                }
+            },
+        },
+        {"default": "allow"},
+        now=100,
+    )
+    return {"capsule": capsule, "capability_id": cid}
+
+
+def test_literal_tenant_omission_is_reported_as_security_drift():
+    """Regression for KCC <=0.1.1: literal constraint could be bypassed by omission."""
+    context = _literal_tenant_context()
+    result = evaluate(context, operation="read", parameters={})
+    assert result.drift_detected is True
+    assert result.within_claimed_authority is False
+    assert result.capsule_integrity_valid is True
+    assert any(
+        v.code == "AUTH-PARAM-REQUIRED" and v.field == "customer_id"
+        for v in result.violations
+    )
+
+
+def test_correct_literal_tenant_read_is_not_falsely_flagged():
+    context = _literal_tenant_context()
+    result = evaluate(
+        context, operation="read", parameters={"customer_id": "tenant-a-001"}
+    )
+    assert result.drift_detected is False
+    assert result.within_claimed_authority is True
+    assert result.violations == []
+
+
+def test_wrong_literal_tenant_and_scope_escalation_are_detected():
+    context = _literal_tenant_context()
+    wrong_tenant = evaluate(
+        context, operation="read", parameters={"customer_id": "tenant-b-001"}
+    )
+    assert wrong_tenant.drift_detected is True
+    assert any(v.code == "AUTH-PARAM-MISMATCH" for v in wrong_tenant.violations)
+
+    extra_scope = evaluate(
+        context, operation="read",
+        parameters={"customer_id": "tenant-a-001", "all_tenants": True},
+    )
+    assert extra_scope.drift_detected is True
+    assert any(
+        v.code == "AUTH-PARAM-NOT-GRANTED" for v in extra_scope.violations
+    )
