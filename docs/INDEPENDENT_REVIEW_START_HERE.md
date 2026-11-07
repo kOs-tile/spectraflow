@@ -11,7 +11,7 @@ A practical challenge for engineers reviewing agent execution systems, designed 
 ```bash
 git clone https://github.com/kOs-tile/kavi-capability-compiler.git
 cd kavi-capability-compiler
-python -m pip install https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.1/kavi_capability_compiler-0.1.1-py3-none-any.whl
+python -m pip install https://github.com/kOs-tile/kavi-capability-compiler/releases/download/v0.1.2/kavi_capability_compiler-0.1.2-py3-none-any.whl#sha256=bdfa14efd81d4474120a4b9a7f9104084083ff0f4a979f62af1e3f01bd26ef49
 python examples/recruiter_demo.py
 ```
 
