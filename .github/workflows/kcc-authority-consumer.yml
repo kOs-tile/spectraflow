@@ -1,0 +1,76 @@
+name: KCC pinned 0.1.2 authority consumer regression
+
+on:
+  push:
+    paths:
+      - "requirements.txt"
+      - "spectraflow/authority/**"
+      - "tests/test_authority_drift.py"
+      - ".github/workflows/kcc-authority-consumer.yml"
+  pull_request:
+    paths:
+      - "requirements.txt"
+      - "spectraflow/authority/**"
+      - "tests/test_authority_drift.py"
+      - ".github/workflows/kcc-authority-consumer.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-authority:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - name: Check out SPECTRAFLOW
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Set up supported Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install immutable pinned KCC and minimal authority test dependencies
+        run: |
+          python - <<'PY'
+          import subprocess,sys
+          from pathlib import Path
+          deps=[x.strip() for x in Path("requirements.txt").read_text().splitlines()
+                if x.strip().startswith("kavi-capability-compiler @ ")]
+          assert len(deps)==1, "One pinned KCC requirement required"
+          dep=deps[0]
+          assert "/v0.1.2/kavi_capability_compiler-0.1.2-py3-none-any.whl" in dep
+          assert dep.endswith("#sha256=bdfa14efd81d4474120a4b9a7f9104084083ff0f4a979f62af1e3f01bd26ef49")
+          subprocess.run([sys.executable,"-m","pip","install","--disable-pip-version-check","--no-cache-dir",
+                          dep,"pydantic==2.7.4","pytest==8.2.2"],check=True)
+          PY
+
+      - name: Prove installed wheel is KCC security-patched 0.1.2
+        run: |
+          python - <<'PY'
+          import kavi_capability_compiler as kcc
+          from importlib import metadata
+          assert kcc.__version__=="0.1.2"
+          assert metadata.version("kavi-capability-compiler")=="0.1.2"
+          assert "site-packages" in kcc.__file__
+          print("Installed and version-checked immutable KCC v0.1.2 wheel.")
+          PY
+
+      - name: Check real authority drift regression and benign cases
+        run: python -m pytest -q tests/test_authority_drift.py
+
+      - name: Verify synthetic authority benchmark has no false negatives
+        run: |
+          python - <<'PY'
+          from benchmark.authority_drift import run_benchmark
+          x=run_benchmark()
+          assert x["false_negative"]==0
+          assert x["false_positive"]==0
+          assert x["cases"]==6
+          print("Authority drift benchmark: 6/6 observed correctly; no host dispatch.")
+          PY
