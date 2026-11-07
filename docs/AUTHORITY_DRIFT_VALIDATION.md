@@ -8,7 +8,7 @@ wedge asks a narrower production question:
 
 This layer is observational. It does not replace KCC enforcement and it never
 grants authority. Current observations are evaluated through KCC's public
-`authorize_call()` primitive from the immutable v0.1.1 release; SPECTRAFLOW does
+`authorize_call()` primitive from the immutable v0.1.2 security-patched release; SPECTRAFLOW does
 not reimplement the KCC authorization rules and never supplies a dispatcher.
 
 ## Failure taxonomy
